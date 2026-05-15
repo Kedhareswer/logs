@@ -1,0 +1,2446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Work Log</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #0A0A0A;
+            --surface-2: #111111;
+            --surface-3: #181818;
+            --border: #1A1A1A;
+            --border-2: #262626;
+            --border-3: #333333;
+            --text: #FAFAFA;
+            --text-2: #A1A1A1;
+            --text-3: #6B6B6B;
+            --text-4: #404040;
+            --accent: #3B82F6;
+            --accent-soft: rgba(59, 130, 246, 0.12);
+            --green: #4ADE80;
+            --green-soft: rgba(74, 222, 128, 0.12);
+            --amber: #F59E0B;
+            --amber-soft: rgba(245, 158, 11, 0.10);
+            --red: #EF4444;
+            --red-soft: rgba(239, 68, 68, 0.10);
+
+            --sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'Geist Mono', 'SF Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        body {
+            font-family: var(--sans);
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            font-feature-settings: "ss01", "cv01", "cv11";
+        }
+
+        ::selection {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .app {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 56px 40px 80px;
+        }
+
+        /* ===================== HEADER ===================== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            background: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .brand h1 {
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.015em;
+        }
+
+        .brand .ver {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-4);
+            letter-spacing: 0.02em;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sync-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-2);
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+
+        .sync-pill:hover {
+            border-color: var(--border-2);
+            color: var(--text);
+        }
+
+        .sync-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-3);
+        }
+
+        .sync-dot.connected {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+        }
+
+        .sync-dot.syncing {
+            background: var(--amber);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .sync-dot.error {
+            background: var(--red);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .header-date {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-3);
+            letter-spacing: 0.02em;
+        }
+
+        /* ===================== HEAT STRIP ===================== */
+        .heat-section {
+            margin-bottom: 32px;
+        }
+
+        .heat-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 12px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .heat-strip {
+            display: grid;
+            grid-template-columns: repeat(14, 1fr);
+            gap: 3px;
+        }
+
+        .heat-cell {
+            aspect-ratio: 1;
+            max-height: 36px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px 5px;
+            overflow: hidden;
+            transition: all 0.12s;
+        }
+
+        .heat-cell.today {
+            border-color: var(--text-3);
+        }
+
+        .heat-cell .heat-fill {
+            position: absolute;
+            inset: 0;
+            background: var(--text);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .heat-cell .heat-day {
+            font-family: var(--mono);
+            font-size: 8px;
+            color: var(--text-3);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .heat-cell .heat-val {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text-2);
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .heat-cell.filled .heat-day,
+        .heat-cell.filled .heat-val {
+            color: var(--bg);
+        }
+
+        .heat-cell.today.filled .heat-day {
+            color: var(--bg);
+        }
+
+        /* ===================== KPIs ===================== */
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 48px;
+            overflow: hidden;
+        }
+
+        .kpi {
+            background: var(--bg);
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+        }
+
+        .kpi-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .kpi-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .kpi-delta {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: -0.005em;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .kpi-delta.up {
+            color: var(--green);
+        }
+
+        .kpi-delta.down {
+            color: var(--red);
+        }
+
+        .kpi-delta.flat {
+            color: var(--text-3);
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            font-feature-settings: "tnum";
+        }
+
+        .kpi-value.empty {
+            color: var(--text-3);
+            font-weight: 300;
+        }
+
+        .kpi-value .unit {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-left: 5px;
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+
+        .kpi-sub {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.02em;
+        }
+
+        /* ===================== SECTION ===================== */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-2);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            font-family: var(--mono);
+            font-size: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.12s;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: var(--surface);
+            color: var(--text);
+            border-color: var(--border-2);
+        }
+
+        .nav-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-3);
+            padding: 0 10px;
+            min-width: 160px;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+
+        /* ===================== FORM ===================== */
+        .form {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr 100px 1.5fr auto;
+            gap: 0;
+            align-items: stretch;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            padding: 14px 16px;
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+
+        .field:last-of-type {
+            border-right: none;
+        }
+
+        .field label {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text-3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .field input {
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 400;
+            padding: 4px 0;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            transition: color 0.12s;
+            outline: none;
+            width: 100%;
+            color-scheme: dark;
+            letter-spacing: -0.005em;
+        }
+
+        .field input::placeholder {
+            color: var(--text-4);
+        }
+
+        .field input::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.12s;
+        }
+
+        .field input::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+
+        .field.focused {
+            background: var(--surface);
+        }
+
+        .field.focused label {
+            color: var(--text-2);
+        }
+
+        .field-readout {
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2px;
+            border-right: 1px solid var(--border);
+            background: var(--surface);
+            min-width: 110px;
+        }
+
+        .field-readout .v {
+            font-family: var(--sans);
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            font-feature-settings: "tnum";
+        }
+
+        .field-readout .v.empty {
+            color: var(--text-3);
+            font-weight: 300;
+        }
+
+        .field-readout .u {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text-3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .field-readout.overnight .u {
+            color: var(--amber);
+        }
+
+        .btn-save {
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 0 24px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.12s;
+            white-space: nowrap;
+            letter-spacing: -0.005em;
+            min-width: 110px;
+        }
+
+        .btn-save:hover {
+            background: #E5E5E5;
+        }
+
+        .btn-save:active {
+            background: #D4D4D4;
+        }
+
+        .btn-save.editing {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        .btn-save.editing:hover {
+            background: #2563EB;
+        }
+
+        .form-note-row {
+            display: flex;
+            border-top: 1px solid var(--border);
+        }
+
+        .form-note-row .field {
+            flex: 1;
+            border-right: none;
+        }
+
+        .form-cancel {
+            background: transparent;
+            border: none;
+            border-left: 1px solid var(--border);
+            color: var(--text-3);
+            font-family: var(--mono);
+            font-size: 10px;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: color 0.12s;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 500;
+            display: none;
+        }
+
+        .form-cancel.visible {
+            display: block;
+        }
+
+        .form-cancel:hover {
+            color: var(--red);
+        }
+
+        /* ===================== TIMELINE ===================== */
+        .timeline {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px 24px 24px;
+            background: var(--bg);
+        }
+
+        .tl-axis {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            align-items: end;
+            height: 18px;
+            margin-bottom: 12px;
+        }
+
+        .tl-axis-hours {
+            position: relative;
+            height: 16px;
+        }
+
+        .tl-axis-tick {
+            position: absolute;
+            bottom: 0;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.02em;
+            transform: translateX(-50%);
+        }
+
+        .tl-axis-tick.midnight {
+            color: var(--text-2);
+        }
+
+        .tl-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            align-items: center;
+            height: 48px;
+            position: relative;
+        }
+
+        .tl-row+.tl-row {
+            border-top: 1px solid var(--border);
+        }
+
+        .tl-row.week-break {
+            border-top: 1px solid var(--border-2);
+            margin-top: 6px;
+            padding-top: 6px;
+        }
+
+        .tl-row.today::before {
+            content: "";
+            position: absolute;
+            left: -24px;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .tl-day {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 16px;
+            gap: 2px;
+        }
+
+        .tl-day .name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .tl-day .name.weekend {
+            color: var(--text-2);
+        }
+
+        .tl-day .name.today {
+            color: var(--accent);
+        }
+
+        .tl-day .date {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.02em;
+        }
+
+        .tl-track {
+            position: relative;
+            height: 32px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .tl-track-gridline {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--border-2);
+        }
+
+        .tl-track-gridline.midnight {
+            background: var(--border-3);
+        }
+
+        .tl-bar {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            background: var(--text);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--bg);
+            font-weight: 500;
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+            z-index: 2;
+        }
+
+        .tl-bar.today {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        .tl-bar.continuation {
+            background: var(--text-2);
+            color: var(--bg);
+        }
+
+        .tl-bar.continuation.today {
+            background: var(--accent);
+            opacity: 0.6;
+        }
+
+        .tl-hours {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            text-align: right;
+            letter-spacing: -0.01em;
+            font-feature-settings: "tnum";
+        }
+
+        .tl-hours.empty {
+            color: var(--text-3);
+            font-weight: 400;
+        }
+
+        .tl-totals {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding-top: 18px;
+            margin-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .tl-totals .label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .tl-totals .value {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: -0.025em;
+            font-feature-settings: "tnum";
+        }
+
+        .tl-totals .value .unit {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-3);
+            margin-left: 5px;
+            letter-spacing: 0;
+        }
+
+        /* ===================== TABLE ===================== */
+        .table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text-3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-align: left;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        thead th.num {
+            text-align: right;
+        }
+
+        thead th.center {
+            text-align: center;
+        }
+
+        .week-divider td {
+            background: var(--surface);
+            padding: 10px 18px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .week-divider .week-meta {
+            float: right;
+            color: var(--text-2);
+            font-weight: 500;
+        }
+
+        tbody td {
+            padding: 13px 18px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr.entry-row {
+            transition: background 0.12s;
+            cursor: pointer;
+        }
+
+        tbody tr.entry-row:hover {
+            background: var(--surface);
+        }
+
+        tbody tr.entry-row.today {
+            background: rgba(59, 130, 246, 0.03);
+            box-shadow: inset 2px 0 0 var(--accent);
+        }
+
+        tbody tr.entry-row.today:hover {
+            background: rgba(59, 130, 246, 0.06);
+        }
+
+        tbody tr.entry-row.editing {
+            background: var(--surface-2);
+            box-shadow: inset 2px 0 0 var(--accent);
+        }
+
+        .date-col {
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            font-feature-settings: "tnum";
+        }
+
+        .date-col .month {
+            color: var(--text-3);
+            font-weight: 400;
+            margin-left: 4px;
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+
+        .day-col {
+            color: var(--text-2);
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.02em;
+        }
+
+        .time-col {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text);
+            letter-spacing: 0.02em;
+        }
+
+        .num-col {
+            font-family: var(--mono);
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-size: 12px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-family: var(--mono);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .badge.overnight {
+            background: var(--amber-soft);
+            color: var(--amber);
+        }
+
+        .badge.day {
+            color: var(--text-3);
+        }
+
+        .hours-strong {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: -0.005em;
+        }
+
+        .note-text {
+            color: var(--text-2);
+            font-size: 12px;
+        }
+
+        .empty-text {
+            color: var(--text-4);
+            font-style: italic;
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        tr.entry-row:hover .row-actions {
+            opacity: 1;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-3);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: all 0.12s;
+            line-height: 1;
+            font-family: var(--mono);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .btn-icon:hover {
+            color: var(--text);
+            border-color: var(--border-2);
+            background: var(--surface);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--red);
+            border-color: var(--red);
+            background: var(--red-soft);
+        }
+
+        .empty-state {
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--text-3);
+            font-size: 13px;
+        }
+
+        /* ===================== FOOTER ===================== */
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 0;
+        }
+
+        .footer-actions-left,
+        .footer-actions-right {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .btn-text {
+            background: transparent;
+            border: none;
+            color: var(--text-3);
+            font-family: var(--mono);
+            font-size: 10px;
+            cursor: pointer;
+            padding: 6px 10px;
+            transition: color 0.12s;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-radius: 3px;
+        }
+
+        .btn-text:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .btn-text.danger:hover {
+            color: var(--red);
+            background: var(--red-soft);
+        }
+
+        .last-sync {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-4);
+            letter-spacing: 0.02em;
+            padding-right: 8px;
+        }
+
+        /* ===================== MODAL ===================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-backdrop.visible {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg);
+            border: 1px solid var(--border-2);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+        }
+
+        .modal-head {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.015em;
+            margin-bottom: 6px;
+        }
+
+        .modal-sub {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-3);
+            letter-spacing: 0.02em;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+        }
+
+        .modal-body p {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .modal-body code {
+            font-family: var(--mono);
+            font-size: 11px;
+            background: var(--surface-2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--text);
+        }
+
+        .modal-body a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
+        .modal-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .modal-field label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .modal-field input {
+            font-family: var(--mono);
+            font-size: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-2);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.12s;
+        }
+
+        .modal-field input:focus {
+            border-color: var(--text-3);
+        }
+
+        .modal-foot {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-foot-left {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-modal {
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.12s;
+            border: 1px solid var(--border-2);
+            background: transparent;
+            color: var(--text-2);
+            letter-spacing: -0.005em;
+        }
+
+        .btn-modal:hover {
+            color: var(--text);
+            border-color: var(--border-3);
+        }
+
+        .btn-modal.primary {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        .btn-modal.primary:hover {
+            background: #E5E5E5;
+        }
+
+        .btn-modal.danger {
+            color: var(--red);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-modal.danger:hover {
+            background: var(--red-soft);
+            border-color: var(--red);
+        }
+
+        /* ===================== LOCKED STATE ===================== */
+        body.locked .form input,
+        body.locked .form button {
+            pointer-events: none;
+        }
+
+        body.locked .form input {
+            color: var(--text-3);
+        }
+
+        body.locked .field-readout .v {
+            color: var(--text-3);
+        }
+
+        body.locked .form {
+            opacity: 0.55;
+            filter: grayscale(0.2);
+        }
+
+        body.locked .form-row .btn-save,
+        body.locked .row-actions,
+        body.locked #btn-reset,
+        body.locked #form-cancel {
+            display: none !important;
+        }
+
+        body.locked tr.entry-row {
+            cursor: default;
+        }
+
+        body.locked tr.entry-row:hover {
+            background: transparent;
+        }
+
+        body.locked tr.entry-row.today:hover {
+            background: rgba(59, 130, 246, 0.03);
+        }
+
+        .lock-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--surface);
+        }
+
+        .lock-indicator .ic {
+            font-size: 11px;
+        }
+
+        body.unlocked .lock-indicator {
+            color: var(--green);
+            border-color: rgba(74, 222, 128, 0.3);
+            background: var(--green-soft);
+        }
+
+        /* Password prompt modal */
+        .pw-prompt-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 60;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(6px);
+        }
+
+        .pw-prompt-backdrop.visible {
+            display: flex;
+        }
+
+        .pw-prompt {
+            width: 100%;
+            max-width: 360px;
+            background: var(--bg);
+            border: 1px solid var(--border-2);
+            border-radius: 6px;
+            padding: 24px;
+        }
+
+        .pw-prompt.shake {
+            animation: shake 0.4s;
+            border-color: var(--red);
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-6px);
+            }
+
+            75% {
+                transform: translateX(6px);
+            }
+        }
+
+        .pw-prompt-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-3);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .pw-prompt input {
+            width: 100%;
+            font-family: var(--mono);
+            font-size: 14px;
+            padding: 12px 14px;
+            border: 1px solid var(--border-2);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.12s;
+            letter-spacing: 0.05em;
+        }
+
+        .pw-prompt input:focus {
+            border-color: var(--text-3);
+        }
+
+        .pw-prompt-foot {
+            margin-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pw-prompt-hint {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-4);
+            letter-spacing: 0.05em;
+        }
+
+        .pw-prompt-hint kbd {
+            color: var(--text-3);
+        }
+
+        /* ===================== TOAST ===================== */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 10px 18px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s;
+            z-index: 100;
+            letter-spacing: -0.005em;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.error {
+            background: var(--red);
+            color: var(--text);
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 900px) {
+            .app {
+                padding: 40px 24px 60px;
+            }
+
+            .kpis {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-row>.field-readout,
+            .form-row>.btn-save {
+                grid-column: 1 / -1;
+            }
+
+            .field-readout {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-right: none;
+                border-top: 1px solid var(--border);
+            }
+
+            .tl-axis,
+            .tl-row {
+                grid-template-columns: 60px 1fr 48px;
+            }
+
+            thead th:nth-child(6),
+            tbody td:nth-child(6) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .app {
+                padding: 28px 16px 60px;
+            }
+
+            .kpi-value {
+                font-size: 26px;
+            }
+
+            thead th:nth-child(3),
+            tbody td:nth-child(3),
+            thead th:nth-child(4),
+            tbody td:nth-child(4) {
+                display: none;
+            }
+
+            .tl-axis,
+            .tl-row {
+                grid-template-columns: 50px 1fr 40px;
+            }
+
+            .tl-bar {
+                font-size: 9px;
+                padding: 0 4px;
+            }
+
+            .header-right {
+                gap: 8px;
+            }
+
+            .header-date {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-mark">W</div>
+                <h1>Work Log</h1>
+                <span class="ver">v2.0</span>
+            </div>
+            <div class="header-right">
+                <span class="lock-indicator" id="lock-indicator">
+                    <span class="ic">○</span>
+                    <span id="lock-text">Read only</span>
+                </span>
+                <button class="sync-pill" id="sync-pill" title="Sync settings">
+                    <span class="sync-dot" id="sync-dot"></span>
+                    <span id="sync-status">Local only</span>
+                </button>
+                <div class="header-date" id="header-date">—</div>
+            </div>
+        </header>
+
+        <!-- HEAT STRIP -->
+        <section class="heat-section">
+            <div class="heat-label">
+                <span>Current 2 Weeks</span>
+                <span id="heat-range">—</span>
+            </div>
+            <div class="heat-strip" id="heat-strip"></div>
+        </section>
+
+        <!-- KPIs -->
+        <section class="kpis">
+            <div class="kpi">
+                <div class="kpi-head">
+                    <span class="kpi-label">Current 2 Weeks</span>
+                    <span class="kpi-delta" id="delta-week">—</span>
+                </div>
+                <div class="kpi-value" id="kpi-week">0<span class="unit">hrs</span></div>
+                <div class="kpi-sub" id="kpi-week-sub">—</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-head">
+                    <span class="kpi-label">Previous 2 Weeks</span>
+                    <span class="kpi-delta" id="delta-month">—</span>
+                </div>
+                <div class="kpi-value" id="kpi-month">0<span class="unit">hrs</span></div>
+                <div class="kpi-sub" id="kpi-month-sub">—</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-head">
+                    <span class="kpi-label">Cycle Ends In</span>
+                    <span class="kpi-delta flat" id="delta-avg">—</span>
+                </div>
+                <div class="kpi-value" id="kpi-avg">0<span class="unit">days</span></div>
+                <div class="kpi-sub" id="kpi-avg-sub">—</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-head">
+                    <span class="kpi-label">Total</span>
+                    <span class="kpi-delta flat" id="delta-total">—</span>
+                </div>
+                <div class="kpi-value" id="kpi-total">0<span class="unit">hrs</span></div>
+                <div class="kpi-sub" id="kpi-total-sub">All entries</div>
+            </div>
+        </section>
+
+        <!-- LOG FORM -->
+        <section class="section">
+            <div class="section-head">
+                <div class="section-title" id="form-title">Log a Shift</div>
+            </div>
+            <div class="form">
+                <div class="form-row">
+                    <div class="field"><label>Date</label><input type="date" id="in-date" /></div>
+                    <div class="field"><label>Start</label><input type="time" id="in-start" value="21:00" /></div>
+                    <div class="field"><label>End</label><input type="time" id="in-end" value="02:00" /></div>
+                    <div class="field"><label>Break</label><input type="number" id="in-break" step="0.25" value="0"
+                            min="0" /></div>
+                    <div class="field-readout" id="computed">
+                        <span class="v" id="computed-v">5.0</span>
+                        <span class="u" id="computed-u">Hours</span>
+                    </div>
+                    <button class="btn-save" id="btn-save">Save</button>
+                </div>
+                <div class="form-note-row">
+                    <div class="field"><label>Note</label><input type="text" id="in-note"
+                            placeholder="Optional — project, meeting, context…" /></div>
+                    <button class="form-cancel" id="form-cancel">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE -->
+        <section class="section">
+            <div class="section-head">
+                <div class="section-title">Biweekly Timeline</div>
+                <div class="section-actions">
+                    <button class="nav-btn" id="prev-week">← Prev</button>
+                    <span class="nav-label" id="week-label">—</span>
+                    <button class="nav-btn" id="next-week">Next →</button>
+                    <button class="nav-btn" id="this-week">Today</button>
+                </div>
+            </div>
+            <div class="timeline">
+                <div class="tl-axis">
+                    <div></div>
+                    <div class="tl-axis-hours" id="tl-axis-hours"></div>
+                    <div></div>
+                </div>
+                <div id="tl-rows"></div>
+                <div class="tl-totals">
+                    <span class="label">Cycle total</span>
+                    <span class="value" id="week-total">0<span class="unit">hrs</span></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <section class="section">
+            <div class="footer-actions">
+                <div class="footer-actions-left">
+                    <span class="last-sync" id="last-sync">Never synced</span>
+                </div>
+                <div class="footer-actions-right">
+                    <button class="btn-text" id="btn-sync">↻ Sync now</button>
+                    <button class="btn-text" id="btn-export">Export CSV</button>
+                    <button class="btn-text danger" id="btn-reset">Reset</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- SYNC MODAL -->
+    <div class="modal-backdrop" id="sync-modal">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="modal-title">GitHub Gist Sync</div>
+                <div class="modal-sub">Sync your data across devices via a private gist</div>
+            </div>
+            <div class="modal-body">
+                <p>To enable sync, you need a <a
+                        href="https://github.com/settings/tokens/new?scopes=gist&description=Work%20Log"
+                        target="_blank">personal access token</a> with the <code>gist</code> scope.</p>
+                <p style="margin-bottom: 18px;">First time? Leave Gist ID empty — a private gist will be created.
+                    Already syncing? Paste your existing Gist ID.</p>
+                <div class="modal-field">
+                    <label>Personal Access Token</label>
+                    <input type="password" id="modal-token" placeholder="ghp_..." />
+                </div>
+                <div class="modal-field">
+                    <label>Gist ID (optional)</label>
+                    <input type="text" id="modal-gist-id" placeholder="Leave empty to create new" />
+                </div>
+            </div>
+            <div class="modal-foot">
+                <div class="modal-foot-left">
+                    <button class="btn-modal danger" id="modal-disconnect">Disconnect</button>
+                </div>
+                <div class="modal-foot-left">
+                    <button class="btn-modal" id="modal-cancel">Cancel</button>
+                    <button class="btn-modal primary" id="modal-save">Connect</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    </div>
+
+    <!-- PASSWORD PROMPT -->
+    <div class="pw-prompt-backdrop" id="pw-backdrop">
+        <div class="pw-prompt" id="pw-prompt">
+            <label class="pw-prompt-label">Enter password</label>
+            <input type="password" id="pw-input" autocomplete="off" />
+            <div class="pw-prompt-foot">
+                <span class="pw-prompt-hint"><kbd>Enter</kbd> to unlock · <kbd>Esc</kbd> to cancel</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Saved</div>
+
+    <script>
+        /* ============================ LOCK STATE ============================ */
+        // API namespace identifier — change this value to your private phrase
+        const API_NAMESPACE = 'change-me-before-deploying';
+
+        let isUnlocked = false;
+
+        function lock() {
+            isUnlocked = false;
+            document.body.classList.remove('unlocked');
+            document.body.classList.add('locked');
+            document.getElementById('lock-text').textContent = 'Read only';
+            document.getElementById('lock-indicator').querySelector('.ic').textContent = '○';
+        }
+        function unlock() {
+            isUnlocked = true;
+            document.body.classList.remove('locked');
+            document.body.classList.add('unlocked');
+            document.getElementById('lock-text').textContent = 'Editable';
+            document.getElementById('lock-indicator').querySelector('.ic').textContent = '●';
+        }
+        function showPwPrompt() {
+            document.getElementById('pw-backdrop').classList.add('visible');
+            setTimeout(() => document.getElementById('pw-input').focus(), 50);
+        }
+        function hidePwPrompt() {
+            document.getElementById('pw-backdrop').classList.remove('visible');
+            document.getElementById('pw-input').value = '';
+            document.getElementById('pw-prompt').classList.remove('shake');
+        }
+        function tryUnlock() {
+            const val = document.getElementById('pw-input').value;
+            if (val === API_NAMESPACE) {
+                unlock();
+                hidePwPrompt();
+                toast('Unlocked');
+            } else {
+                const p = document.getElementById('pw-prompt');
+                p.classList.remove('shake');
+                void p.offsetWidth;
+                p.classList.add('shake');
+                document.getElementById('pw-input').value = '';
+                setTimeout(() => document.getElementById('pw-input').focus(), 100);
+            }
+        }
+
+
+        const STORAGE_KEY = 'workLog_v2_data';
+        const SYNC_KEY = 'workLog_v2_sync';
+
+        let shifts = [];
+        let syncConfig = loadSyncConfig();
+        let editingId = null;
+
+        const TODAY = new Date();
+        TODAY.setHours(0, 0, 0, 0);
+
+        let viewWeekStart; // assigned in INIT, after cycle helpers are defined
+
+        function loadShifts() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch (e) { }
+            return seedSamples();
+        }
+        function saveShiftsLocal() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(shifts)); } catch (e) { }
+        }
+        function loadSyncConfig() {
+            try {
+                const raw = localStorage.getItem(SYNC_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch (e) { }
+            return { token: '', gistId: '', lastSync: null };
+        }
+        function saveSyncConfig() {
+            try { localStorage.setItem(SYNC_KEY, JSON.stringify(syncConfig)); } catch (e) { }
+        }
+
+        function seedSamples() {
+            // Real shifts starting May 9, 2026
+            const PAY_START = new Date(2026, 4, 9); // May 9
+            const pattern = [
+                { offset: 0, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 9
+                { offset: 1, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 10
+                { offset: 2, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 11
+                { offset: 3, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 12
+                { offset: 4, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 13
+                { offset: 5, start: '21:00', end: '01:30', brk: 0, note: '' }, // May 14
+                { offset: 6, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 15
+            ];
+            return pattern.map((p, i) => {
+                const d = new Date(PAY_START);
+                d.setDate(PAY_START.getDate() + p.offset);
+                return { id: 'shift-' + i, date: fmtDate(d), start: p.start, end: p.end, break: p.brk, note: p.note };
+            });
+        }
+
+        /* ============================ DATE/TIME ============================ */
+        function fmtDate(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+        function parseDate(s) {
+            const [y, m, d] = s.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+        function parseTime(t) {
+            if (!t) return null;
+            const [h, m] = t.split(':').map(Number);
+            return h + m / 60;
+        }
+        function fmtTime12(t) {
+            if (!t) return '—';
+            const [h, m] = t.split(':').map(Number);
+            const suffix = h < 12 ? 'AM' : 'PM';
+            const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
+            return m === 0 ? `${display}:00 ${suffix}` : `${display}:${String(m).padStart(2, '0')} ${suffix}`;
+        }
+        function fmtHour(h) {
+            if (h === 0 || h === 24) return '12a';
+            if (h === 12) return '12p';
+            const whole = Math.floor(h);
+            const min = Math.round((h - whole) * 60);
+            const suffix = whole < 12 ? 'a' : 'p';
+            const display = whole === 0 ? 12 : whole > 12 ? whole - 12 : whole;
+            return min === 0 ? `${display}${suffix}` : `${display}:${String(min).padStart(2, '0')}${suffix}`;
+        }
+        function computeHours(start, end, brk) {
+            const s = parseTime(start);
+            const e = parseTime(end);
+            if (s === null || e === null) return 0;
+            let diff = e - s;
+            if (diff <= 0) diff += 24;
+            diff -= (parseFloat(brk) || 0);
+            return Math.max(0, Math.round(diff * 100) / 100);
+        }
+        function isOvernight(start, end) {
+            const s = parseTime(start);
+            const e = parseTime(end);
+            return s !== null && e !== null && e <= s;
+        }
+        function startOfWeek(d) {
+            const x = new Date(d);
+            x.setHours(0, 0, 0, 0);
+            const day = x.getDay();
+            const offset = day === 0 ? -6 : 1 - day;
+            x.setDate(x.getDate() + offset);
+            return x;
+        }
+        function sameDay(a, b) {
+            return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+        }
+        function startOfMonth(d) {
+            return new Date(d.getFullYear(), d.getMonth(), 1);
+        }
+
+        /* ============ CYCLE ============ */
+        // Anchor date: 14-day cycles start from this date
+        const PAY_ANCHOR = new Date(2026, 4, 9); // May 9, 2026
+        PAY_ANCHOR.setHours(0, 0, 0, 0);
+
+        function currentPayPeriodStart(d) {
+            const target = new Date(d);
+            target.setHours(0, 0, 0, 0);
+            const daysSince = Math.floor((target - PAY_ANCHOR) / 86400000);
+            const periodIndex = Math.floor(daysSince / 14);
+            const start = new Date(PAY_ANCHOR);
+            start.setDate(PAY_ANCHOR.getDate() + periodIndex * 14);
+            return start;
+        }
+        function payPeriodEnd(start) {
+            const end = new Date(start);
+            end.setDate(start.getDate() + 13);
+            return end;
+        }
+        function previousPayPeriodStart(d) {
+            const cur = currentPayPeriodStart(d);
+            const prev = new Date(cur);
+            prev.setDate(cur.getDate() - 14);
+            return prev;
+        }
+        function daysUntilPayday(d) {
+            const periodEnd = payPeriodEnd(currentPayPeriodStart(d));
+            const payday = new Date(periodEnd);
+            payday.setDate(periodEnd.getDate() + 1);
+            const diff = Math.ceil((payday - d) / 86400000);
+            return Math.max(0, diff);
+        }
+        function fmtRelative(ts) {
+            if (!ts) return 'Never synced';
+            const diff = Date.now() - ts;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return 'Synced just now';
+            if (mins < 60) return `Synced ${mins}m ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `Synced ${hrs}h ago`;
+            const days = Math.floor(hrs / 24);
+            return `Synced ${days}d ago`;
+        }
+
+        /* ============================ RENDER ============================ */
+        function render() {
+            renderHeader();
+            renderHeatStrip();
+            renderKPIs();
+            renderTimeline();
+            renderLog();
+            renderSyncStatus();
+        }
+
+        function renderHeader() {
+            document.getElementById('header-date').textContent =
+                TODAY.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
+        function renderHeatStrip() {
+            const strip = document.getElementById('heat-strip');
+            const periodStart = currentPayPeriodStart(TODAY);
+            const periodEnd = payPeriodEnd(periodStart);
+            document.getElementById('heat-range').textContent =
+                `${periodStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${periodEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+
+            const dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S'];
+            let html = '';
+            for (let i = 0; i < 14; i++) {
+                const d = new Date(periodStart);
+                d.setDate(periodStart.getDate() + i);
+                const shift = shifts.find(s => s.date === fmtDate(d));
+                const hrs = shift ? computeHours(shift.start, shift.end, shift.break) : 0;
+                const intensity = Math.min(hrs / 8, 1);
+                const isToday = sameDay(d, TODAY);
+                const filled = hrs > 0;
+                html += `
+      <div class="heat-cell ${isToday ? 'today' : ''} ${filled ? 'filled' : ''}" title="${d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}${hrs ? ' — ' + hrs + ' hrs' : ' — no entry'}">
+        <div class="heat-fill" style="opacity: ${intensity * 0.95};"></div>
+        <span class="heat-day">${dayLetters[i]}</span>
+        <span class="heat-val">${hrs > 0 ? hrs : ''}</span>
+      </div>
+    `;
+            }
+            strip.innerHTML = html;
+        }
+
+        function renderKPIs() {
+            const sumInRange = (start, end) =>
+                shifts.filter(s => {
+                    const d = parseDate(s.date);
+                    return d >= start && d <= end;
+                }).reduce((a, s) => a + computeHours(s.start, s.end, s.break), 0);
+
+            // Current pay period
+            const curStart = currentPayPeriodStart(TODAY);
+            const curEnd = payPeriodEnd(curStart);
+            const curHrs = sumInRange(curStart, curEnd);
+
+            // Previous pay period
+            const prevStart = previousPayPeriodStart(TODAY);
+            const prevEnd = payPeriodEnd(prevStart);
+            const prevHrs = sumInRange(prevStart, prevEnd);
+
+            // Days until payday
+            const daysToPay = daysUntilPayday(TODAY);
+
+            // Total
+            const total = shifts.reduce((a, s) => a + computeHours(s.start, s.end, s.break), 0);
+            const totalCount = shifts.filter(s => computeHours(s.start, s.end, s.break) > 0).length;
+
+            setKPI('kpi-week', curHrs, 'hrs');
+            setKPI('kpi-month', prevHrs, 'hrs');
+            setKPI('kpi-total', total, 'hrs');
+
+            // Days to payday as a plain number (no decimal)
+            const dpEl = document.getElementById('kpi-avg');
+            dpEl.innerHTML = `${daysToPay}<span class="unit">${daysToPay === 1 ? 'day' : 'days'}</span>`;
+            dpEl.classList.toggle('empty', daysToPay === 0);
+
+            // Deltas
+            setDelta('delta-week', curHrs, prevHrs);
+            setDelta('delta-month', prevHrs, sumInRange(
+                new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 14),
+                new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 1)
+            ));
+            document.getElementById('delta-avg').textContent = daysToPay === 0 ? 'Last day' : '';
+            document.getElementById('delta-avg').className = daysToPay === 0 ? 'kpi-delta up' : 'kpi-delta flat';
+            document.getElementById('delta-total').textContent = `${totalCount} entries`;
+            document.getElementById('delta-total').className = 'kpi-delta flat';
+
+            // Subs
+            const fmtRange = (s, e) =>
+                `${s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}–${e.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+            document.getElementById('kpi-week-sub').textContent = fmtRange(curStart, curEnd);
+            document.getElementById('kpi-month-sub').textContent = fmtRange(prevStart, prevEnd);
+            const cycleEnd = new Date(curEnd);
+            document.getElementById('kpi-avg-sub').textContent =
+                daysToPay === 0 ? 'Cycle ends today' : `Ends ${cycleEnd.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+        }
+
+        function setKPI(id, value, unit) {
+            const el = document.getElementById(id);
+            const v = (Math.round(value * 10) / 10);
+            el.innerHTML = `${v || 0}<span class="unit">${unit}</span>`;
+            el.classList.toggle('empty', v === 0);
+        }
+
+        function setDelta(id, current, previous) {
+            const el = document.getElementById(id);
+            if (previous === 0 && current === 0) {
+                el.textContent = '—';
+                el.className = 'kpi-delta flat';
+                return;
+            }
+            if (previous === 0) {
+                el.textContent = `+${Math.round(current * 10) / 10}`;
+                el.className = 'kpi-delta up';
+                return;
+            }
+            const diff = current - previous;
+            const pct = Math.round((diff / previous) * 100);
+            if (Math.abs(pct) < 1) {
+                el.textContent = '—';
+                el.className = 'kpi-delta flat';
+                return;
+            }
+            const arrow = pct > 0 ? '▲' : '▼';
+            el.textContent = `${arrow} ${Math.abs(pct)}%`;
+            el.className = `kpi-delta ${pct > 0 ? 'up' : 'down'}`;
+        }
+
+        function renderTimeline() {
+            // Axis: percentage positioned ticks
+            const axis = document.getElementById('tl-axis-hours');
+            let axisHTML = '';
+            for (let h = 0; h <= 24; h += 3) {
+                const pct = (h / 24) * 100;
+                const isMid = h === 0 || h === 24;
+                axisHTML += `<div class="tl-axis-tick ${isMid ? 'midnight' : ''}" style="left: ${pct}%;">${fmtHour(h === 24 ? 0 : h)}</div>`;
+            }
+            axis.innerHTML = axisHTML;
+
+            const cycleEnd = new Date(viewWeekStart);
+            cycleEnd.setDate(viewWeekStart.getDate() + 13);
+            document.getElementById('week-label').textContent =
+                `${viewWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${cycleEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+
+            const rowsEl = document.getElementById('tl-rows');
+            let rowsHTML = '';
+            let cycleTotal = 0;
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            for (let i = 0; i < 14; i++) {
+                const d = new Date(viewWeekStart);
+                d.setDate(viewWeekStart.getDate() + i);
+                const dStr = fmtDate(d);
+                const shift = shifts.find(s => s.date === dStr);
+                const dayOfWeek = d.getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                const isToday = sameDay(d, TODAY);
+                const isWeekDivider = i === 7; // divider between week 1 and week 2
+
+                let trackHTML = '';
+                for (let h = 3; h < 24; h += 3) {
+                    const pct = (h / 24) * 100;
+                    trackHTML += `<div class="tl-track-gridline ${h === 0 ? 'midnight' : ''}" style="left: ${pct}%;"></div>`;
+                }
+
+                let hoursLabel = '<span class="empty">—</span>';
+
+                if (shift && shift.start && shift.end) {
+                    const startH = parseTime(shift.start);
+                    const endH = parseTime(shift.end);
+                    const overnight = endH <= startH;
+                    const totalH = computeHours(shift.start, shift.end, shift.break);
+                    cycleTotal += totalH;
+                    hoursLabel = `${totalH}h`;
+
+                    const seg1End = overnight ? 24 : endH;
+                    const seg1StartPct = (startH / 24) * 100;
+                    const seg1EndPct = (seg1End / 24) * 100;
+                    const seg1Width = seg1EndPct - seg1StartPct;
+                    trackHTML += `<div class="tl-bar ${isToday ? 'today' : ''}" style="left: ${seg1StartPct}%; width: ${seg1Width}%;" title="${fmtTime12(shift.start)} – ${overnight ? '12:00 AM' : fmtTime12(shift.end)}">${seg1Width > 12 ? fmtHour(startH) + '–' + (overnight ? '12a' : fmtHour(seg1End)) : ''}</div>`;
+
+                    if (overnight && endH > 0) {
+                        const seg2EndPct = (endH / 24) * 100;
+                        trackHTML += `<div class="tl-bar continuation ${isToday ? 'today' : ''}" style="left: 0; width: ${seg2EndPct}%;" title="Continues from previous day">${seg2EndPct > 8 ? '→' + fmtHour(endH) : ''}</div>`;
+                    }
+                }
+
+                rowsHTML += `
+      <div class="tl-row ${isToday ? 'today' : ''} ${isWeekDivider ? 'week-break' : ''}">
+        <div class="tl-day">
+          <span class="name ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}">${dayNames[dayOfWeek]}</span>
+          <span class="date">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+        </div>
+        <div class="tl-track">${trackHTML}</div>
+        <div class="tl-hours ${!shift ? 'empty' : ''}">${hoursLabel}</div>
+      </div>
+    `;
+            }
+
+            rowsEl.innerHTML = rowsHTML;
+            document.getElementById('week-total').innerHTML =
+                `${(Math.round(cycleTotal * 10) / 10)}<span class="unit">hrs</span>`;
+        }
+
+        function renderLog() {
+            // Table removed — editing happens via clicking timeline rows or via the form
+        }
+
+        function renderSyncStatus() {
+            const dot = document.getElementById('sync-dot');
+            const status = document.getElementById('sync-status');
+            const lastSync = document.getElementById('last-sync');
+
+            if (syncConfig.token && syncConfig.gistId) {
+                dot.className = 'sync-dot connected';
+                status.textContent = 'Synced';
+                lastSync.textContent = fmtRelative(syncConfig.lastSync);
+            } else {
+                dot.className = 'sync-dot';
+                status.textContent = 'Local only';
+                lastSync.textContent = 'Not connected';
+            }
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        /* ============================ ACTIONS ============================ */
+        function saveShift() {
+            if (!isUnlocked) return;
+            const date = document.getElementById('in-date').value;
+            const start = document.getElementById('in-start').value;
+            const end = document.getElementById('in-end').value;
+            const brk = parseFloat(document.getElementById('in-break').value) || 0;
+            const note = document.getElementById('in-note').value.trim();
+
+            if (!date || !start || !end) {
+                toast('Fill in date, start, and end', true);
+                return;
+            }
+
+            let existingIdx;
+            if (editingId) {
+                existingIdx = shifts.findIndex(s => s.id === editingId);
+            } else {
+                existingIdx = shifts.findIndex(s => s.date === date);
+            }
+
+            const entry = {
+                id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
+                date, start, end, break: brk, note,
+            };
+
+            if (existingIdx >= 0) shifts[existingIdx] = entry;
+            else shifts.push(entry);
+
+            saveShiftsLocal();
+            if (syncConfig.token && syncConfig.gistId) {
+                syncToGist();
+            }
+
+            toast(existingIdx >= 0 ? 'Updated' : 'Saved');
+            cancelEdit();
+            render();
+        }
+
+        function startEdit(id) {
+            if (!isUnlocked) return;
+            const s = shifts.find(x => x.id === id);
+            if (!s) return;
+            editingId = id;
+            document.getElementById('in-date').value = s.date;
+            document.getElementById('in-start').value = s.start;
+            document.getElementById('in-end').value = s.end;
+            document.getElementById('in-break').value = s.break || 0;
+            document.getElementById('in-note').value = s.note || '';
+            document.getElementById('btn-save').textContent = 'Update';
+            document.getElementById('btn-save').classList.add('editing');
+            document.getElementById('form-cancel').classList.add('visible');
+            document.getElementById('form-title').textContent = 'Editing entry · ' + s.date;
+            updateComputed();
+            render();
+            document.querySelector('.form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            document.getElementById('btn-save').textContent = 'Save';
+            document.getElementById('btn-save').classList.remove('editing');
+            document.getElementById('form-cancel').classList.remove('visible');
+            document.getElementById('form-title').textContent = 'Log a Shift';
+            document.getElementById('in-note').value = '';
+        }
+
+        function deleteShift(id) {
+            if (!isUnlocked) return;
+            if (!confirm('Delete this entry?')) return;
+            shifts = shifts.filter(s => s.id !== id);
+            saveShiftsLocal();
+            if (syncConfig.token && syncConfig.gistId) syncToGist();
+            if (editingId === id) cancelEdit();
+            toast('Deleted');
+            render();
+        }
+
+        function resetToSamples() {
+            if (!isUnlocked) return;
+            if (!confirm('Reset all entries to samples? This erases local data (but won\'t affect your synced gist unless you sync after).')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            shifts = loadShifts();
+            render();
+            toast('Reset');
+        }
+
+        function exportCSV() {
+            const rows = [['Date', 'Day', 'Start', 'End', 'Type', 'Break', 'Hours', 'Note']];
+            [...shifts].sort((a, b) => a.date.localeCompare(b.date)).forEach(s => {
+                const d = parseDate(s.date);
+                rows.push([
+                    s.date,
+                    d.toLocaleDateString('en-US', { weekday: 'long' }),
+                    s.start, s.end,
+                    isOvernight(s.start, s.end) ? 'Overnight' : 'Day',
+                    s.break || 0,
+                    computeHours(s.start, s.end, s.break),
+                    (s.note || '').replace(/"/g, '""'),
+                ]);
+            });
+            const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `work_log_${fmtDate(new Date())}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            toast('Exported');
+        }
+
+        function updateComputed() {
+            const start = document.getElementById('in-start').value;
+            const end = document.getElementById('in-end').value;
+            const brk = parseFloat(document.getElementById('in-break').value) || 0;
+            const hrs = computeHours(start, end, brk);
+            const overnight = isOvernight(start, end);
+            const cv = document.getElementById('computed-v');
+            cv.textContent = hrs || '0';
+            cv.classList.toggle('empty', hrs === 0);
+            document.getElementById('computed-u').textContent = overnight ? 'Overnight' : 'Hours';
+            document.getElementById('computed').classList.toggle('overnight', overnight);
+        }
+
+        function toast(msg, isError) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.toggle('error', !!isError);
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1500);
+        }
+
+        /* ============================ GIST SYNC ============================ */
+        async function syncToGist() {
+            if (!syncConfig.token) return;
+
+            setSyncStatus('syncing');
+            try {
+                const payload = {
+                    description: 'Work Log — synced data',
+                    public: false,
+                    files: {
+                        'work_log.json': { content: JSON.stringify({ shifts, updated: new Date().toISOString() }, null, 2) }
+                    }
+                };
+
+                let res;
+                if (syncConfig.gistId) {
+                    res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `token ${syncConfig.token}`,
+                            'Accept': 'application/vnd.github+json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+                } else {
+                    res = await fetch('https://api.github.com/gists', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${syncConfig.token}`,
+                            'Accept': 'application/vnd.github+json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+                }
+
+                if (!res.ok) throw new Error(`Gist API ${res.status}`);
+                const data = await res.json();
+                if (!syncConfig.gistId) syncConfig.gistId = data.id;
+                syncConfig.lastSync = Date.now();
+                saveSyncConfig();
+                setSyncStatus('connected');
+                return true;
+            } catch (e) {
+                setSyncStatus('error');
+                toast('Sync failed: ' + e.message, true);
+                return false;
+            }
+        }
+
+        async function pullFromGist() {
+            if (!syncConfig.token || !syncConfig.gistId) return;
+            setSyncStatus('syncing');
+            try {
+                const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+                    headers: {
+                        'Authorization': `token ${syncConfig.token}`,
+                        'Accept': 'application/vnd.github+json',
+                    },
+                });
+                if (!res.ok) throw new Error(`Gist API ${res.status}`);
+                const data = await res.json();
+                const file = data.files['work_log.json'];
+                if (!file) throw new Error('work_log.json not found in gist');
+                const parsed = JSON.parse(file.content);
+                if (parsed.shifts) {
+                    shifts = parsed.shifts;
+                    saveShiftsLocal();
+                    syncConfig.lastSync = Date.now();
+                    saveSyncConfig();
+                    setSyncStatus('connected');
+                    render();
+                    return true;
+                }
+            } catch (e) {
+                setSyncStatus('error');
+                toast('Pull failed: ' + e.message, true);
+                return false;
+            }
+        }
+
+        function setSyncStatus(state) {
+            const dot = document.getElementById('sync-dot');
+            const status = document.getElementById('sync-status');
+            dot.className = 'sync-dot ' + (state === 'connected' ? 'connected' : state);
+            status.textContent = state === 'syncing' ? 'Syncing…' : state === 'connected' ? 'Synced' : state === 'error' ? 'Sync error' : 'Local only';
+            document.getElementById('last-sync').textContent = state === 'connected' ? fmtRelative(syncConfig.lastSync) : state === 'error' ? 'Last sync failed' : 'Not connected';
+        }
+
+        async function manualSync() {
+            if (!syncConfig.token || !syncConfig.gistId) {
+                openSyncModal();
+                return;
+            }
+            const ok = await syncToGist();
+            if (ok) toast('Synced');
+        }
+
+        /* ============================ MODAL ============================ */
+        function openSyncModal() {
+            document.getElementById('modal-token').value = syncConfig.token || '';
+            document.getElementById('modal-gist-id').value = syncConfig.gistId || '';
+            document.getElementById('sync-modal').classList.add('visible');
+        }
+        function closeSyncModal() {
+            document.getElementById('sync-modal').classList.remove('visible');
+        }
+        async function modalSave() {
+            const token = document.getElementById('modal-token').value.trim();
+            const gistId = document.getElementById('modal-gist-id').value.trim();
+            if (!token) { toast('Token required', true); return; }
+
+            syncConfig.token = token;
+            syncConfig.gistId = gistId;
+            saveSyncConfig();
+
+            // If gist ID was provided, pull first; else push to create
+            if (gistId) {
+                const ok = await pullFromGist();
+                if (ok) toast('Connected · pulled data');
+            } else {
+                const ok = await syncToGist();
+                if (ok) toast('Connected · gist created');
+            }
+            closeSyncModal();
+            render();
+        }
+        function modalDisconnect() {
+            if (!confirm('Disconnect sync? Token and Gist ID will be removed from this browser. Your local data stays.')) return;
+            syncConfig = { token: '', gistId: '', lastSync: null };
+            saveSyncConfig();
+            closeSyncModal();
+            render();
+            toast('Disconnected');
+        }
+
+        /* ============================ INIT ============================ */
+        // Start locked by default — anyone visiting sees read-only view
+        lock();
+
+        viewWeekStart = currentPayPeriodStart(TODAY);
+        shifts = loadShifts();
+        document.getElementById('in-date').value = fmtDate(TODAY);
+
+        document.getElementById('btn-save').addEventListener('click', saveShift);
+        document.getElementById('form-cancel').addEventListener('click', () => { cancelEdit(); render(); });
+        document.getElementById('btn-reset').addEventListener('click', resetToSamples);
+        document.getElementById('btn-export').addEventListener('click', exportCSV);
+        document.getElementById('btn-sync').addEventListener('click', manualSync);
+        document.getElementById('sync-pill').addEventListener('click', openSyncModal);
+        document.getElementById('modal-cancel').addEventListener('click', closeSyncModal);
+        document.getElementById('modal-save').addEventListener('click', modalSave);
+        document.getElementById('modal-disconnect').addEventListener('click', modalDisconnect);
+        document.getElementById('sync-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'sync-modal') closeSyncModal();
+        });
+
+        ['in-start', 'in-end', 'in-break'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateComputed);
+        });
+        ['in-date', 'in-start', 'in-end', 'in-break', 'in-note'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
+            el.addEventListener('blur', () => el.closest('.field').classList.remove('focused'));
+        });
+
+        document.getElementById('prev-week').addEventListener('click', () => {
+            viewWeekStart.setDate(viewWeekStart.getDate() - 14);
+            viewWeekStart = new Date(viewWeekStart);
+            renderTimeline();
+        });
+        document.getElementById('next-week').addEventListener('click', () => {
+            viewWeekStart.setDate(viewWeekStart.getDate() + 14);
+            viewWeekStart = new Date(viewWeekStart);
+            renderTimeline();
+        });
+        document.getElementById('this-week').addEventListener('click', () => {
+            viewWeekStart = currentPayPeriodStart(TODAY);
+            renderTimeline();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            // Unlock shortcut: Cmd/Ctrl + E
+            if ((e.metaKey || e.ctrlKey) && (e.key === 'e' || e.key === 'E')) {
+                e.preventDefault();
+                if (isUnlocked) {
+                    lock();
+                    toast('Locked');
+                } else {
+                    showPwPrompt();
+                }
+                return;
+            }
+            // Password prompt keys
+            const pwBackdrop = document.getElementById('pw-backdrop');
+            if (pwBackdrop.classList.contains('visible')) {
+                if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); return; }
+                if (e.key === 'Escape') { hidePwPrompt(); return; }
+            }
+            if (e.key === 'Escape') {
+                if (document.getElementById('sync-modal').classList.contains('visible')) closeSyncModal();
+                else if (editingId) { cancelEdit(); render(); }
+            }
+        });
+
+        // Click backdrop to close pw prompt
+        document.getElementById('pw-backdrop').addEventListener('click', (e) => {
+            if (e.target.id === 'pw-backdrop') hidePwPrompt();
+        });
+
+        // On load: if synced, try to pull latest
+        if (syncConfig.token && syncConfig.gistId) {
+            pullFromGist().then(() => {
+                updateComputed();
+                render();
+            });
+        }
+
+        updateComputed();
+        render();
+
+        // Refresh "last sync" string every minute
+        setInterval(() => {
+            if (syncConfig.token && syncConfig.gistId) renderSyncStatus();
+        }, 60000);
+    </script>
+
+</body>
+
+</html>
