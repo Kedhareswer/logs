@@ -328,20 +328,90 @@
     background: var(--bg);
     overflow: hidden;
   }
-  .form-row {
+  .form-main {
     display: grid;
-    grid-template-columns: 140px 1fr 1fr 100px 1.5fr auto;
-    gap: 0;
+    grid-template-columns: 170px 1fr auto auto;
     align-items: stretch;
+  }
+  .form-left, .form-center, .form-right {
+    border-right: 1px solid var(--border);
+  }
+  .form-left { display: flex; flex-direction: column; }
+  .form-center {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+  }
+  .form-right {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .date-field {
+    flex: 1;
+  }
+  .segments {
+    display: flex;
+    flex-direction: column;
+  }
+  .segment-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: stretch;
+  }
+  .segment-row + .segment-row {
+    border-top: 1px dashed var(--border);
+  }
+  .segment-row .field {
+    border-right: 1px solid var(--border);
+  }
+  .segment-row .field:last-of-type {
+    border-right: none;
+  }
+  .segment-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-4);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 0 14px;
+    transition: all 0.12s;
+    line-height: 1;
+    align-self: center;
+  }
+  .segment-remove:hover {
+    color: var(--red);
+  }
+  .segment-row:only-child .segment-remove {
+    visibility: hidden;
+  }
+  .btn-add-segment {
+    background: transparent;
+    border: none;
+    border-top: 1px dashed var(--border);
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 10px 16px;
+    transition: all 0.12s;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 0;
+  }
+  .btn-add-segment:hover {
+    color: var(--text);
+    background: var(--surface);
   }
   .field {
     display: flex;
     flex-direction: column;
-    padding: 14px 16px;
-    border-right: 1px solid var(--border);
+    padding: 12px 16px;
     position: relative;
   }
-  .field:last-of-type { border-right: none; }
   .field label {
     font-family: var(--mono);
     font-size: 9px;
@@ -382,9 +452,8 @@
     justify-content: center;
     align-items: flex-start;
     gap: 2px;
-    border-right: 1px solid var(--border);
     background: var(--surface);
-    min-width: 110px;
+    min-width: 100px;
   }
   .field-readout .v {
     font-family: var(--sans);
@@ -404,6 +473,33 @@
     font-weight: 500;
   }
   .field-readout.overnight .u { color: var(--amber); }
+  .field-readout-secondary {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2px;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    min-width: 80px;
+  }
+  .field-readout-secondary .v {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-2);
+    line-height: 1;
+    font-feature-settings: "tnum";
+  }
+  .field-readout-secondary .u {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
   .btn-save {
     font-family: var(--sans);
     font-size: 13px;
@@ -964,10 +1060,12 @@
   body.locked .form input { color: var(--text-3); }
   body.locked .field-readout .v { color: var(--text-3); }
   body.locked .form { opacity: 0.55; filter: grayscale(0.2); }
-  body.locked .form-row .btn-save,
+  body.locked .form-main .btn-save,
   body.locked .row-actions,
   body.locked #btn-reset,
-  body.locked #form-cancel { display: none !important; }
+  body.locked #form-cancel,
+  body.locked #btn-add-segment,
+  body.locked .segment-remove { display: none !important; }
   body.locked tr.entry-row { cursor: default; }
   body.locked tr.entry-row:hover { background: transparent; }
   body.locked tr.entry-row.today:hover { background: rgba(59, 130, 246, 0.03); }
@@ -1393,15 +1491,33 @@
   @media (max-width: 900px) {
     .app { padding: 40px 24px 60px; }
     .kpis { grid-template-columns: repeat(2, 1fr); }
-    .form-row { grid-template-columns: 1fr 1fr; }
-    .form-row > .field-readout, .form-row > .btn-save { grid-column: 1 / -1; }
-    .field-readout { flex-direction: row; justify-content: space-between; align-items: center; border-right: none; border-top: 1px solid var(--border); }
+    .form-main {
+      grid-template-columns: 1fr;
+    }
+    .form-left, .form-center, .form-right {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-right {
+      flex-direction: row;
+    }
+    .field-readout, .field-readout-secondary {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex: 1;
+    }
+    .btn-save {
+      width: 100%;
+      padding: 14px 0;
+    }
     .tl-axis, .tl-row { grid-template-columns: 60px 1fr 48px; }
     thead th:nth-child(6), tbody td:nth-child(6) { display: none; }
   }
   @media (max-width: 560px) {
     .app { padding: 28px 16px 60px; }
     .kpi-value { font-size: 26px; }
+    .segment-row { grid-template-columns: 1fr 1fr auto; }
     thead th:nth-child(3), tbody td:nth-child(3),
     thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
     .tl-axis, .tl-row { grid-template-columns: 50px 1fr 40px; }
@@ -1501,14 +1617,28 @@
       <div class="section-title" id="form-title">Log a Shift</div>
     </div>
     <div class="form">
-      <div class="form-row">
-        <div class="field"><label>Date</label><input type="date" id="in-date" /></div>
-        <div class="field"><label>Start</label><input type="time" id="in-start" value="21:00" /></div>
-        <div class="field"><label>End</label><input type="time" id="in-end" value="02:00" /></div>
-        <div class="field"><label>Break</label><input type="number" id="in-break" step="0.25" value="0" min="0" /></div>
-        <div class="field-readout" id="computed">
-          <span class="v" id="computed-v">5.0</span>
-          <span class="u" id="computed-u">Hours</span>
+      <div class="form-main">
+        <div class="form-left">
+          <div class="field date-field">
+            <label>Date</label>
+            <input type="date" id="in-date" />
+          </div>
+        </div>
+        <div class="form-center">
+          <div class="segments" id="segments">
+            <!-- segment rows injected here by JS -->
+          </div>
+          <button type="button" class="btn-add-segment" id="btn-add-segment">+ Add segment</button>
+        </div>
+        <div class="form-right">
+          <div class="field-readout" id="computed">
+            <span class="v" id="computed-v">0</span>
+            <span class="u" id="computed-u">Hours</span>
+          </div>
+          <div class="field-readout-secondary" id="break-readout" style="display:none;">
+            <span class="v" id="break-v">0h</span>
+            <span class="u">Break</span>
+          </div>
         </div>
         <button class="btn-save" id="btn-save">Save</button>
       </div>
@@ -1957,7 +2087,9 @@ function renderHeatStrip() {
   document.getElementById('heat-range').textContent =
     `${periodStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${periodEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 
-  const dayLetters = ['M','T','W','T','F','S','S','M','T','W','T','F','S','S'];
+  // Day-of-week letters derived from the actual dates (Sun=S, Mon=M, ...).
+  // The cycle may start on any day of the week, so don't hardcode.
+  const DOW_LETTER = ['S','M','T','W','T','F','S']; // Sun..Sat
   let html = '';
   for (let i = 0; i < 14; i++) {
     const d = new Date(periodStart);
@@ -1967,10 +2099,11 @@ function renderHeatStrip() {
     const intensity = Math.min(hrs / 8, 1);
     const isToday = sameDay(d, TODAY);
     const filled = hrs > 0;
+    const letter = DOW_LETTER[d.getDay()];
     html += `
       <div class="heat-cell ${isToday ? 'today' : ''} ${filled ? 'filled' : ''}" title="${d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}${hrs ? ' — ' + hrs + ' hrs' : ' — no entry'}">
         <div class="heat-fill" style="opacity: ${intensity * 0.95};"></div>
-        <span class="heat-day">${dayLetters[i]}</span>
+        <span class="heat-day">${letter}</span>
         <span class="heat-val">${hrs > 0 ? hrs : ''}</span>
       </div>
     `;
@@ -2047,8 +2180,15 @@ function setDelta(id, current, previous) {
     return;
   }
   if (previous === 0) {
-    el.textContent = `+${Math.round(current * 10) / 10}`;
+    // No previous data — show "New" instead of an inflated percentage
+    el.textContent = 'New';
     el.className = 'kpi-delta up';
+    return;
+  }
+  if (current === 0) {
+    // Had work last period, none now — show "—"
+    el.textContent = '—';
+    el.className = 'kpi-delta down';
     return;
   }
   const diff = current - previous;
@@ -2205,16 +2345,84 @@ function escapeHtml(s) {
 }
 
 /* ============================ ACTIONS ============================ */
+/* ============================ FORM SEGMENTS ============================ */
+// Each segment row has two time inputs (start, end) and a remove button.
+// `formSegments` holds the current draft state; render syncs it to the DOM.
+let formSegments = [{ start: '21:00', end: '02:00' }];
+
+function renderSegments() {
+  const container = document.getElementById('segments');
+  container.innerHTML = formSegments.map((seg, i) => `
+    <div class="segment-row" data-idx="${i}">
+      <div class="field">
+        <label>${i === 0 ? 'Start' : 'Start ' + (i + 1)}</label>
+        <input type="time" class="seg-start" data-idx="${i}" value="${seg.start || ''}" />
+      </div>
+      <div class="field">
+        <label>${i === 0 ? 'End' : 'End ' + (i + 1)}</label>
+        <input type="time" class="seg-end" data-idx="${i}" value="${seg.end || ''}" />
+      </div>
+      <button type="button" class="segment-remove" data-idx="${i}" aria-label="Remove segment">×</button>
+    </div>
+  `).join('');
+
+  // Re-wire input listeners
+  container.querySelectorAll('.seg-start, .seg-end').forEach(el => {
+    el.addEventListener('input', handleSegmentInput);
+    el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
+    el.addEventListener('blur',  () => el.closest('.field').classList.remove('focused'));
+  });
+  container.querySelectorAll('.segment-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx);
+      formSegments.splice(idx, 1);
+      if (formSegments.length === 0) formSegments = [{ start: '', end: '' }];
+      renderSegments();
+      updateComputed();
+    });
+  });
+}
+
+function handleSegmentInput(e) {
+  const idx = parseInt(e.target.dataset.idx);
+  const field = e.target.classList.contains('seg-start') ? 'start' : 'end';
+  if (formSegments[idx]) {
+    formSegments[idx][field] = e.target.value;
+  }
+  updateComputed();
+}
+
+function addSegment() {
+  // Default the new segment's start to the previous segment's end + 1 hour
+  let defaultStart = '', defaultEnd = '';
+  const last = formSegments[formSegments.length - 1];
+  if (last && last.end) {
+    const eH = parseTime(last.end);
+    if (eH !== null) {
+      const newStart = (Math.ceil(eH) + 1) % 24;
+      defaultStart = `${String(Math.floor(newStart)).padStart(2,'0')}:00`;
+    }
+  }
+  formSegments.push({ start: defaultStart, end: defaultEnd });
+  renderSegments();
+  updateComputed();
+}
+
+/* ============================ FORM ACTIONS ============================ */
 function saveShift() {
   if (!isUnlocked) return;
   const date = document.getElementById('in-date').value;
-  const start = document.getElementById('in-start').value;
-  const end = document.getElementById('in-end').value;
-  const brk = parseFloat(document.getElementById('in-break').value) || 0;
   const note = document.getElementById('in-note').value.trim();
 
-  if (!date || !start || !end) {
-    toast('Fill in date, start, and end', true);
+  if (!date) {
+    toast('Pick a date', true);
+    return;
+  }
+
+  // Filter to only valid segments (both start and end set)
+  const validSegs = formSegments.filter(s => s.start && s.end);
+  if (validSegs.length === 0) {
+    toast('Add at least one segment with start and end', true);
     return;
   }
 
@@ -2225,18 +2433,35 @@ function saveShift() {
     existingIdx = shifts.findIndex(s => s.date === date);
   }
 
-  const entry = {
-    id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
-    date, start, end, break: brk, note,
-  };
+  // Build entry. If only one segment, store flat (backward compatible).
+  // If multiple, use segments array.
+  let entry;
+  if (validSegs.length === 1) {
+    entry = {
+      id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
+      date,
+      start: validSegs[0].start,
+      end: validSegs[0].end,
+      break: 0,
+      note,
+    };
+  } else {
+    entry = {
+      id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
+      date,
+      start: validSegs[0].start,
+      end: validSegs[0].end,
+      break: 0,
+      note,
+      segments: validSegs.map(s => ({ start: s.start, end: s.end })),
+    };
+  }
 
   if (existingIdx >= 0) shifts[existingIdx] = entry;
   else shifts.push(entry);
 
   saveShiftsLocal();
-  if (syncConfig.token && syncConfig.gistId) {
-    syncToGist();
-  }
+  if (syncConfig.token && syncConfig.gistId) syncToGist();
 
   toast(existingIdx >= 0 ? 'Updated' : 'Saved');
   cancelEdit();
@@ -2249,9 +2474,11 @@ function startEdit(id) {
   if (!s) return;
   editingId = id;
   document.getElementById('in-date').value = s.date;
-  document.getElementById('in-start').value = s.start;
-  document.getElementById('in-end').value = s.end;
-  document.getElementById('in-break').value = s.break || 0;
+  // Load segments — either from `segments` array or single start/end
+  formSegments = getSegments(s).length > 0
+    ? getSegments(s).map(seg => ({ start: seg.start, end: seg.end }))
+    : [{ start: s.start || '', end: s.end || '' }];
+  renderSegments();
   document.getElementById('in-note').value = s.note || '';
   document.getElementById('btn-save').textContent = 'Update';
   document.getElementById('btn-save').classList.add('editing');
@@ -2269,6 +2496,10 @@ function cancelEdit() {
   document.getElementById('form-cancel').classList.remove('visible');
   document.getElementById('form-title').textContent = 'Log a Shift';
   document.getElementById('in-note').value = '';
+  // Reset segments to a default single segment
+  formSegments = [{ start: '21:00', end: '02:00' }];
+  renderSegments();
+  updateComputed();
 }
 
 function deleteShift(id) {
@@ -2292,16 +2523,16 @@ function resetToSamples() {
 }
 
 function exportCSV() {
-  const rows = [['Date','Day','Start','End','Type','Break','Hours','Note']];
+  const rows = [['Date','Day','Segments','Hours','Note']];
   [...shifts].sort((a,b) => a.date.localeCompare(b.date)).forEach(s => {
     const d = parseDate(s.date);
+    const segs = getSegments(s);
+    const segStr = segs.map(seg => `${seg.start}–${seg.end}`).join(' | ');
     rows.push([
       s.date,
       d.toLocaleDateString('en-US', { weekday: 'long' }),
-      s.start, s.end,
-      isOvernight(s.start, s.end) ? 'Overnight' : 'Day',
-      s.break || 0,
-      computeHours(s.start, s.end, s.break),
+      segStr,
+      computeShiftHours(s),
       (s.note || '').replace(/"/g, '""'),
     ]);
   });
@@ -2317,16 +2548,53 @@ function exportCSV() {
 }
 
 function updateComputed() {
-  const start = document.getElementById('in-start').value;
-  const end = document.getElementById('in-end').value;
-  const brk = parseFloat(document.getElementById('in-break').value) || 0;
-  const hrs = computeHours(start, end, brk);
-  const overnight = isOvernight(start, end);
+  // Compute total worked hours and break (gap) time across all valid segments.
+  const validSegs = formSegments.filter(s => s.start && s.end);
+  let totalWorked = 0;
+  let anyOvernight = false;
+
+  validSegs.forEach(seg => {
+    const sH = parseTime(seg.start);
+    const eH = parseTime(seg.end);
+    if (sH === null || eH === null) return;
+    let diff = eH - sH;
+    if (diff <= 0) { diff += 24; anyOvernight = true; }
+    totalWorked += diff;
+  });
+
+  // Break time = gaps between segments (in their declared order)
+  let totalBreak = 0;
+  if (validSegs.length >= 2) {
+    // Sort segments by start time to compute gaps reliably.
+    // For overnight scenarios, we treat each segment as a separate window —
+    // gaps are computed based on the order entered.
+    for (let i = 1; i < validSegs.length; i++) {
+      const prevEnd = parseTime(validSegs[i - 1].end);
+      const currStart = parseTime(validSegs[i].start);
+      if (prevEnd === null || currStart === null) continue;
+      let gap = currStart - prevEnd;
+      if (gap < 0) gap += 24; // overnight gap
+      if (gap > 0 && gap < 24) totalBreak += gap;
+    }
+  }
+
+  totalWorked = Math.max(0, Math.round(totalWorked * 100) / 100);
+  totalBreak = Math.max(0, Math.round(totalBreak * 100) / 100);
+
   const cv = document.getElementById('computed-v');
-  cv.textContent = hrs || '0';
-  cv.classList.toggle('empty', hrs === 0);
-  document.getElementById('computed-u').textContent = overnight ? 'Overnight' : 'Hours';
-  document.getElementById('computed').classList.toggle('overnight', overnight);
+  cv.textContent = totalWorked || '0';
+  cv.classList.toggle('empty', totalWorked === 0);
+  document.getElementById('computed-u').textContent = anyOvernight ? 'Overnight' : 'Hours';
+  document.getElementById('computed').classList.toggle('overnight', anyOvernight);
+
+  // Show break readout only when there's a gap
+  const breakReadout = document.getElementById('break-readout');
+  if (totalBreak > 0) {
+    breakReadout.style.display = '';
+    document.getElementById('break-v').textContent = `${totalBreak}h`;
+  } else {
+    breakReadout.style.display = 'none';
+  }
 }
 
 function toast(msg, isError) {
@@ -2495,13 +2763,18 @@ document.getElementById('sync-modal').addEventListener('click', (e) => {
   if (e.target.id === 'sync-modal') closeSyncModal();
 });
 
-['in-start', 'in-end', 'in-break'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updateComputed);
+// Segment input listeners are wired inside renderSegments() each time it runs.
+// Wire the "+ Add segment" button:
+document.getElementById('btn-add-segment').addEventListener('click', () => {
+  if (!isUnlocked) return;
+  addSegment();
 });
-['in-date', 'in-start', 'in-end', 'in-break', 'in-note'].forEach(id => {
+
+// Wire focused class on date and note fields
+['in-date', 'in-note'].forEach(id => {
   const el = document.getElementById(id);
   el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
-  el.addEventListener('blur', () => el.closest('.field').classList.remove('focused'));
+  el.addEventListener('blur',  () => el.closest('.field').classList.remove('focused'));
 });
 
 document.getElementById('prev-week').addEventListener('click', () => {
@@ -2551,11 +2824,13 @@ document.getElementById('pw-backdrop').addEventListener('click', (e) => {
 // On load: if synced, try to pull latest
 if (syncConfig.token && syncConfig.gistId) {
   pullFromGist().then(() => {
+    renderSegments();
     updateComputed();
     render();
   });
 }
 
+renderSegments();
 updateComputed();
 render();
 
