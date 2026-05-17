@@ -1,2444 +1,2964 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Work Log</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #000000;
-            --surface: #0A0A0A;
-            --surface-2: #111111;
-            --surface-3: #181818;
-            --border: #1A1A1A;
-            --border-2: #262626;
-            --border-3: #333333;
-            --text: #FAFAFA;
-            --text-2: #A1A1A1;
-            --text-3: #6B6B6B;
-            --text-4: #404040;
-            --accent: #3B82F6;
-            --accent-soft: rgba(59, 130, 246, 0.12);
-            --green: #4ADE80;
-            --green-soft: rgba(74, 222, 128, 0.12);
-            --amber: #F59E0B;
-            --amber-soft: rgba(245, 158, 11, 0.10);
-            --red: #EF4444;
-            --red-soft: rgba(239, 68, 68, 0.10);
-
-            --sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
-            --mono: 'Geist Mono', 'SF Mono', monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        body {
-            font-family: var(--sans);
-            font-size: 14px;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            min-height: 100vh;
-            font-feature-settings: "ss01", "cv01", "cv11";
-        }
-
-        ::selection {
-            background: var(--text);
-            color: var(--bg);
-        }
-
-        .app {
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 56px 40px 80px;
-        }
-
-        /* ===================== HEADER ===================== */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 48px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .brand-mark {
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
-            background: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--bg);
-            font-family: var(--mono);
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .brand h1 {
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: -0.015em;
-        }
-
-        .brand .ver {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-4);
-            letter-spacing: 0.02em;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .sync-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-2);
-            letter-spacing: 0.02em;
-            cursor: pointer;
-            transition: all 0.12s;
-        }
-
-        .sync-pill:hover {
-            border-color: var(--border-2);
-            color: var(--text);
-        }
-
-        .sync-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--text-3);
-        }
-
-        .sync-dot.connected {
-            background: var(--green);
-            box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
-        }
-
-        .sync-dot.syncing {
-            background: var(--amber);
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        .sync-dot.error {
-            background: var(--red);
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.4;
-            }
-        }
-
-        .header-date {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-3);
-            letter-spacing: 0.02em;
-        }
-
-        /* ===================== HEAT STRIP ===================== */
-        .heat-section {
-            margin-bottom: 32px;
-        }
-
-        .heat-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 12px;
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        .heat-strip {
-            display: grid;
-            grid-template-columns: repeat(14, 1fr);
-            gap: 3px;
-        }
-
-        .heat-cell {
-            aspect-ratio: 1;
-            max-height: 36px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 3px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 4px 5px;
-            overflow: hidden;
-            transition: all 0.12s;
-        }
-
-        .heat-cell.today {
-            border-color: var(--text-3);
-        }
-
-        .heat-cell .heat-fill {
-            position: absolute;
-            inset: 0;
-            background: var(--text);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .heat-cell .heat-day {
-            font-family: var(--mono);
-            font-size: 8px;
-            color: var(--text-3);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
-        }
-
-        .heat-cell .heat-val {
-            font-family: var(--mono);
-            font-size: 9px;
-            color: var(--text-2);
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
-        }
-
-        .heat-cell.filled .heat-day,
-        .heat-cell.filled .heat-val {
-            color: var(--bg);
-        }
-
-        .heat-cell.today.filled .heat-day {
-            color: var(--bg);
-        }
-
-        /* ===================== KPIs ===================== */
-        .kpis {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            margin-bottom: 48px;
-            overflow: hidden;
-        }
-
-        .kpi {
-            background: var(--bg);
-            padding: 22px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            position: relative;
-        }
-
-        .kpi-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-
-        .kpi-label {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .kpi-delta {
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: -0.005em;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .kpi-delta.up {
-            color: var(--green);
-        }
-
-        .kpi-delta.down {
-            color: var(--red);
-        }
-
-        .kpi-delta.flat {
-            color: var(--text-3);
-        }
-
-        .kpi-value {
-            font-size: 32px;
-            font-weight: 400;
-            letter-spacing: -0.03em;
-            line-height: 1;
-            font-feature-settings: "tnum";
-        }
-
-        .kpi-value.empty {
-            color: var(--text-3);
-            font-weight: 300;
-        }
-
-        .kpi-value .unit {
-            font-size: 12px;
-            color: var(--text-3);
-            margin-left: 5px;
-            font-weight: 400;
-            letter-spacing: 0;
-        }
-
-        .kpi-sub {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.02em;
-        }
-
-        /* ===================== SECTION ===================== */
-        .section {
-            margin-bottom: 48px;
-        }
-
-        .section-head {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-2);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .section-actions {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-2);
-            font-family: var(--mono);
-            font-size: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.12s;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .nav-btn:hover {
-            background: var(--surface);
-            color: var(--text);
-            border-color: var(--border-2);
-        }
-
-        .nav-label {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-3);
-            padding: 0 10px;
-            min-width: 160px;
-            text-align: center;
-            letter-spacing: 0.02em;
-        }
-
-        /* ===================== FORM ===================== */
-        .form {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg);
-            overflow: hidden;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 140px 1fr 1fr 100px 1.5fr auto;
-            gap: 0;
-            align-items: stretch;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            padding: 14px 16px;
-            border-right: 1px solid var(--border);
-            position: relative;
-        }
-
-        .field:last-of-type {
-            border-right: none;
-        }
-
-        .field label {
-            font-family: var(--mono);
-            font-size: 9px;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            font-weight: 500;
-            margin-bottom: 6px;
-        }
-
-        .field input {
-            font-family: var(--sans);
-            font-size: 14px;
-            font-weight: 400;
-            padding: 4px 0;
-            border: none;
-            background: transparent;
-            color: var(--text);
-            transition: color 0.12s;
-            outline: none;
-            width: 100%;
-            color-scheme: dark;
-            letter-spacing: -0.005em;
-        }
-
-        .field input::placeholder {
-            color: var(--text-4);
-        }
-
-        .field input::-webkit-calendar-picker-indicator {
-            filter: invert(0.5);
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.12s;
-        }
-
-        .field input::-webkit-calendar-picker-indicator:hover {
-            opacity: 1;
-        }
-
-        .field.focused {
-            background: var(--surface);
-        }
-
-        .field.focused label {
-            color: var(--text-2);
-        }
-
-        .field-readout {
-            padding: 14px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 2px;
-            border-right: 1px solid var(--border);
-            background: var(--surface);
-            min-width: 110px;
-        }
-
-        .field-readout .v {
-            font-family: var(--sans);
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 1;
-            letter-spacing: -0.02em;
-            font-feature-settings: "tnum";
-        }
-
-        .field-readout .v.empty {
-            color: var(--text-3);
-            font-weight: 300;
-        }
-
-        .field-readout .u {
-            font-family: var(--mono);
-            font-size: 9px;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .field-readout.overnight .u {
-            color: var(--amber);
-        }
-
-        .btn-save {
-            font-family: var(--sans);
-            font-size: 13px;
-            font-weight: 500;
-            padding: 0 24px;
-            background: var(--text);
-            color: var(--bg);
-            border: none;
-            border-radius: 0;
-            cursor: pointer;
-            transition: all 0.12s;
-            white-space: nowrap;
-            letter-spacing: -0.005em;
-            min-width: 110px;
-        }
-
-        .btn-save:hover {
-            background: #E5E5E5;
-        }
-
-        .btn-save:active {
-            background: #D4D4D4;
-        }
-
-        .btn-save.editing {
-            background: var(--accent);
-            color: var(--text);
-        }
-
-        .btn-save.editing:hover {
-            background: #2563EB;
-        }
-
-        .form-note-row {
-            display: flex;
-            border-top: 1px solid var(--border);
-        }
-
-        .form-note-row .field {
-            flex: 1;
-            border-right: none;
-        }
-
-        .form-cancel {
-            background: transparent;
-            border: none;
-            border-left: 1px solid var(--border);
-            color: var(--text-3);
-            font-family: var(--mono);
-            font-size: 10px;
-            padding: 0 20px;
-            cursor: pointer;
-            transition: color 0.12s;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            font-weight: 500;
-            display: none;
-        }
-
-        .form-cancel.visible {
-            display: block;
-        }
-
-        .form-cancel:hover {
-            color: var(--red);
-        }
-
-        /* ===================== TIMELINE ===================== */
-        .timeline {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 20px 24px 24px;
-            background: var(--bg);
-        }
-
-        .tl-axis {
-            display: grid;
-            grid-template-columns: 80px 1fr 60px;
-            align-items: end;
-            height: 18px;
-            margin-bottom: 12px;
-        }
-
-        .tl-axis-hours {
-            position: relative;
-            height: 16px;
-        }
-
-        .tl-axis-tick {
-            position: absolute;
-            bottom: 0;
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.02em;
-            transform: translateX(-50%);
-        }
-
-        .tl-axis-tick.midnight {
-            color: var(--text-2);
-        }
-
-        .tl-row {
-            display: grid;
-            grid-template-columns: 80px 1fr 60px;
-            align-items: center;
-            height: 48px;
-            position: relative;
-        }
-
-        .tl-row+.tl-row {
-            border-top: 1px solid var(--border);
-        }
-
-        .tl-row.week-break {
-            border-top: 1px solid var(--border-2);
-            margin-top: 6px;
-            padding-top: 6px;
-        }
-
-        .tl-row.today::before {
-            content: "";
-            position: absolute;
-            left: -24px;
-            top: 50%;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--accent);
-            transform: translateY(-50%);
-            box-shadow: 0 0 10px var(--accent);
-        }
-
-        .tl-day {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-right: 16px;
-            gap: 2px;
-        }
-
-        .tl-day .name {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text);
-            letter-spacing: -0.01em;
-        }
-
-        .tl-day .name.weekend {
-            color: var(--text-2);
-        }
-
-        .tl-day .name.today {
-            color: var(--accent);
-        }
-
-        .tl-day .date {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.02em;
-        }
-
-        .tl-track {
-            position: relative;
-            height: 32px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .tl-track-gridline {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: var(--border-2);
-        }
-
-        .tl-track-gridline.midnight {
-            background: var(--border-3);
-        }
-
-        .tl-bar {
-            position: absolute;
-            top: 4px;
-            bottom: 4px;
-            background: var(--text);
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--bg);
-            font-weight: 500;
-            overflow: hidden;
-            white-space: nowrap;
-            letter-spacing: 0.02em;
-            z-index: 2;
-        }
-
-        .tl-bar.today {
-            background: var(--accent);
-            color: var(--text);
-        }
-
-        .tl-bar.continuation {
-            background: var(--text-2);
-            color: var(--bg);
-        }
-
-        .tl-bar.continuation.today {
-            background: var(--accent);
-            opacity: 0.6;
-        }
-
-        .tl-hours {
-            font-family: var(--mono);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text);
-            text-align: right;
-            letter-spacing: -0.01em;
-            font-feature-settings: "tnum";
-        }
-
-        .tl-hours.empty {
-            color: var(--text-3);
-            font-weight: 400;
-        }
-
-        .tl-totals {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding-top: 18px;
-            margin-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-
-        .tl-totals .label {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .tl-totals .value {
-            font-size: 20px;
-            font-weight: 400;
-            color: var(--text);
-            letter-spacing: -0.025em;
-            font-feature-settings: "tnum";
-        }
-
-        .tl-totals .value .unit {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-3);
-            margin-left: 5px;
-            letter-spacing: 0;
-        }
-
-        /* ===================== TABLE ===================== */
-        .table-wrap {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            overflow: hidden;
-            background: var(--bg);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead th {
-            font-family: var(--mono);
-            font-size: 9px;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            font-weight: 500;
-            text-align: left;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-        }
-
-        thead th.num {
-            text-align: right;
-        }
-
-        thead th.center {
-            text-align: center;
-        }
-
-        .week-divider td {
-            background: var(--surface);
-            padding: 10px 18px;
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            font-weight: 500;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .week-divider .week-meta {
-            float: right;
-            color: var(--text-2);
-            font-weight: 500;
-        }
-
-        tbody td {
-            padding: 13px 18px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            color: var(--text);
-            vertical-align: middle;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr.entry-row {
-            transition: background 0.12s;
-            cursor: pointer;
-        }
-
-        tbody tr.entry-row:hover {
-            background: var(--surface);
-        }
-
-        tbody tr.entry-row.today {
-            background: rgba(59, 130, 246, 0.03);
-            box-shadow: inset 2px 0 0 var(--accent);
-        }
-
-        tbody tr.entry-row.today:hover {
-            background: rgba(59, 130, 246, 0.06);
-        }
-
-        tbody tr.entry-row.editing {
-            background: var(--surface-2);
-            box-shadow: inset 2px 0 0 var(--accent);
-        }
-
-        .date-col {
-            font-weight: 500;
-            letter-spacing: -0.01em;
-            font-feature-settings: "tnum";
-        }
-
-        .date-col .month {
-            color: var(--text-3);
-            font-weight: 400;
-            margin-left: 4px;
-            font-family: var(--mono);
-            font-size: 11px;
-        }
-
-        .day-col {
-            color: var(--text-2);
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: 0.02em;
-        }
-
-        .time-col {
-            font-family: var(--mono);
-            font-size: 12px;
-            color: var(--text);
-            letter-spacing: 0.02em;
-        }
-
-        .num-col {
-            font-family: var(--mono);
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-            font-size: 12px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 7px;
-            border-radius: 3px;
-            font-family: var(--mono);
-            font-size: 9px;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-
-        .badge.overnight {
-            background: var(--amber-soft);
-            color: var(--amber);
-        }
-
-        .badge.day {
-            color: var(--text-3);
-        }
-
-        .hours-strong {
-            font-family: var(--mono);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text);
-            letter-spacing: -0.005em;
-        }
-
-        .note-text {
-            color: var(--text-2);
-            font-size: 12px;
-        }
-
-        .empty-text {
-            color: var(--text-4);
-            font-style: italic;
-        }
-
-        .row-actions {
-            display: flex;
-            gap: 4px;
-            justify-content: flex-end;
-            opacity: 0;
-            transition: opacity 0.15s;
-        }
-
-        tr.entry-row:hover .row-actions {
-            opacity: 1;
-        }
-
-        .btn-icon {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-3);
-            font-size: 11px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 3px;
-            transition: all 0.12s;
-            line-height: 1;
-            font-family: var(--mono);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .btn-icon:hover {
-            color: var(--text);
-            border-color: var(--border-2);
-            background: var(--surface);
-        }
-
-        .btn-icon.danger:hover {
-            color: var(--red);
-            border-color: var(--red);
-            background: var(--red-soft);
-        }
-
-        .empty-state {
-            padding: 80px 20px;
-            text-align: center;
-            color: var(--text-3);
-            font-size: 13px;
-        }
-
-        /* ===================== FOOTER ===================== */
-        .footer-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 16px;
-            padding-top: 0;
-        }
-
-        .footer-actions-left,
-        .footer-actions-right {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .btn-text {
-            background: transparent;
-            border: none;
-            color: var(--text-3);
-            font-family: var(--mono);
-            font-size: 10px;
-            cursor: pointer;
-            padding: 6px 10px;
-            transition: color 0.12s;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            font-weight: 500;
-            border-radius: 3px;
-        }
-
-        .btn-text:hover {
-            color: var(--text);
-            background: var(--surface);
-        }
-
-        .btn-text.danger:hover {
-            color: var(--red);
-            background: var(--red-soft);
-        }
-
-        .last-sync {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-4);
-            letter-spacing: 0.02em;
-            padding-right: 8px;
-        }
-
-        /* ===================== MODAL ===================== */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 50;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-backdrop.visible {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg);
-            border: 1px solid var(--border-2);
-            border-radius: 8px;
-            width: 100%;
-            max-width: 480px;
-            overflow: hidden;
-        }
-
-        .modal-head {
-            padding: 20px 24px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .modal-title {
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: -0.015em;
-            margin-bottom: 6px;
-        }
-
-        .modal-sub {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-3);
-            letter-spacing: 0.02em;
-        }
-
-        .modal-body {
-            padding: 20px 24px;
-        }
-
-        .modal-body p {
-            font-size: 13px;
-            color: var(--text-2);
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-
-        .modal-body code {
-            font-family: var(--mono);
-            font-size: 11px;
-            background: var(--surface-2);
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: var(--text);
-        }
-
-        .modal-body a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .modal-body a:hover {
-            text-decoration: underline;
-        }
-
-        .modal-field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
-
-        .modal-field label {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .modal-field input {
-            font-family: var(--mono);
-            font-size: 12px;
-            padding: 10px 12px;
-            border: 1px solid var(--border-2);
-            border-radius: 4px;
-            background: var(--surface);
-            color: var(--text);
-            outline: none;
-            transition: border-color 0.12s;
-        }
-
-        .modal-field input:focus {
-            border-color: var(--text-3);
-        }
-
-        .modal-foot {
-            padding: 14px 24px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .modal-foot-left {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-modal {
-            font-family: var(--sans);
-            font-size: 13px;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.12s;
-            border: 1px solid var(--border-2);
-            background: transparent;
-            color: var(--text-2);
-            letter-spacing: -0.005em;
-        }
-
-        .btn-modal:hover {
-            color: var(--text);
-            border-color: var(--border-3);
-        }
-
-        .btn-modal.primary {
-            background: var(--text);
-            color: var(--bg);
-            border-color: var(--text);
-        }
-
-        .btn-modal.primary:hover {
-            background: #E5E5E5;
-        }
-
-        .btn-modal.danger {
-            color: var(--red);
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-modal.danger:hover {
-            background: var(--red-soft);
-            border-color: var(--red);
-        }
-
-        /* ===================== LOCKED STATE ===================== */
-        body.locked .form input,
-        body.locked .form button {
-            pointer-events: none;
-        }
-
-        body.locked .form input {
-            color: var(--text-3);
-        }
-
-        body.locked .field-readout .v {
-            color: var(--text-3);
-        }
-
-        body.locked .form {
-            opacity: 0.55;
-            filter: grayscale(0.2);
-        }
-
-        body.locked .form-row .btn-save,
-        body.locked .row-actions,
-        body.locked #btn-reset,
-        body.locked #form-cancel {
-            display: none !important;
-        }
-
-        body.locked tr.entry-row {
-            cursor: default;
-        }
-
-        body.locked tr.entry-row:hover {
-            background: transparent;
-        }
-
-        body.locked tr.entry-row.today:hover {
-            background: rgba(59, 130, 246, 0.03);
-        }
-
-        .lock-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 4px 8px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            background: var(--surface);
-        }
-
-        .lock-indicator .ic {
-            font-size: 11px;
-        }
-
-        body.unlocked .lock-indicator {
-            color: var(--green);
-            border-color: rgba(74, 222, 128, 0.3);
-            background: var(--green-soft);
-        }
-
-        /* Password prompt modal */
-        .pw-prompt-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: 60;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            backdrop-filter: blur(6px);
-        }
-
-        .pw-prompt-backdrop.visible {
-            display: flex;
-        }
-
-        .pw-prompt {
-            width: 100%;
-            max-width: 360px;
-            background: var(--bg);
-            border: 1px solid var(--border-2);
-            border-radius: 6px;
-            padding: 24px;
-        }
-
-        .pw-prompt.shake {
-            animation: shake 0.4s;
-            border-color: var(--red);
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-6px);
-            }
-
-            75% {
-                transform: translateX(6px);
-            }
-        }
-
-        .pw-prompt-label {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-3);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .pw-prompt input {
-            width: 100%;
-            font-family: var(--mono);
-            font-size: 14px;
-            padding: 12px 14px;
-            border: 1px solid var(--border-2);
-            border-radius: 4px;
-            background: var(--surface);
-            color: var(--text);
-            outline: none;
-            transition: border-color 0.12s;
-            letter-spacing: 0.05em;
-        }
-
-        .pw-prompt input:focus {
-            border-color: var(--text-3);
-        }
-
-        .pw-prompt-foot {
-            margin-top: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pw-prompt-hint {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-4);
-            letter-spacing: 0.05em;
-        }
-
-        .pw-prompt-hint kbd {
-            color: var(--text-3);
-        }
-
-        /* ===================== TOAST ===================== */
-        .toast {
-            position: fixed;
-            bottom: 28px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--text);
-            color: var(--bg);
-            padding: 10px 18px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.2s;
-            z-index: 100;
-            letter-spacing: -0.005em;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .toast.error {
-            background: var(--red);
-            color: var(--text);
-        }
-
-        /* ===================== RESPONSIVE ===================== */
-        @media (max-width: 900px) {
-            .app {
-                padding: 40px 24px 60px;
-            }
-
-            .kpis {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .form-row {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .form-row>.field-readout,
-            .form-row>.btn-save {
-                grid-column: 1 / -1;
-            }
-
-            .field-readout {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                border-right: none;
-                border-top: 1px solid var(--border);
-            }
-
-            .tl-axis,
-            .tl-row {
-                grid-template-columns: 60px 1fr 48px;
-            }
-
-            thead th:nth-child(6),
-            tbody td:nth-child(6) {
-                display: none;
-            }
-        }
-
-        @media (max-width: 560px) {
-            .app {
-                padding: 28px 16px 60px;
-            }
-
-            .kpi-value {
-                font-size: 26px;
-            }
-
-            thead th:nth-child(3),
-            tbody td:nth-child(3),
-            thead th:nth-child(4),
-            tbody td:nth-child(4) {
-                display: none;
-            }
-
-            .tl-axis,
-            .tl-row {
-                grid-template-columns: 50px 1fr 40px;
-            }
-
-            .tl-bar {
-                font-size: 9px;
-                padding: 0 4px;
-            }
-
-            .header-right {
-                gap: 8px;
-            }
-
-            .header-date {
-                display: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Work Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #000000;
+    --surface:      #0A0A0A;
+    --surface-2:    #111111;
+    --surface-3:    #181818;
+    --border:       #1A1A1A;
+    --border-2:     #262626;
+    --border-3:     #333333;
+    --text:         #FAFAFA;
+    --text-2:       #A1A1A1;
+    --text-3:       #6B6B6B;
+    --text-4:       #404040;
+    --accent:       #3B82F6;
+    --accent-soft:  rgba(59, 130, 246, 0.12);
+    --green:        #4ADE80;
+    --green-soft:   rgba(74, 222, 128, 0.12);
+    --amber:        #F59E0B;
+    --amber-soft:   rgba(245, 158, 11, 0.10);
+    --red:          #EF4444;
+    --red-soft:     rgba(239, 68, 68, 0.10);
+
+    --sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'Geist Mono', 'SF Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    font-feature-settings: "ss01", "cv01", "cv11";
+  }
+
+  ::selection { background: var(--text); color: var(--bg); }
+
+  .app {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+  }
+
+  /* ===================== HEADER ===================== */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .brand h1 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .brand .ver {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-4);
+    letter-spacing: 0.02em;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .sync-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-2);
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .sync-pill:hover {
+    border-color: var(--border-2);
+    color: var(--text);
+  }
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-3);
+  }
+  .sync-dot.connected { background: var(--green); box-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
+  .sync-dot.syncing { background: var(--amber); animation: pulse 1s ease-in-out infinite; }
+  .sync-dot.error { background: var(--red); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .header-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+
+  /* ===================== HEAT STRIP ===================== */
+  .heat-section {
+    margin-bottom: 32px;
+  }
+  .heat-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .heat-strip {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 3px;
+  }
+  .heat-cell {
+    aspect-ratio: 1;
+    max-height: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px 5px;
+    overflow: hidden;
+    transition: all 0.12s;
+  }
+  .heat-cell.today {
+    border-color: var(--text-3);
+  }
+  .heat-cell .heat-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--text);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .heat-cell .heat-day {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+  }
+  .heat-cell .heat-val {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-2);
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+  }
+  .heat-cell.filled .heat-day,
+  .heat-cell.filled .heat-val {
+    color: var(--bg);
+  }
+  .heat-cell.today.filled .heat-day {
+    color: var(--bg);
+  }
+
+  /* ===================== KPIs ===================== */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 48px;
+    overflow: hidden;
+  }
+  .kpi {
+    background: var(--bg);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+  .kpi-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .kpi-delta {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .kpi-delta.up { color: var(--green); }
+  .kpi-delta.down { color: var(--red); }
+  .kpi-delta.flat { color: var(--text-3); }
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-feature-settings: "tnum";
+  }
+  .kpi-value.empty { color: var(--text-3); font-weight: 300; }
+  .kpi-value .unit {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-left: 5px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .kpi-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+
+  /* ===================== SECTION ===================== */
+  .section { margin-bottom: 48px; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.12s;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .nav-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border-2);
+  }
+  .nav-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    padding: 0 10px;
+    min-width: 160px;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  /* ===================== FORM ===================== */
+  .form {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 100px 1.5fr auto;
+    gap: 0;
+    align-items: stretch;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 16px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .field:last-of-type { border-right: none; }
+  .field label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .field input {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    transition: color 0.12s;
+    outline: none;
+    width: 100%;
+    color-scheme: dark;
+    letter-spacing: -0.005em;
+  }
+  .field input::placeholder { color: var(--text-4); }
+  .field input::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.12s;
+  }
+  .field input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+  .field.focused { background: var(--surface); }
+  .field.focused label { color: var(--text-2); }
+  .field-readout {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    min-width: 110px;
+  }
+  .field-readout .v {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-feature-settings: "tnum";
+  }
+  .field-readout .v.empty { color: var(--text-3); font-weight: 300; }
+  .field-readout .u {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .field-readout.overnight .u { color: var(--amber); }
+  .btn-save {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 24px;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+    letter-spacing: -0.005em;
+    min-width: 110px;
+  }
+  .btn-save:hover { background: #E5E5E5; }
+  .btn-save:active { background: #D4D4D4; }
+  .btn-save.editing { background: var(--accent); color: var(--text); }
+  .btn-save.editing:hover { background: #2563EB; }
+  .form-note-row {
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+  .form-note-row .field {
+    flex: 1;
+    border-right: none;
+  }
+  .form-cancel {
+    background: transparent;
+    border: none;
+    border-left: 1px solid var(--border);
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: color 0.12s;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: none;
+  }
+  .form-cancel.visible { display: block; }
+  .form-cancel:hover { color: var(--red); }
+
+  /* ===================== TIMELINE ===================== */
+  .timeline {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px 24px;
+    background: var(--bg);
+  }
+  .tl-axis {
+    display: grid;
+    grid-template-columns: 80px 1fr 60px;
+    align-items: end;
+    height: 18px;
+    margin-bottom: 12px;
+  }
+  .tl-axis-hours {
+    position: relative;
+    height: 16px;
+  }
+  .tl-axis-tick {
+    position: absolute;
+    bottom: 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+    transform: translateX(-50%);
+  }
+  .tl-axis-tick.midnight { color: var(--text-2); }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 60px;
+    align-items: center;
+    height: 48px;
+    position: relative;
+  }
+  .tl-row + .tl-row {
+    border-top: 1px solid var(--border);
+  }
+  .tl-row.week-break {
+    border-top: 1px solid var(--border-2);
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+  .tl-row.today::before {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .tl-day {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 16px;
+    gap: 2px;
+  }
+  .tl-day .name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .tl-day .name.weekend { color: var(--text-2); }
+  .tl-day .name.today { color: var(--accent); }
+  .tl-day .date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+  .tl-track {
+    position: relative;
+    height: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .tl-track-gridline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-2);
+  }
+  .tl-track-gridline.midnight {
+    background: var(--border-3);
+  }
+  .tl-bar {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    background: var(--text);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--bg);
+    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    z-index: 2;
+  }
+  .tl-bar.today {
+    background: var(--accent);
+    color: var(--text);
+  }
+  .tl-bar.continuation {
+    background: var(--text-2);
+    color: var(--bg);
+  }
+  .tl-bar.continuation.today {
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .tl-hours {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: right;
+    letter-spacing: -0.01em;
+    font-feature-settings: "tnum";
+  }
+  .tl-hours.empty {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+  .tl-totals {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 18px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .tl-totals .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .tl-totals .value {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.025em;
+    font-feature-settings: "tnum";
+  }
+  .tl-totals .value .unit {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    margin-left: 5px;
+    letter-spacing: 0;
+  }
+
+  /* ===================== TABLE ===================== */
+  .table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: left;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  thead th.num { text-align: right; }
+  thead th.center { text-align: center; }
+  .week-divider td {
+    background: var(--surface);
+    padding: 10px 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .week-divider .week-meta {
+    float: right;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+  tbody td {
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr.entry-row {
+    transition: background 0.12s;
+    cursor: pointer;
+  }
+  tbody tr.entry-row:hover { background: var(--surface); }
+  tbody tr.entry-row.today {
+    background: rgba(59, 130, 246, 0.03);
+    box-shadow: inset 2px 0 0 var(--accent);
+  }
+  tbody tr.entry-row.today:hover { background: rgba(59, 130, 246, 0.06); }
+  tbody tr.entry-row.editing {
+    background: var(--surface-2);
+    box-shadow: inset 2px 0 0 var(--accent);
+  }
+  .date-col {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    font-feature-settings: "tnum";
+  }
+  .date-col .month {
+    color: var(--text-3);
+    font-weight: 400;
+    margin-left: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .day-col {
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  .time-col {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .num-col {
+    font-family: var(--mono);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.overnight {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+  .badge.day {
+    color: var(--text-3);
+  }
+  .hours-strong {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.005em;
+  }
+  .note-text {
+    color: var(--text-2);
+    font-size: 12px;
+  }
+  .empty-text {
+    color: var(--text-4);
+    font-style: italic;
+  }
+  .row-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  tr.entry-row:hover .row-actions { opacity: 1; }
+  .btn-icon {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 3px;
+    transition: all 0.12s;
+    line-height: 1;
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .btn-icon:hover {
+    color: var(--text);
+    border-color: var(--border-2);
+    background: var(--surface);
+  }
+  .btn-icon.danger:hover {
+    color: var(--red);
+    border-color: var(--red);
+    background: var(--red-soft);
+  }
+  .empty-state {
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 13px;
+  }
+
+  /* ===================== FOOTER ===================== */
+  .footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 0;
+  }
+  .footer-actions-left,
+  .footer-actions-right {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .btn-text {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 6px 10px;
+    transition: color 0.12s;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 3px;
+  }
+  .btn-text:hover {
+    color: var(--text);
+    background: var(--surface);
+  }
+  .btn-text.danger:hover {
+    color: var(--red);
+    background: var(--red-soft);
+  }
+  .last-sync {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-4);
+    letter-spacing: 0.02em;
+    padding-right: 8px;
+  }
+
+  /* ===================== MODAL ===================== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-backdrop.visible { display: flex; }
+  .modal {
+    background: var(--bg);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+  }
+  .modal-head {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+  .modal-body {
+    padding: 20px 24px;
+  }
+  .modal-body p {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .modal-body code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--text);
+  }
+  .modal-body a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .modal-body a:hover { text-decoration: underline; }
+  .modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .modal-field label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .modal-field input {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-2);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .modal-field input:focus {
+    border-color: var(--text-3);
+  }
+  .modal-foot {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-foot-left { display: flex; gap: 8px; }
+  .btn-modal {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s;
+    border: 1px solid var(--border-2);
+    background: transparent;
+    color: var(--text-2);
+    letter-spacing: -0.005em;
+  }
+  .btn-modal:hover {
+    color: var(--text);
+    border-color: var(--border-3);
+  }
+  .btn-modal.primary {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .btn-modal.primary:hover {
+    background: #E5E5E5;
+  }
+  .btn-modal.danger {
+    color: var(--red);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  .btn-modal.danger:hover {
+    background: var(--red-soft);
+    border-color: var(--red);
+  }
+
+  /* ===================== LOCKED STATE ===================== */
+  body.locked .form input,
+  body.locked .form button { pointer-events: none; }
+  body.locked .form input { color: var(--text-3); }
+  body.locked .field-readout .v { color: var(--text-3); }
+  body.locked .form { opacity: 0.55; filter: grayscale(0.2); }
+  body.locked .form-row .btn-save,
+  body.locked .row-actions,
+  body.locked #btn-reset,
+  body.locked #form-cancel { display: none !important; }
+  body.locked tr.entry-row { cursor: default; }
+  body.locked tr.entry-row:hover { background: transparent; }
+  body.locked tr.entry-row.today:hover { background: rgba(59, 130, 246, 0.03); }
+
+  .lock-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+  .lock-indicator .ic {
+    font-size: 11px;
+  }
+  body.unlocked .lock-indicator {
+    color: var(--green);
+    border-color: rgba(74, 222, 128, 0.3);
+    background: var(--green-soft);
+  }
+
+  /* Password prompt modal */
+  .pw-prompt-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 60;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(6px);
+  }
+  .pw-prompt-backdrop.visible { display: flex; }
+  .pw-prompt {
+    width: 100%;
+    max-width: 360px;
+    background: var(--bg);
+    border: 1px solid var(--border-2);
+    border-radius: 6px;
+    padding: 24px;
+  }
+  .pw-prompt.shake {
+    animation: shake 0.4s;
+    border-color: var(--red);
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .pw-prompt-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .pw-prompt input {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-2);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .pw-prompt input:focus { border-color: var(--text-3); }
+  .pw-prompt-foot {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pw-prompt-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-4);
+    letter-spacing: 0.05em;
+  }
+  .pw-prompt-hint kbd {
+    color: var(--text-3);
+  }
+
+  /* ===================== ICON BUTTON ===================== */
+  .icon-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    padding: 0;
+  }
+  .icon-btn:hover {
+    border-color: var(--border-2);
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .icon-btn svg {
+    display: block;
+  }
+
+  /* ===================== CALCULATOR ===================== */
+  .calc-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 70;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(6px);
+  }
+  .calc-backdrop.visible { display: flex; }
+  .calc {
+    width: 100%;
+    max-width: 320px;
+    background: var(--bg);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    overflow: hidden;
+    user-select: none;
+  }
+  .calc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .calc-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .calc-close {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px 6px;
+    transition: color 0.12s;
+    font-family: var(--mono);
+  }
+  .calc-close:hover { color: var(--text); }
+  .calc-display {
+    padding: 24px 18px 18px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .calc-expr {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+    min-height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    direction: rtl;
+  }
+  .calc-result {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-top: 8px;
+    line-height: 1.1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    direction: rtl;
+    font-feature-settings: "tnum";
+  }
+  .calc-keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+  .calc-key {
+    background: var(--bg);
+    color: var(--text);
+    border: none;
+    padding: 18px 0;
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.08s;
+    letter-spacing: 0;
+  }
+  .calc-key:hover { background: var(--surface); }
+  .calc-key:active { background: var(--surface-2); }
+  .calc-key.func {
+    color: var(--text-2);
+    background: var(--surface);
+    font-size: 13px;
+  }
+  .calc-key.func:hover { background: var(--surface-2); }
+  .calc-key.op {
+    color: var(--accent);
+    background: var(--bg);
+  }
+  .calc-key.op.active {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .calc-key.eq {
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 500;
+  }
+  .calc-key.eq:hover { background: #E5E5E5; }
+  .calc-key.span2 { grid-column: span 2; }
+
+  /* Tabs (Calc / Convert) */
+  .calc-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .calc-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: all 0.12s;
+  }
+  .calc-tab:hover { color: var(--text-2); background: var(--surface); }
+  .calc-tab.active {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+
+  /* Panes */
+  .calc-pane { display: none; }
+  .calc-pane.active { display: block; }
+
+  /* Converter */
+  .convert-status {
+    padding: 14px 18px 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    min-height: 24px;
+  }
+  .convert-status.error { color: var(--red); }
+  .convert-status.ready { color: var(--green); }
+  .convert-status.warning { color: var(--amber); }
+  .convert-fields {
+    padding: 16px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .convert-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    transition: border-color 0.12s;
+  }
+  .convert-row:focus-within {
+    border-color: var(--border-3);
+    background: var(--surface-2);
+  }
+  .convert-badge {
+    width: 26px;
+    height: 18px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #FFFFFF;
+    text-shadow: 0 0 2px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+  }
+  .convert-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-2);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    min-width: 32px;
+  }
+  .convert-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 400;
+    outline: none;
+    text-align: right;
+    font-feature-settings: "tnum";
+    letter-spacing: -0.01em;
+    min-width: 0;
+  }
+  .convert-input::placeholder { color: var(--text-4); }
+  .convert-foot {
+    padding: 0 18px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+  .convert-refresh {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1;
+    transition: all 0.12s;
+    font-family: var(--mono);
+  }
+  .convert-refresh:hover {
+    color: var(--text);
+    border-color: var(--border-2);
+    background: var(--surface);
+  }
+  .convert-refresh.spinning {
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .convert-attribution {
+    padding: 10px 18px 14px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-4);
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+  .convert-attribution a {
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+  .convert-attribution a:hover {
+    color: var(--text-2);
+  }
+
+  /* ===================== TOAST ===================== */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s;
+    z-index: 100;
+    letter-spacing: -0.005em;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { background: var(--red); color: var(--text); }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 900px) {
+    .app { padding: 40px 24px 60px; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr 1fr; }
+    .form-row > .field-readout, .form-row > .btn-save { grid-column: 1 / -1; }
+    .field-readout { flex-direction: row; justify-content: space-between; align-items: center; border-right: none; border-top: 1px solid var(--border); }
+    .tl-axis, .tl-row { grid-template-columns: 60px 1fr 48px; }
+    thead th:nth-child(6), tbody td:nth-child(6) { display: none; }
+  }
+  @media (max-width: 560px) {
+    .app { padding: 28px 16px 60px; }
+    .kpi-value { font-size: 26px; }
+    thead th:nth-child(3), tbody td:nth-child(3),
+    thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
+    .tl-axis, .tl-row { grid-template-columns: 50px 1fr 40px; }
+    .tl-bar { font-size: 9px; padding: 0 4px; }
+    .header-right { gap: 8px; }
+    .header-date { display: none; }
+  }
+</style>
 </head>
-
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <!-- HEADER -->
-        <header class="header">
-            <div class="brand">
-                <div class="brand-mark">W</div>
-                <h1>Work Log</h1>
-                <span class="ver">v2.0</span>
-            </div>
-            <div class="header-right">
-                <span class="lock-indicator" id="lock-indicator">
-                    <span class="ic">○</span>
-                    <span id="lock-text">Read only</span>
-                </span>
-                <button class="sync-pill" id="sync-pill" title="Sync settings">
-                    <span class="sync-dot" id="sync-dot"></span>
-                    <span id="sync-status">Local only</span>
-                </button>
-                <div class="header-date" id="header-date">—</div>
-            </div>
-        </header>
-
-        <!-- HEAT STRIP -->
-        <section class="heat-section">
-            <div class="heat-label">
-                <span>Current 2 Weeks</span>
-                <span id="heat-range">—</span>
-            </div>
-            <div class="heat-strip" id="heat-strip"></div>
-        </section>
-
-        <!-- KPIs -->
-        <section class="kpis">
-            <div class="kpi">
-                <div class="kpi-head">
-                    <span class="kpi-label">Current 2 Weeks</span>
-                    <span class="kpi-delta" id="delta-week">—</span>
-                </div>
-                <div class="kpi-value" id="kpi-week">0<span class="unit">hrs</span></div>
-                <div class="kpi-sub" id="kpi-week-sub">—</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-head">
-                    <span class="kpi-label">Previous 2 Weeks</span>
-                    <span class="kpi-delta" id="delta-month">—</span>
-                </div>
-                <div class="kpi-value" id="kpi-month">0<span class="unit">hrs</span></div>
-                <div class="kpi-sub" id="kpi-month-sub">—</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-head">
-                    <span class="kpi-label">Cycle Ends In</span>
-                    <span class="kpi-delta flat" id="delta-avg">—</span>
-                </div>
-                <div class="kpi-value" id="kpi-avg">0<span class="unit">days</span></div>
-                <div class="kpi-sub" id="kpi-avg-sub">—</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-head">
-                    <span class="kpi-label">Total</span>
-                    <span class="kpi-delta flat" id="delta-total">—</span>
-                </div>
-                <div class="kpi-value" id="kpi-total">0<span class="unit">hrs</span></div>
-                <div class="kpi-sub" id="kpi-total-sub">All entries</div>
-            </div>
-        </section>
-
-        <!-- LOG FORM -->
-        <section class="section">
-            <div class="section-head">
-                <div class="section-title" id="form-title">Log a Shift</div>
-            </div>
-            <div class="form">
-                <div class="form-row">
-                    <div class="field"><label>Date</label><input type="date" id="in-date" /></div>
-                    <div class="field"><label>Start</label><input type="time" id="in-start" value="21:00" /></div>
-                    <div class="field"><label>End</label><input type="time" id="in-end" value="02:00" /></div>
-                    <div class="field"><label>Break</label><input type="number" id="in-break" step="0.25" value="0"
-                            min="0" /></div>
-                    <div class="field-readout" id="computed">
-                        <span class="v" id="computed-v">5.0</span>
-                        <span class="u" id="computed-u">Hours</span>
-                    </div>
-                    <button class="btn-save" id="btn-save">Save</button>
-                </div>
-                <div class="form-note-row">
-                    <div class="field"><label>Note</label><input type="text" id="in-note"
-                            placeholder="Optional — project, meeting, context…" /></div>
-                    <button class="form-cancel" id="form-cancel">Cancel</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- TIMELINE -->
-        <section class="section">
-            <div class="section-head">
-                <div class="section-title">Biweekly Timeline</div>
-                <div class="section-actions">
-                    <button class="nav-btn" id="prev-week">← Prev</button>
-                    <span class="nav-label" id="week-label">—</span>
-                    <button class="nav-btn" id="next-week">Next →</button>
-                    <button class="nav-btn" id="this-week">Today</button>
-                </div>
-            </div>
-            <div class="timeline">
-                <div class="tl-axis">
-                    <div></div>
-                    <div class="tl-axis-hours" id="tl-axis-hours"></div>
-                    <div></div>
-                </div>
-                <div id="tl-rows"></div>
-                <div class="tl-totals">
-                    <span class="label">Cycle total</span>
-                    <span class="value" id="week-total">0<span class="unit">hrs</span></span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ACTIONS -->
-        <section class="section">
-            <div class="footer-actions">
-                <div class="footer-actions-left">
-                    <span class="last-sync" id="last-sync">Never synced</span>
-                </div>
-                <div class="footer-actions-right">
-                    <button class="btn-text" id="btn-sync">↻ Sync now</button>
-                    <button class="btn-text" id="btn-export">Export CSV</button>
-                    <button class="btn-text danger" id="btn-reset">Reset</button>
-                </div>
-            </div>
-        </section>
-
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark">W</div>
+      <h1>Work Log</h1>
+      <span class="ver">v2.0</span>
     </div>
+    <div class="header-right">
+      <span class="lock-indicator" id="lock-indicator" style="display:none;">
+        <span class="ic">○</span>
+        <span id="lock-text">Read only</span>
+      </span>
+      <button class="sync-pill" id="sync-pill" title="Sync settings" style="display:none;">
+        <span class="sync-dot" id="sync-dot"></span>
+        <span id="sync-status">Local only</span>
+      </button>
+      <button class="icon-btn" id="open-calc" title="Calculator" aria-label="Open calculator">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="2" width="16" height="20" rx="2"/>
+          <line x1="8" y1="6" x2="16" y2="6"/>
+          <circle cx="8" cy="10" r="0.5" fill="currentColor"/>
+          <circle cx="12" cy="10" r="0.5" fill="currentColor"/>
+          <circle cx="16" cy="10" r="0.5" fill="currentColor"/>
+          <circle cx="8" cy="14" r="0.5" fill="currentColor"/>
+          <circle cx="12" cy="14" r="0.5" fill="currentColor"/>
+          <circle cx="16" cy="14" r="0.5" fill="currentColor"/>
+          <circle cx="8" cy="18" r="0.5" fill="currentColor"/>
+          <circle cx="12" cy="18" r="0.5" fill="currentColor"/>
+          <circle cx="16" cy="18" r="0.5" fill="currentColor"/>
+        </svg>
+      </button>
+      <div class="header-date" id="header-date">—</div>
+    </div>
+  </header>
 
-    <!-- SYNC MODAL -->
-    <div class="modal-backdrop" id="sync-modal">
-        <div class="modal">
-            <div class="modal-head">
-                <div class="modal-title">GitHub Gist Sync</div>
-                <div class="modal-sub">Sync your data across devices via a private gist</div>
-            </div>
-            <div class="modal-body">
-                <p>To enable sync, you need a <a
-                        href="https://github.com/settings/tokens/new?scopes=gist&description=Work%20Log"
-                        target="_blank">personal access token</a> with the <code>gist</code> scope.</p>
-                <p style="margin-bottom: 18px;">First time? Leave Gist ID empty — a private gist will be created.
-                    Already syncing? Paste your existing Gist ID.</p>
-                <div class="modal-field">
-                    <label>Personal Access Token</label>
-                    <input type="password" id="modal-token" placeholder="ghp_..." />
-                </div>
-                <div class="modal-field">
-                    <label>Gist ID (optional)</label>
-                    <input type="text" id="modal-gist-id" placeholder="Leave empty to create new" />
-                </div>
-            </div>
-            <div class="modal-foot">
-                <div class="modal-foot-left">
-                    <button class="btn-modal danger" id="modal-disconnect">Disconnect</button>
-                </div>
-                <div class="modal-foot-left">
-                    <button class="btn-modal" id="modal-cancel">Cancel</button>
-                    <button class="btn-modal primary" id="modal-save">Connect</button>
-                </div>
-            </div>
+  <!-- HEAT STRIP -->
+  <section class="heat-section">
+    <div class="heat-label">
+      <span>Current 2 Weeks</span>
+      <span id="heat-range">—</span>
+    </div>
+    <div class="heat-strip" id="heat-strip"></div>
+  </section>
+
+  <!-- KPIs -->
+  <section class="kpis">
+    <div class="kpi">
+      <div class="kpi-head">
+        <span class="kpi-label">Current 2 Weeks</span>
+        <span class="kpi-delta" id="delta-week">—</span>
+      </div>
+      <div class="kpi-value" id="kpi-week">0<span class="unit">hrs</span></div>
+      <div class="kpi-sub" id="kpi-week-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-head">
+        <span class="kpi-label">Previous 2 Weeks</span>
+        <span class="kpi-delta" id="delta-month">—</span>
+      </div>
+      <div class="kpi-value" id="kpi-month">0<span class="unit">hrs</span></div>
+      <div class="kpi-sub" id="kpi-month-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-head">
+        <span class="kpi-label">Cycle Ends In</span>
+        <span class="kpi-delta flat" id="delta-avg">—</span>
+      </div>
+      <div class="kpi-value" id="kpi-avg">0<span class="unit">days</span></div>
+      <div class="kpi-sub" id="kpi-avg-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-head">
+        <span class="kpi-label">Total</span>
+        <span class="kpi-delta flat" id="delta-total">—</span>
+      </div>
+      <div class="kpi-value" id="kpi-total">0<span class="unit">hrs</span></div>
+      <div class="kpi-sub" id="kpi-total-sub">All entries</div>
+    </div>
+  </section>
+
+  <!-- LOG FORM -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title" id="form-title">Log a Shift</div>
+    </div>
+    <div class="form">
+      <div class="form-row">
+        <div class="field"><label>Date</label><input type="date" id="in-date" /></div>
+        <div class="field"><label>Start</label><input type="time" id="in-start" value="21:00" /></div>
+        <div class="field"><label>End</label><input type="time" id="in-end" value="02:00" /></div>
+        <div class="field"><label>Break</label><input type="number" id="in-break" step="0.25" value="0" min="0" /></div>
+        <div class="field-readout" id="computed">
+          <span class="v" id="computed-v">5.0</span>
+          <span class="u" id="computed-u">Hours</span>
         </div>
+        <button class="btn-save" id="btn-save">Save</button>
+      </div>
+      <div class="form-note-row">
+        <div class="field"><label>Note</label><input type="text" id="in-note" placeholder="Optional — project, meeting, context…" /></div>
+        <button class="form-cancel" id="form-cancel">Cancel</button>
+      </div>
     </div>
+  </section>
 
-
-
+  <!-- TIMELINE -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">Biweekly Timeline</div>
+      <div class="section-actions">
+        <button class="nav-btn" id="prev-week">← Prev</button>
+        <span class="nav-label" id="week-label">—</span>
+        <button class="nav-btn" id="next-week">Next →</button>
+        <button class="nav-btn" id="this-week">Today</button>
+      </div>
     </div>
-
-    <!-- PASSWORD PROMPT -->
-    <div class="pw-prompt-backdrop" id="pw-backdrop">
-        <div class="pw-prompt" id="pw-prompt">
-            <label class="pw-prompt-label">Enter password</label>
-            <input type="password" id="pw-input" autocomplete="off" />
-            <div class="pw-prompt-foot">
-                <span class="pw-prompt-hint"><kbd>Enter</kbd> to unlock · <kbd>Esc</kbd> to cancel</span>
-            </div>
+    <div class="timeline">
+      <div class="chart-stage" id="chart-stage">
+        <div class="tl-axis" id="gantt-axis-wrap">
+          <div></div>
+          <div class="tl-axis-hours" id="tl-axis-hours"></div>
+          <div></div>
         </div>
+        <div id="tl-rows"></div>
+      </div>
+      <div class="tl-totals">
+        <span class="label">Cycle total</span>
+        <span class="value" id="week-total">0<span class="unit">hrs</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIONS -->
+  <section class="section">
+    <div class="footer-actions">
+      <div class="footer-actions-left">
+        <span class="last-sync" id="last-sync">Never synced</span>
+      </div>
+      <div class="footer-actions-right">
+        <button class="btn-text" id="btn-sync">↻ Sync now</button>
+        <button class="btn-text" id="btn-export">Export CSV</button>
+        <button class="btn-text danger" id="btn-reset">Reset</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYNC MODAL -->
+<div class="modal-backdrop" id="sync-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">GitHub Gist Sync</div>
+      <div class="modal-sub">Sync your data across devices via a private gist</div>
+    </div>
+    <div class="modal-body">
+      <p>To enable sync, you need a <a href="https://github.com/settings/tokens/new?scopes=gist&description=Work%20Log" target="_blank">personal access token</a> with the <code>gist</code> scope.</p>
+      <p style="margin-bottom: 18px;">First time? Leave Gist ID empty — a private gist will be created. Already syncing? Paste your existing Gist ID.</p>
+      <div class="modal-field">
+        <label>Personal Access Token</label>
+        <input type="password" id="modal-token" placeholder="ghp_..." />
+      </div>
+      <div class="modal-field">
+        <label>Gist ID (optional)</label>
+        <input type="text" id="modal-gist-id" placeholder="Leave empty to create new" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-foot-left">
+        <button class="btn-modal danger" id="modal-disconnect">Disconnect</button>
+      </div>
+      <div class="modal-foot-left">
+        <button class="btn-modal" id="modal-cancel">Cancel</button>
+        <button class="btn-modal primary" id="modal-save">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+<!-- PASSWORD PROMPT -->
+<div class="pw-prompt-backdrop" id="pw-backdrop">
+  <div class="pw-prompt" id="pw-prompt">
+    <label class="pw-prompt-label">Enter password</label>
+    <input type="password" id="pw-input" autocomplete="off" />
+    <div class="pw-prompt-foot">
+      <span class="pw-prompt-hint"><kbd>Enter</kbd> to unlock · <kbd>Esc</kbd> to cancel</span>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="calc-backdrop" id="calc-backdrop">
+  <div class="calc" id="calc">
+    <div class="calc-head">
+      <div class="calc-tabs">
+        <button class="calc-tab active" data-tab="calc" id="tab-calc">Calc</button>
+        <button class="calc-tab" data-tab="convert" id="tab-convert">Convert</button>
+      </div>
+      <button class="calc-close" id="calc-close" aria-label="Close">×</button>
     </div>
 
-    <div class="toast" id="toast">Saved</div>
+    <!-- CALC PANE -->
+    <div class="calc-pane active" id="pane-calc">
+      <div class="calc-display">
+        <div class="calc-expr" id="calc-expr">&nbsp;</div>
+        <div class="calc-result" id="calc-result">0</div>
+      </div>
+      <div class="calc-keys">
+        <button class="calc-key func" data-action="clear">AC</button>
+        <button class="calc-key func" data-action="sign">±</button>
+        <button class="calc-key func" data-action="percent">%</button>
+        <button class="calc-key op" data-op="/">÷</button>
 
-    <script>
-        const API_NAMESPACE = 'Kedhar';
+        <button class="calc-key" data-digit="7">7</button>
+        <button class="calc-key" data-digit="8">8</button>
+        <button class="calc-key" data-digit="9">9</button>
+        <button class="calc-key op" data-op="*">×</button>
 
-        let isUnlocked = false;
+        <button class="calc-key" data-digit="4">4</button>
+        <button class="calc-key" data-digit="5">5</button>
+        <button class="calc-key" data-digit="6">6</button>
+        <button class="calc-key op" data-op="-">−</button>
 
-        function lock() {
-            isUnlocked = false;
-            document.body.classList.remove('unlocked');
-            document.body.classList.add('locked');
-            document.getElementById('lock-text').textContent = 'Read only';
-            document.getElementById('lock-indicator').querySelector('.ic').textContent = '○';
-        }
-        function unlock() {
-            isUnlocked = true;
-            document.body.classList.remove('locked');
-            document.body.classList.add('unlocked');
-            document.getElementById('lock-text').textContent = 'Editable';
-            document.getElementById('lock-indicator').querySelector('.ic').textContent = '●';
-        }
-        function showPwPrompt() {
-            document.getElementById('pw-backdrop').classList.add('visible');
-            setTimeout(() => document.getElementById('pw-input').focus(), 50);
-        }
-        function hidePwPrompt() {
-            document.getElementById('pw-backdrop').classList.remove('visible');
-            document.getElementById('pw-input').value = '';
-            document.getElementById('pw-prompt').classList.remove('shake');
-        }
-        function tryUnlock() {
-            const val = document.getElementById('pw-input').value;
-            if (val === API_NAMESPACE) {
-                unlock();
-                hidePwPrompt();
-                toast('Unlocked');
-            } else {
-                const p = document.getElementById('pw-prompt');
-                p.classList.remove('shake');
-                void p.offsetWidth;
-                p.classList.add('shake');
-                document.getElementById('pw-input').value = '';
-                setTimeout(() => document.getElementById('pw-input').focus(), 100);
-            }
-        }
+        <button class="calc-key" data-digit="1">1</button>
+        <button class="calc-key" data-digit="2">2</button>
+        <button class="calc-key" data-digit="3">3</button>
+        <button class="calc-key op" data-op="+">+</button>
+
+        <button class="calc-key span2" data-digit="0">0</button>
+        <button class="calc-key" data-action="dot">.</button>
+        <button class="calc-key eq" data-action="eq">=</button>
+      </div>
+    </div>
+
+    <!-- CONVERT PANE -->
+    <div class="calc-pane" id="pane-convert">
+      <div class="convert-status" id="convert-status">Loading rates…</div>
+      <div class="convert-fields">
+        <div class="convert-row">
+          <span class="convert-badge" style="background: linear-gradient(135deg, #3C3B6E 50%, #B22234 50%);">US</span>
+          <span class="convert-code">USD</span>
+          <input type="text" class="convert-input" id="conv-usd" data-cur="USD" inputmode="decimal" placeholder="0" />
+        </div>
+        <div class="convert-row">
+          <span class="convert-badge" style="background: linear-gradient(90deg, #D52B1E 25%, #FFFFFF 25%, #FFFFFF 75%, #D52B1E 75%); color: #D52B1E;">CA</span>
+          <span class="convert-code">CAD</span>
+          <input type="text" class="convert-input" id="conv-cad" data-cur="CAD" inputmode="decimal" placeholder="0" />
+        </div>
+        <div class="convert-row">
+          <span class="convert-badge" style="background: linear-gradient(180deg, #FF9933 33%, #FFFFFF 33%, #FFFFFF 67%, #138808 67%); color: #000080;">IN</span>
+          <span class="convert-code">INR</span>
+          <input type="text" class="convert-input" id="conv-inr" data-cur="INR" inputmode="decimal" placeholder="0" />
+        </div>
+      </div>
+      <div class="convert-foot">
+        <span id="convert-updated">—</span>
+        <button class="convert-refresh" id="convert-refresh" title="Refresh rates">↻</button>
+      </div>
+      <div class="convert-attribution">
+        Rates by <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Exchange Rate API</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+/* ============================ LOCK STATE ============================ */
+// API namespace identifier — change this value to your private phrase
+const API_NAMESPACE = 'change-me-before-deploying';
+
+let isUnlocked = false;
+
+function lock() {
+  isUnlocked = false;
+  document.body.classList.remove('unlocked');
+  document.body.classList.add('locked');
+  document.getElementById('lock-text').textContent = 'Read only';
+  document.getElementById('lock-indicator').querySelector('.ic').textContent = '○';
+}
+function unlock() {
+  isUnlocked = true;
+  document.body.classList.remove('locked');
+  document.body.classList.add('unlocked');
+  document.getElementById('lock-text').textContent = 'Editable';
+  document.getElementById('lock-indicator').querySelector('.ic').textContent = '●';
+}
+function showPwPrompt() {
+  document.getElementById('pw-backdrop').classList.add('visible');
+  setTimeout(() => document.getElementById('pw-input').focus(), 50);
+}
+function hidePwPrompt() {
+  document.getElementById('pw-backdrop').classList.remove('visible');
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-prompt').classList.remove('shake');
+}
+function tryUnlock() {
+  const val = document.getElementById('pw-input').value;
+  if (val === API_NAMESPACE) {
+    unlock();
+    hidePwPrompt();
+    toast('Unlocked');
+  } else {
+    const p = document.getElementById('pw-prompt');
+    p.classList.remove('shake');
+    void p.offsetWidth;
+    p.classList.add('shake');
+    document.getElementById('pw-input').value = '';
+    setTimeout(() => document.getElementById('pw-input').focus(), 100);
+  }
+}
 
 
-        const STORAGE_KEY = 'workLog_v2_data';
-        const SYNC_KEY = 'workLog_v2_sync';
+const STORAGE_KEY = 'workLog_v2_data';
+const SYNC_KEY = 'workLog_v2_sync';
 
-        let shifts = [];
-        let syncConfig = loadSyncConfig();
-        let editingId = null;
+let shifts = [];
+let syncConfig = loadSyncConfig();
+let editingId = null;
 
-        const TODAY = new Date();
-        TODAY.setHours(0, 0, 0, 0);
+const TODAY = new Date();
+TODAY.setHours(0, 0, 0, 0);
 
-        let viewWeekStart; // assigned in INIT, after cycle helpers are defined
+let viewWeekStart; // assigned in INIT, after cycle helpers are defined
 
-        function loadShifts() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (raw) return JSON.parse(raw);
-            } catch (e) { }
-            return seedSamples();
-        }
-        function saveShiftsLocal() {
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(shifts)); } catch (e) { }
-        }
-        function loadSyncConfig() {
-            try {
-                const raw = localStorage.getItem(SYNC_KEY);
-                if (raw) return JSON.parse(raw);
-            } catch (e) { }
-            return { token: '', gistId: '', lastSync: null };
-        }
-        function saveSyncConfig() {
-            try { localStorage.setItem(SYNC_KEY, JSON.stringify(syncConfig)); } catch (e) { }
-        }
+function loadShifts() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return seedSamples();
+}
+function saveShiftsLocal() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(shifts)); } catch(e) {}
+}
+function loadSyncConfig() {
+  try {
+    const raw = localStorage.getItem(SYNC_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { token: '', gistId: '', lastSync: null };
+}
+function saveSyncConfig() {
+  try { localStorage.setItem(SYNC_KEY, JSON.stringify(syncConfig)); } catch(e) {}
+}
 
-        function seedSamples() {
-            // Real shifts starting May 9, 2026
-            const PAY_START = new Date(2026, 4, 9); // May 9
-            const pattern = [
-                { offset: 0, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 9
-                { offset: 1, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 10
-                { offset: 2, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 11
-                { offset: 3, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 12
-                { offset: 4, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 13
-                { offset: 5, start: '21:00', end: '01:30', brk: 0, note: '' }, // May 14
-                { offset: 6, start: '21:00', end: '02:00', brk: 0, note: '' }, // May 15
-            ];
-            return pattern.map((p, i) => {
-                const d = new Date(PAY_START);
-                d.setDate(PAY_START.getDate() + p.offset);
-                return { id: 'shift-' + i, date: fmtDate(d), start: p.start, end: p.end, break: p.brk, note: p.note };
-            });
-        }
+function seedSamples() {
+  // Real shifts starting May 9, 2026
+  const PAY_START = new Date(2026, 4, 9); // May 9
+  const pattern = [
+    { offset: 0, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 9
+    { offset: 1, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 10
+    { offset: 2, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 11
+    { offset: 3, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 12
+    { offset: 4, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 13
+    { offset: 5, start: '21:00', end: '01:30', brk: 0,   note: '' }, // May 14
+    { offset: 6, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 15
+    // May 16 (today): split shift — 6 PM to 8 PM, then 9 PM to 3 AM
+    { offset: 7, start: '18:00', end: '20:00', brk: 0,   note: 'Split shift',
+      segments: [
+        { start: '18:00', end: '20:00' },
+        { start: '21:00', end: '03:00' }
+      ]
+    },
+    // May 17: split shift — 6 PM to 8 PM, then 9 PM to 11:30 PM
+    { offset: 8, start: '18:00', end: '20:00', brk: 0,   note: 'Split shift',
+      segments: [
+        { start: '18:00', end: '20:00' },
+        { start: '21:00', end: '23:30' }
+      ]
+    },
+  ];
+  return pattern.map((p, i) => {
+    const d = new Date(PAY_START);
+    d.setDate(PAY_START.getDate() + p.offset);
+    const entry = { id: 'shift-' + i, date: fmtDate(d), start: p.start, end: p.end, break: p.brk, note: p.note };
+    if (p.segments) entry.segments = p.segments;
+    return entry;
+  });
+}
 
-        /* ============================ DATE/TIME ============================ */
-        function fmtDate(d) {
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
-        }
-        function parseDate(s) {
-            const [y, m, d] = s.split('-').map(Number);
-            return new Date(y, m - 1, d);
-        }
-        function parseTime(t) {
-            if (!t) return null;
-            const [h, m] = t.split(':').map(Number);
-            return h + m / 60;
-        }
-        function fmtTime12(t) {
-            if (!t) return '—';
-            const [h, m] = t.split(':').map(Number);
-            const suffix = h < 12 ? 'AM' : 'PM';
-            const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
-            return m === 0 ? `${display}:00 ${suffix}` : `${display}:${String(m).padStart(2, '0')} ${suffix}`;
-        }
-        function fmtHour(h) {
-            if (h === 0 || h === 24) return '12a';
-            if (h === 12) return '12p';
-            const whole = Math.floor(h);
-            const min = Math.round((h - whole) * 60);
-            const suffix = whole < 12 ? 'a' : 'p';
-            const display = whole === 0 ? 12 : whole > 12 ? whole - 12 : whole;
-            return min === 0 ? `${display}${suffix}` : `${display}:${String(min).padStart(2, '0')}${suffix}`;
-        }
-        function computeHours(start, end, brk) {
-            const s = parseTime(start);
-            const e = parseTime(end);
-            if (s === null || e === null) return 0;
-            let diff = e - s;
-            if (diff <= 0) diff += 24;
-            diff -= (parseFloat(brk) || 0);
-            return Math.max(0, Math.round(diff * 100) / 100);
-        }
-        function isOvernight(start, end) {
-            const s = parseTime(start);
-            const e = parseTime(end);
-            return s !== null && e !== null && e <= s;
-        }
-        function startOfWeek(d) {
-            const x = new Date(d);
-            x.setHours(0, 0, 0, 0);
-            const day = x.getDay();
-            const offset = day === 0 ? -6 : 1 - day;
-            x.setDate(x.getDate() + offset);
-            return x;
-        }
-        function sameDay(a, b) {
-            return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-        }
-        function startOfMonth(d) {
-            return new Date(d.getFullYear(), d.getMonth(), 1);
-        }
+/* ============================ DATE/TIME ============================ */
+function fmtDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function parseDate(s) {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+function parseTime(t) {
+  if (!t) return null;
+  const [h, m] = t.split(':').map(Number);
+  return h + m / 60;
+}
+function fmtTime12(t) {
+  if (!t) return '—';
+  const [h, m] = t.split(':').map(Number);
+  const suffix = h < 12 ? 'AM' : 'PM';
+  const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return m === 0 ? `${display}:00 ${suffix}` : `${display}:${String(m).padStart(2,'0')} ${suffix}`;
+}
+function fmtHour(h) {
+  if (h === 0 || h === 24) return '12a';
+  if (h === 12) return '12p';
+  const whole = Math.floor(h);
+  const min = Math.round((h - whole) * 60);
+  const suffix = whole < 12 ? 'a' : 'p';
+  const display = whole === 0 ? 12 : whole > 12 ? whole - 12 : whole;
+  return min === 0 ? `${display}${suffix}` : `${display}:${String(min).padStart(2,'0')}${suffix}`;
+}
+function computeHours(start, end, brk) {
+  const s = parseTime(start);
+  const e = parseTime(end);
+  if (s === null || e === null) return 0;
+  let diff = e - s;
+  if (diff <= 0) diff += 24;
+  diff -= (parseFloat(brk) || 0);
+  return Math.max(0, Math.round(diff * 100) / 100);
+}
+function isOvernight(start, end) {
+  const s = parseTime(start);
+  const e = parseTime(end);
+  return s !== null && e !== null && e <= s;
+}
 
-        /* ============ CYCLE ============ */
-        // Anchor date: 14-day cycles start from this date
-        const PAY_ANCHOR = new Date(2026, 4, 9); // May 9, 2026
-        PAY_ANCHOR.setHours(0, 0, 0, 0);
+// Extract all segments from a shift. Returns array of {start, end} strings.
+// Single-segment shifts return [{start, end}].
+// Multi-segment shifts (with a `segments` array) return that array.
+function getSegments(shift) {
+  if (!shift) return [];
+  if (Array.isArray(shift.segments) && shift.segments.length > 0) {
+    return shift.segments.filter(s => s.start && s.end);
+  }
+  if (shift.start && shift.end) return [{ start: shift.start, end: shift.end }];
+  return [];
+}
 
-        function currentPayPeriodStart(d) {
-            const target = new Date(d);
-            target.setHours(0, 0, 0, 0);
-            const daysSince = Math.floor((target - PAY_ANCHOR) / 86400000);
-            const periodIndex = Math.floor(daysSince / 14);
-            const start = new Date(PAY_ANCHOR);
-            start.setDate(PAY_ANCHOR.getDate() + periodIndex * 14);
-            return start;
-        }
-        function payPeriodEnd(start) {
-            const end = new Date(start);
-            end.setDate(start.getDate() + 13);
-            return end;
-        }
-        function previousPayPeriodStart(d) {
-            const cur = currentPayPeriodStart(d);
-            const prev = new Date(cur);
-            prev.setDate(cur.getDate() - 14);
-            return prev;
-        }
-        function daysUntilPayday(d) {
-            const periodEnd = payPeriodEnd(currentPayPeriodStart(d));
-            const payday = new Date(periodEnd);
-            payday.setDate(periodEnd.getDate() + 1);
-            const diff = Math.ceil((payday - d) / 86400000);
-            return Math.max(0, diff);
-        }
-        function fmtRelative(ts) {
-            if (!ts) return 'Never synced';
-            const diff = Date.now() - ts;
-            const mins = Math.floor(diff / 60000);
-            if (mins < 1) return 'Synced just now';
-            if (mins < 60) return `Synced ${mins}m ago`;
-            const hrs = Math.floor(mins / 60);
-            if (hrs < 24) return `Synced ${hrs}h ago`;
-            const days = Math.floor(hrs / 24);
-            return `Synced ${days}d ago`;
-        }
+// Compute total hours for a shift, summing across all segments and subtracting break
+function computeShiftHours(shift) {
+  if (!shift) return 0;
+  const segs = getSegments(shift);
+  let total = 0;
+  segs.forEach(seg => {
+    const s = parseTime(seg.start);
+    const e = parseTime(seg.end);
+    if (s === null || e === null) return;
+    let diff = e - s;
+    if (diff <= 0) diff += 24;
+    total += diff;
+  });
+  total -= (parseFloat(shift.break) || 0);
+  return Math.max(0, Math.round(total * 100) / 100);
+}
+function startOfWeek(d) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  const day = x.getDay();
+  const offset = day === 0 ? -6 : 1 - day;
+  x.setDate(x.getDate() + offset);
+  return x;
+}
+function sameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+function startOfMonth(d) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
 
-        /* ============================ RENDER ============================ */
-        function render() {
-            renderHeader();
-            renderHeatStrip();
-            renderKPIs();
-            renderTimeline();
-            renderLog();
-            renderSyncStatus();
-        }
+/* ============ CYCLE ============ */
+// Anchor date: 14-day cycles start from this date
+const PAY_ANCHOR = new Date(2026, 4, 9); // May 9, 2026
+PAY_ANCHOR.setHours(0, 0, 0, 0);
 
-        function renderHeader() {
-            document.getElementById('header-date').textContent =
-                TODAY.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-        }
+function currentPayPeriodStart(d) {
+  const target = new Date(d);
+  target.setHours(0, 0, 0, 0);
+  const daysSince = Math.floor((target - PAY_ANCHOR) / 86400000);
+  const periodIndex = Math.floor(daysSince / 14);
+  const start = new Date(PAY_ANCHOR);
+  start.setDate(PAY_ANCHOR.getDate() + periodIndex * 14);
+  return start;
+}
+function payPeriodEnd(start) {
+  const end = new Date(start);
+  end.setDate(start.getDate() + 13);
+  return end;
+}
+function previousPayPeriodStart(d) {
+  const cur = currentPayPeriodStart(d);
+  const prev = new Date(cur);
+  prev.setDate(cur.getDate() - 14);
+  return prev;
+}
+function daysUntilPayday(d) {
+  const periodEnd = payPeriodEnd(currentPayPeriodStart(d));
+  const payday = new Date(periodEnd);
+  payday.setDate(periodEnd.getDate() + 1);
+  const diff = Math.ceil((payday - d) / 86400000);
+  return Math.max(0, diff);
+}
+function fmtRelative(ts) {
+  if (!ts) return 'Never synced';
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'Synced just now';
+  if (mins < 60) return `Synced ${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `Synced ${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `Synced ${days}d ago`;
+}
 
-        function renderHeatStrip() {
-            const strip = document.getElementById('heat-strip');
-            const periodStart = currentPayPeriodStart(TODAY);
-            const periodEnd = payPeriodEnd(periodStart);
-            document.getElementById('heat-range').textContent =
-                `${periodStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${periodEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+/* ============================ RENDER ============================ */
+function render() {
+  renderHeader();
+  renderHeatStrip();
+  renderKPIs();
+  renderTimeline();
+  renderLog();
+  renderSyncStatus();
+}
 
-            const dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S'];
-            let html = '';
-            for (let i = 0; i < 14; i++) {
-                const d = new Date(periodStart);
-                d.setDate(periodStart.getDate() + i);
-                const shift = shifts.find(s => s.date === fmtDate(d));
-                const hrs = shift ? computeHours(shift.start, shift.end, shift.break) : 0;
-                const intensity = Math.min(hrs / 8, 1);
-                const isToday = sameDay(d, TODAY);
-                const filled = hrs > 0;
-                html += `
+function renderHeader() {
+  document.getElementById('header-date').textContent =
+    TODAY.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function renderHeatStrip() {
+  const strip = document.getElementById('heat-strip');
+  const periodStart = currentPayPeriodStart(TODAY);
+  const periodEnd = payPeriodEnd(periodStart);
+  document.getElementById('heat-range').textContent =
+    `${periodStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${periodEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+
+  const dayLetters = ['M','T','W','T','F','S','S','M','T','W','T','F','S','S'];
+  let html = '';
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(periodStart);
+    d.setDate(periodStart.getDate() + i);
+    const shift = shifts.find(s => s.date === fmtDate(d));
+    const hrs = computeShiftHours(shift);
+    const intensity = Math.min(hrs / 8, 1);
+    const isToday = sameDay(d, TODAY);
+    const filled = hrs > 0;
+    html += `
       <div class="heat-cell ${isToday ? 'today' : ''} ${filled ? 'filled' : ''}" title="${d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}${hrs ? ' — ' + hrs + ' hrs' : ' — no entry'}">
         <div class="heat-fill" style="opacity: ${intensity * 0.95};"></div>
         <span class="heat-day">${dayLetters[i]}</span>
         <span class="heat-val">${hrs > 0 ? hrs : ''}</span>
       </div>
     `;
-            }
-            strip.innerHTML = html;
-        }
+  }
+  strip.innerHTML = html;
+}
 
-        function renderKPIs() {
-            const sumInRange = (start, end) =>
-                shifts.filter(s => {
-                    const d = parseDate(s.date);
-                    return d >= start && d <= end;
-                }).reduce((a, s) => a + computeHours(s.start, s.end, s.break), 0);
+function renderKPIs() {
+  const sumInRange = (start, end) =>
+    shifts.filter(s => {
+      const d = parseDate(s.date);
+      return d >= start && d <= end;
+    }).reduce((a, s) => a + computeShiftHours(s), 0);
 
-            // Current pay period
-            const curStart = currentPayPeriodStart(TODAY);
-            const curEnd = payPeriodEnd(curStart);
-            const curHrs = sumInRange(curStart, curEnd);
+  // Current pay period
+  const curStart = currentPayPeriodStart(TODAY);
+  const curEnd = payPeriodEnd(curStart);
+  const curHrs = sumInRange(curStart, curEnd);
 
-            // Previous pay period
-            const prevStart = previousPayPeriodStart(TODAY);
-            const prevEnd = payPeriodEnd(prevStart);
-            const prevHrs = sumInRange(prevStart, prevEnd);
+  // Previous pay period
+  const prevStart = previousPayPeriodStart(TODAY);
+  const prevEnd = payPeriodEnd(prevStart);
+  const prevHrs = sumInRange(prevStart, prevEnd);
 
-            // Days until payday
-            const daysToPay = daysUntilPayday(TODAY);
+  // Days until payday
+  const daysToPay = daysUntilPayday(TODAY);
 
-            // Total
-            const total = shifts.reduce((a, s) => a + computeHours(s.start, s.end, s.break), 0);
-            const totalCount = shifts.filter(s => computeHours(s.start, s.end, s.break) > 0).length;
+  // Total
+  const total = shifts.reduce((a, s) => a + computeShiftHours(s), 0);
+  const totalCount = shifts.filter(s => computeShiftHours(s) > 0).length;
 
-            setKPI('kpi-week', curHrs, 'hrs');
-            setKPI('kpi-month', prevHrs, 'hrs');
-            setKPI('kpi-total', total, 'hrs');
+  setKPI('kpi-week', curHrs, 'hrs');
+  setKPI('kpi-month', prevHrs, 'hrs');
+  setKPI('kpi-total', total, 'hrs');
 
-            // Days to payday as a plain number (no decimal)
-            const dpEl = document.getElementById('kpi-avg');
-            dpEl.innerHTML = `${daysToPay}<span class="unit">${daysToPay === 1 ? 'day' : 'days'}</span>`;
-            dpEl.classList.toggle('empty', daysToPay === 0);
+  // Days to payday as a plain number (no decimal)
+  const dpEl = document.getElementById('kpi-avg');
+  dpEl.innerHTML = `${daysToPay}<span class="unit">${daysToPay === 1 ? 'day' : 'days'}</span>`;
+  dpEl.classList.toggle('empty', daysToPay === 0);
 
-            // Deltas
-            setDelta('delta-week', curHrs, prevHrs);
-            setDelta('delta-month', prevHrs, sumInRange(
-                new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 14),
-                new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 1)
-            ));
-            document.getElementById('delta-avg').textContent = daysToPay === 0 ? 'Last day' : '';
-            document.getElementById('delta-avg').className = daysToPay === 0 ? 'kpi-delta up' : 'kpi-delta flat';
-            document.getElementById('delta-total').textContent = `${totalCount} entries`;
-            document.getElementById('delta-total').className = 'kpi-delta flat';
+  // Deltas
+  setDelta('delta-week', curHrs, prevHrs);
+  setDelta('delta-month', prevHrs, sumInRange(
+    new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 14),
+    new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 1)
+  ));
+  document.getElementById('delta-avg').textContent = daysToPay === 0 ? 'Last day' : '';
+  document.getElementById('delta-avg').className = daysToPay === 0 ? 'kpi-delta up' : 'kpi-delta flat';
+  document.getElementById('delta-total').textContent = `${totalCount} entries`;
+  document.getElementById('delta-total').className = 'kpi-delta flat';
 
-            // Subs
-            const fmtRange = (s, e) =>
-                `${s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}–${e.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-            document.getElementById('kpi-week-sub').textContent = fmtRange(curStart, curEnd);
-            document.getElementById('kpi-month-sub').textContent = fmtRange(prevStart, prevEnd);
-            const cycleEnd = new Date(curEnd);
-            document.getElementById('kpi-avg-sub').textContent =
-                daysToPay === 0 ? 'Cycle ends today' : `Ends ${cycleEnd.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
-        }
+  // Subs
+  const fmtRange = (s, e) =>
+    `${s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}–${e.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+  document.getElementById('kpi-week-sub').textContent = fmtRange(curStart, curEnd);
+  document.getElementById('kpi-month-sub').textContent = fmtRange(prevStart, prevEnd);
+  const cycleEnd = new Date(curEnd);
+  document.getElementById('kpi-avg-sub').textContent =
+    daysToPay === 0 ? 'Cycle ends today' : `Ends ${cycleEnd.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+}
 
-        function setKPI(id, value, unit) {
-            const el = document.getElementById(id);
-            const v = (Math.round(value * 10) / 10);
-            el.innerHTML = `${v || 0}<span class="unit">${unit}</span>`;
-            el.classList.toggle('empty', v === 0);
-        }
+function setKPI(id, value, unit) {
+  const el = document.getElementById(id);
+  const v = (Math.round(value * 10) / 10);
+  el.innerHTML = `${v || 0}<span class="unit">${unit}</span>`;
+  el.classList.toggle('empty', v === 0);
+}
 
-        function setDelta(id, current, previous) {
-            const el = document.getElementById(id);
-            if (previous === 0 && current === 0) {
-                el.textContent = '—';
-                el.className = 'kpi-delta flat';
-                return;
-            }
-            if (previous === 0) {
-                el.textContent = `+${Math.round(current * 10) / 10}`;
-                el.className = 'kpi-delta up';
-                return;
-            }
-            const diff = current - previous;
-            const pct = Math.round((diff / previous) * 100);
-            if (Math.abs(pct) < 1) {
-                el.textContent = '—';
-                el.className = 'kpi-delta flat';
-                return;
-            }
-            const arrow = pct > 0 ? '▲' : '▼';
-            el.textContent = `${arrow} ${Math.abs(pct)}%`;
-            el.className = `kpi-delta ${pct > 0 ? 'up' : 'down'}`;
-        }
+function setDelta(id, current, previous) {
+  const el = document.getElementById(id);
+  if (previous === 0 && current === 0) {
+    el.textContent = '—';
+    el.className = 'kpi-delta flat';
+    return;
+  }
+  if (previous === 0) {
+    el.textContent = `+${Math.round(current * 10) / 10}`;
+    el.className = 'kpi-delta up';
+    return;
+  }
+  const diff = current - previous;
+  const pct = Math.round((diff / previous) * 100);
+  if (Math.abs(pct) < 1) {
+    el.textContent = '—';
+    el.className = 'kpi-delta flat';
+    return;
+  }
+  const arrow = pct > 0 ? '▲' : '▼';
+  el.textContent = `${arrow} ${Math.abs(pct)}%`;
+  el.className = `kpi-delta ${pct > 0 ? 'up' : 'down'}`;
+}
 
-        function renderTimeline() {
-            // Axis: percentage positioned ticks
-            const axis = document.getElementById('tl-axis-hours');
-            let axisHTML = '';
-            for (let h = 0; h <= 24; h += 3) {
-                const pct = (h / 24) * 100;
-                const isMid = h === 0 || h === 24;
-                axisHTML += `<div class="tl-axis-tick ${isMid ? 'midnight' : ''}" style="left: ${pct}%;">${fmtHour(h === 24 ? 0 : h)}</div>`;
-            }
-            axis.innerHTML = axisHTML;
+/* ============================ TIMELINE ============================ */
 
-            const cycleEnd = new Date(viewWeekStart);
-            cycleEnd.setDate(viewWeekStart.getDate() + 13);
-            document.getElementById('week-label').textContent =
-                `${viewWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${cycleEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+/* Common: get the 14 cycle days as { date, shift } */
+function getCycleDays() {
+  const days = [];
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(viewWeekStart);
+    d.setDate(viewWeekStart.getDate() + i);
+    const shift = shifts.find(s => s.date === fmtDate(d));
+    days.push({ date: d, shift });
+  }
+  return days;
+}
 
-            const rowsEl = document.getElementById('tl-rows');
-            let rowsHTML = '';
-            let cycleTotal = 0;
-            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+/* Common: cycle total hours */
+function getCycleTotal(days) {
+  return days.reduce((sum, { shift }) => sum + computeShiftHours(shift), 0);
+}
 
-            for (let i = 0; i < 14; i++) {
-                const d = new Date(viewWeekStart);
-                d.setDate(viewWeekStart.getDate() + i);
-                const dStr = fmtDate(d);
-                const shift = shifts.find(s => s.date === dStr);
-                const dayOfWeek = d.getDay();
-                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-                const isToday = sameDay(d, TODAY);
-                const isWeekDivider = i === 7; // divider between week 1 and week 2
+function renderTimeline() {
+  const cycleEnd = new Date(viewWeekStart);
+  cycleEnd.setDate(viewWeekStart.getDate() + 13);
+  document.getElementById('week-label').textContent =
+    `${viewWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${cycleEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 
-                let trackHTML = '';
-                for (let h = 3; h < 24; h += 3) {
-                    const pct = (h / 24) * 100;
-                    trackHTML += `<div class="tl-track-gridline ${h === 0 ? 'midnight' : ''}" style="left: ${pct}%;"></div>`;
-                }
+  const days = getCycleDays();
+  const total = getCycleTotal(days);
+  document.getElementById('week-total').innerHTML =
+    `${(Math.round(total * 10) / 10)}<span class="unit">hrs</span>`;
 
-                let hoursLabel = '<span class="empty">—</span>';
+  renderGantt(days, document.getElementById('tl-rows'));
+}
 
-                if (shift && shift.start && shift.end) {
-                    const startH = parseTime(shift.start);
-                    const endH = parseTime(shift.end);
-                    const overnight = endH <= startH;
-                    const totalH = computeHours(shift.start, shift.end, shift.break);
-                    cycleTotal += totalH;
-                    hoursLabel = `${totalH}h`;
+/* ============ GANTT ============ */
+function renderGantt(cycleDays, stage) {
+  // Compute auto-fit axis range from all segments
+  let axisStart = null, axisEnd = null;
+  cycleDays.forEach(({ shift }) => {
+    getSegments(shift).forEach(seg => {
+      const sH = parseTime(seg.start);
+      let eH = parseTime(seg.end);
+      if (eH <= sH) eH += 24;
+      if (axisStart === null || sH < axisStart) axisStart = sH;
+      if (axisEnd === null || eH > axisEnd) axisEnd = eH;
+    });
+  });
+  if (axisStart === null) { axisStart = 18; axisEnd = 30; }
+  else {
+    axisStart = Math.max(0, Math.floor(axisStart - 1));
+    axisEnd = Math.min(48, Math.ceil(axisEnd + 1));
+  }
+  const axisSpan = axisEnd - axisStart;
+  const toPct = (h) => ((h - axisStart) / axisSpan) * 100;
+  const tickInterval = axisSpan <= 8 ? 1 : axisSpan <= 14 ? 2 : 3;
 
-                    const seg1End = overnight ? 24 : endH;
-                    const seg1StartPct = (startH / 24) * 100;
-                    const seg1EndPct = (seg1End / 24) * 100;
-                    const seg1Width = seg1EndPct - seg1StartPct;
-                    trackHTML += `<div class="tl-bar ${isToday ? 'today' : ''}" style="left: ${seg1StartPct}%; width: ${seg1Width}%;" title="${fmtTime12(shift.start)} – ${overnight ? '12:00 AM' : fmtTime12(shift.end)}">${seg1Width > 12 ? fmtHour(startH) + '–' + (overnight ? '12a' : fmtHour(seg1End)) : ''}</div>`;
+  const axisEl = document.getElementById('tl-axis-hours');
+  let axisHTML = '';
+  const firstTick = Math.ceil(axisStart);
+  for (let h = firstTick; h <= axisEnd; h += tickInterval) {
+    const pct = toPct(h);
+    if (pct < 0 || pct > 100) continue;
+    const nh = ((h % 24) + 24) % 24;
+    axisHTML += `<div class="tl-axis-tick ${nh === 0 ? 'midnight' : ''}" style="left: ${pct}%;">${fmtHour(nh)}</div>`;
+  }
+  axisEl.innerHTML = axisHTML;
 
-                    if (overnight && endH > 0) {
-                        const seg2EndPct = (endH / 24) * 100;
-                        trackHTML += `<div class="tl-bar continuation ${isToday ? 'today' : ''}" style="left: 0; width: ${seg2EndPct}%;" title="Continues from previous day">${seg2EndPct > 8 ? '→' + fmtHour(endH) : ''}</div>`;
-                    }
-                }
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let rowsHTML = '';
+  cycleDays.forEach(({ date: d, shift }, i) => {
+    const dayOfWeek = d.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isToday = sameDay(d, TODAY);
+    const isWeekDivider = i === 7;
 
-                rowsHTML += `
+    let trackHTML = '';
+    for (let h = firstTick; h <= axisEnd; h += tickInterval) {
+      const pct = toPct(h);
+      if (pct <= 0 || pct >= 100) continue;
+      const nh = ((h % 24) + 24) % 24;
+      trackHTML += `<div class="tl-track-gridline ${nh === 0 ? 'midnight' : ''}" style="left: ${pct}%;"></div>`;
+    }
+
+    // Render each segment as its own bar
+    const segs = getSegments(shift);
+    const totalH = computeShiftHours(shift);
+    let hoursLabel = '<span class="empty">—</span>';
+    if (segs.length > 0) hoursLabel = `${totalH}h`;
+
+    segs.forEach(seg => {
+      const startH = parseTime(seg.start);
+      let endH = parseTime(seg.end);
+      if (endH <= startH) endH += 24;
+      const leftPct = toPct(startH);
+      const widthPct = toPct(endH) - leftPct;
+      const labelText = widthPct > 14
+        ? `${fmtTime12(seg.start)} → ${fmtTime12(seg.end)}`
+        : widthPct > 8
+          ? `${fmtHour(startH)}–${fmtHour(((endH % 24) + 24) % 24)}`
+          : '';
+      trackHTML += `<div class="tl-bar ${isToday ? 'today' : ''}" style="left: ${leftPct}%; width: ${widthPct}%;" title="${fmtTime12(seg.start)} – ${fmtTime12(seg.end)}">${labelText}</div>`;
+    });
+
+    rowsHTML += `
       <div class="tl-row ${isToday ? 'today' : ''} ${isWeekDivider ? 'week-break' : ''}">
         <div class="tl-day">
           <span class="name ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}">${dayNames[dayOfWeek]}</span>
           <span class="date">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
         </div>
         <div class="tl-track">${trackHTML}</div>
-        <div class="tl-hours ${!shift ? 'empty' : ''}">${hoursLabel}</div>
+        <div class="tl-hours ${segs.length === 0 ? 'empty' : ''}">${hoursLabel}</div>
       </div>
     `;
-            }
+  });
+  stage.innerHTML = rowsHTML;
+}
 
-            rowsEl.innerHTML = rowsHTML;
-            document.getElementById('week-total').innerHTML =
-                `${(Math.round(cycleTotal * 10) / 10)}<span class="unit">hrs</span>`;
-        }
 
-        function renderLog() {
-            // Table removed — editing happens via clicking timeline rows or via the form
-        }
+function renderLog() {
+  // Table removed — editing happens via clicking timeline rows or via the form
+}
 
-        function renderSyncStatus() {
-            const dot = document.getElementById('sync-dot');
-            const status = document.getElementById('sync-status');
-            const lastSync = document.getElementById('last-sync');
+function renderSyncStatus() {
+  const dot = document.getElementById('sync-dot');
+  const status = document.getElementById('sync-status');
+  const lastSync = document.getElementById('last-sync');
 
-            if (syncConfig.token && syncConfig.gistId) {
-                dot.className = 'sync-dot connected';
-                status.textContent = 'Synced';
-                lastSync.textContent = fmtRelative(syncConfig.lastSync);
-            } else {
-                dot.className = 'sync-dot';
-                status.textContent = 'Local only';
-                lastSync.textContent = 'Not connected';
-            }
-        }
+  if (syncConfig.token && syncConfig.gistId) {
+    dot.className = 'sync-dot connected';
+    status.textContent = 'Synced';
+    lastSync.textContent = fmtRelative(syncConfig.lastSync);
+  } else {
+    dot.className = 'sync-dot';
+    status.textContent = 'Local only';
+    lastSync.textContent = 'Not connected';
+  }
+}
 
-        function escapeHtml(s) {
-            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-        }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
 
-        /* ============================ ACTIONS ============================ */
-        function saveShift() {
-            if (!isUnlocked) return;
-            const date = document.getElementById('in-date').value;
-            const start = document.getElementById('in-start').value;
-            const end = document.getElementById('in-end').value;
-            const brk = parseFloat(document.getElementById('in-break').value) || 0;
-            const note = document.getElementById('in-note').value.trim();
+/* ============================ ACTIONS ============================ */
+function saveShift() {
+  if (!isUnlocked) return;
+  const date = document.getElementById('in-date').value;
+  const start = document.getElementById('in-start').value;
+  const end = document.getElementById('in-end').value;
+  const brk = parseFloat(document.getElementById('in-break').value) || 0;
+  const note = document.getElementById('in-note').value.trim();
 
-            if (!date || !start || !end) {
-                toast('Fill in date, start, and end', true);
-                return;
-            }
+  if (!date || !start || !end) {
+    toast('Fill in date, start, and end', true);
+    return;
+  }
 
-            let existingIdx;
-            if (editingId) {
-                existingIdx = shifts.findIndex(s => s.id === editingId);
-            } else {
-                existingIdx = shifts.findIndex(s => s.date === date);
-            }
+  let existingIdx;
+  if (editingId) {
+    existingIdx = shifts.findIndex(s => s.id === editingId);
+  } else {
+    existingIdx = shifts.findIndex(s => s.date === date);
+  }
 
-            const entry = {
-                id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
-                date, start, end, break: brk, note,
-            };
+  const entry = {
+    id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
+    date, start, end, break: brk, note,
+  };
 
-            if (existingIdx >= 0) shifts[existingIdx] = entry;
-            else shifts.push(entry);
+  if (existingIdx >= 0) shifts[existingIdx] = entry;
+  else shifts.push(entry);
 
-            saveShiftsLocal();
-            if (syncConfig.token && syncConfig.gistId) {
-                syncToGist();
-            }
+  saveShiftsLocal();
+  if (syncConfig.token && syncConfig.gistId) {
+    syncToGist();
+  }
 
-            toast(existingIdx >= 0 ? 'Updated' : 'Saved');
-            cancelEdit();
-            render();
-        }
+  toast(existingIdx >= 0 ? 'Updated' : 'Saved');
+  cancelEdit();
+  render();
+}
 
-        function startEdit(id) {
-            if (!isUnlocked) return;
-            const s = shifts.find(x => x.id === id);
-            if (!s) return;
-            editingId = id;
-            document.getElementById('in-date').value = s.date;
-            document.getElementById('in-start').value = s.start;
-            document.getElementById('in-end').value = s.end;
-            document.getElementById('in-break').value = s.break || 0;
-            document.getElementById('in-note').value = s.note || '';
-            document.getElementById('btn-save').textContent = 'Update';
-            document.getElementById('btn-save').classList.add('editing');
-            document.getElementById('form-cancel').classList.add('visible');
-            document.getElementById('form-title').textContent = 'Editing entry · ' + s.date;
-            updateComputed();
-            render();
-            document.querySelector('.form').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+function startEdit(id) {
+  if (!isUnlocked) return;
+  const s = shifts.find(x => x.id === id);
+  if (!s) return;
+  editingId = id;
+  document.getElementById('in-date').value = s.date;
+  document.getElementById('in-start').value = s.start;
+  document.getElementById('in-end').value = s.end;
+  document.getElementById('in-break').value = s.break || 0;
+  document.getElementById('in-note').value = s.note || '';
+  document.getElementById('btn-save').textContent = 'Update';
+  document.getElementById('btn-save').classList.add('editing');
+  document.getElementById('form-cancel').classList.add('visible');
+  document.getElementById('form-title').textContent = 'Editing entry · ' + s.date;
+  updateComputed();
+  render();
+  document.querySelector('.form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
 
-        function cancelEdit() {
-            editingId = null;
-            document.getElementById('btn-save').textContent = 'Save';
-            document.getElementById('btn-save').classList.remove('editing');
-            document.getElementById('form-cancel').classList.remove('visible');
-            document.getElementById('form-title').textContent = 'Log a Shift';
-            document.getElementById('in-note').value = '';
-        }
+function cancelEdit() {
+  editingId = null;
+  document.getElementById('btn-save').textContent = 'Save';
+  document.getElementById('btn-save').classList.remove('editing');
+  document.getElementById('form-cancel').classList.remove('visible');
+  document.getElementById('form-title').textContent = 'Log a Shift';
+  document.getElementById('in-note').value = '';
+}
 
-        function deleteShift(id) {
-            if (!isUnlocked) return;
-            if (!confirm('Delete this entry?')) return;
-            shifts = shifts.filter(s => s.id !== id);
-            saveShiftsLocal();
-            if (syncConfig.token && syncConfig.gistId) syncToGist();
-            if (editingId === id) cancelEdit();
-            toast('Deleted');
-            render();
-        }
+function deleteShift(id) {
+  if (!isUnlocked) return;
+  if (!confirm('Delete this entry?')) return;
+  shifts = shifts.filter(s => s.id !== id);
+  saveShiftsLocal();
+  if (syncConfig.token && syncConfig.gistId) syncToGist();
+  if (editingId === id) cancelEdit();
+  toast('Deleted');
+  render();
+}
 
-        function resetToSamples() {
-            if (!isUnlocked) return;
-            if (!confirm('Reset all entries to samples? This erases local data (but won\'t affect your synced gist unless you sync after).')) return;
-            localStorage.removeItem(STORAGE_KEY);
-            shifts = loadShifts();
-            render();
-            toast('Reset');
-        }
+function resetToSamples() {
+  if (!isUnlocked) return;
+  if (!confirm('Reset all entries to samples? This erases local data (but won\'t affect your synced gist unless you sync after).')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  shifts = loadShifts();
+  render();
+  toast('Reset');
+}
 
-        function exportCSV() {
-            const rows = [['Date', 'Day', 'Start', 'End', 'Type', 'Break', 'Hours', 'Note']];
-            [...shifts].sort((a, b) => a.date.localeCompare(b.date)).forEach(s => {
-                const d = parseDate(s.date);
-                rows.push([
-                    s.date,
-                    d.toLocaleDateString('en-US', { weekday: 'long' }),
-                    s.start, s.end,
-                    isOvernight(s.start, s.end) ? 'Overnight' : 'Day',
-                    s.break || 0,
-                    computeHours(s.start, s.end, s.break),
-                    (s.note || '').replace(/"/g, '""'),
-                ]);
-            });
-            const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `work_log_${fmtDate(new Date())}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            toast('Exported');
-        }
+function exportCSV() {
+  const rows = [['Date','Day','Start','End','Type','Break','Hours','Note']];
+  [...shifts].sort((a,b) => a.date.localeCompare(b.date)).forEach(s => {
+    const d = parseDate(s.date);
+    rows.push([
+      s.date,
+      d.toLocaleDateString('en-US', { weekday: 'long' }),
+      s.start, s.end,
+      isOvernight(s.start, s.end) ? 'Overnight' : 'Day',
+      s.break || 0,
+      computeHours(s.start, s.end, s.break),
+      (s.note || '').replace(/"/g, '""'),
+    ]);
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `work_log_${fmtDate(new Date())}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported');
+}
 
-        function updateComputed() {
-            const start = document.getElementById('in-start').value;
-            const end = document.getElementById('in-end').value;
-            const brk = parseFloat(document.getElementById('in-break').value) || 0;
-            const hrs = computeHours(start, end, brk);
-            const overnight = isOvernight(start, end);
-            const cv = document.getElementById('computed-v');
-            cv.textContent = hrs || '0';
-            cv.classList.toggle('empty', hrs === 0);
-            document.getElementById('computed-u').textContent = overnight ? 'Overnight' : 'Hours';
-            document.getElementById('computed').classList.toggle('overnight', overnight);
-        }
+function updateComputed() {
+  const start = document.getElementById('in-start').value;
+  const end = document.getElementById('in-end').value;
+  const brk = parseFloat(document.getElementById('in-break').value) || 0;
+  const hrs = computeHours(start, end, brk);
+  const overnight = isOvernight(start, end);
+  const cv = document.getElementById('computed-v');
+  cv.textContent = hrs || '0';
+  cv.classList.toggle('empty', hrs === 0);
+  document.getElementById('computed-u').textContent = overnight ? 'Overnight' : 'Hours';
+  document.getElementById('computed').classList.toggle('overnight', overnight);
+}
 
-        function toast(msg, isError) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.toggle('error', !!isError);
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 1500);
-        }
+function toast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', !!isError);
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
 
-        /* ============================ GIST SYNC ============================ */
-        async function syncToGist() {
-            if (!syncConfig.token) return;
+/* ============================ GIST SYNC ============================ */
+async function syncToGist() {
+  if (!syncConfig.token) return;
 
-            setSyncStatus('syncing');
-            try {
-                const payload = {
-                    description: 'Work Log — synced data',
-                    public: false,
-                    files: {
-                        'work_log.json': { content: JSON.stringify({ shifts, updated: new Date().toISOString() }, null, 2) }
-                    }
-                };
+  setSyncStatus('syncing');
+  try {
+    const payload = {
+      description: 'Work Log — synced data',
+      public: false,
+      files: {
+        'work_log.json': { content: JSON.stringify({ shifts, updated: new Date().toISOString() }, null, 2) }
+      }
+    };
 
-                let res;
-                if (syncConfig.gistId) {
-                    res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `token ${syncConfig.token}`,
-                            'Accept': 'application/vnd.github+json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
-                } else {
-                    res = await fetch('https://api.github.com/gists', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `token ${syncConfig.token}`,
-                            'Accept': 'application/vnd.github+json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
-                }
+    let res;
+    if (syncConfig.gistId) {
+      res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `token ${syncConfig.token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+    } else {
+      res = await fetch('https://api.github.com/gists', {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${syncConfig.token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+    }
 
-                if (!res.ok) throw new Error(`Gist API ${res.status}`);
-                const data = await res.json();
-                if (!syncConfig.gistId) syncConfig.gistId = data.id;
-                syncConfig.lastSync = Date.now();
-                saveSyncConfig();
-                setSyncStatus('connected');
-                return true;
-            } catch (e) {
-                setSyncStatus('error');
-                toast('Sync failed: ' + e.message, true);
-                return false;
-            }
-        }
+    if (!res.ok) throw new Error(`Gist API ${res.status}`);
+    const data = await res.json();
+    if (!syncConfig.gistId) syncConfig.gistId = data.id;
+    syncConfig.lastSync = Date.now();
+    saveSyncConfig();
+    setSyncStatus('connected');
+    return true;
+  } catch (e) {
+    setSyncStatus('error');
+    toast('Sync failed: ' + e.message, true);
+    return false;
+  }
+}
 
-        async function pullFromGist() {
-            if (!syncConfig.token || !syncConfig.gistId) return;
-            setSyncStatus('syncing');
-            try {
-                const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
-                    headers: {
-                        'Authorization': `token ${syncConfig.token}`,
-                        'Accept': 'application/vnd.github+json',
-                    },
-                });
-                if (!res.ok) throw new Error(`Gist API ${res.status}`);
-                const data = await res.json();
-                const file = data.files['work_log.json'];
-                if (!file) throw new Error('work_log.json not found in gist');
-                const parsed = JSON.parse(file.content);
-                if (parsed.shifts) {
-                    shifts = parsed.shifts;
-                    saveShiftsLocal();
-                    syncConfig.lastSync = Date.now();
-                    saveSyncConfig();
-                    setSyncStatus('connected');
-                    render();
-                    return true;
-                }
-            } catch (e) {
-                setSyncStatus('error');
-                toast('Pull failed: ' + e.message, true);
-                return false;
-            }
-        }
+async function pullFromGist() {
+  if (!syncConfig.token || !syncConfig.gistId) return;
+  setSyncStatus('syncing');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+      headers: {
+        'Authorization': `token ${syncConfig.token}`,
+        'Accept': 'application/vnd.github+json',
+      },
+    });
+    if (!res.ok) throw new Error(`Gist API ${res.status}`);
+    const data = await res.json();
+    const file = data.files['work_log.json'];
+    if (!file) throw new Error('work_log.json not found in gist');
+    const parsed = JSON.parse(file.content);
+    if (parsed.shifts) {
+      shifts = parsed.shifts;
+      saveShiftsLocal();
+      syncConfig.lastSync = Date.now();
+      saveSyncConfig();
+      setSyncStatus('connected');
+      render();
+      return true;
+    }
+  } catch (e) {
+    setSyncStatus('error');
+    toast('Pull failed: ' + e.message, true);
+    return false;
+  }
+}
 
-        function setSyncStatus(state) {
-            const dot = document.getElementById('sync-dot');
-            const status = document.getElementById('sync-status');
-            dot.className = 'sync-dot ' + (state === 'connected' ? 'connected' : state);
-            status.textContent = state === 'syncing' ? 'Syncing…' : state === 'connected' ? 'Synced' : state === 'error' ? 'Sync error' : 'Local only';
-            document.getElementById('last-sync').textContent = state === 'connected' ? fmtRelative(syncConfig.lastSync) : state === 'error' ? 'Last sync failed' : 'Not connected';
-        }
+function setSyncStatus(state) {
+  const dot = document.getElementById('sync-dot');
+  const status = document.getElementById('sync-status');
+  dot.className = 'sync-dot ' + (state === 'connected' ? 'connected' : state);
+  status.textContent = state === 'syncing' ? 'Syncing…' : state === 'connected' ? 'Synced' : state === 'error' ? 'Sync error' : 'Local only';
+  document.getElementById('last-sync').textContent = state === 'connected' ? fmtRelative(syncConfig.lastSync) : state === 'error' ? 'Last sync failed' : 'Not connected';
+}
 
-        async function manualSync() {
-            if (!syncConfig.token || !syncConfig.gistId) {
-                openSyncModal();
-                return;
-            }
-            const ok = await syncToGist();
-            if (ok) toast('Synced');
-        }
+async function manualSync() {
+  if (!syncConfig.token || !syncConfig.gistId) {
+    openSyncModal();
+    return;
+  }
+  const ok = await syncToGist();
+  if (ok) toast('Synced');
+}
 
-        /* ============================ MODAL ============================ */
-        function openSyncModal() {
-            document.getElementById('modal-token').value = syncConfig.token || '';
-            document.getElementById('modal-gist-id').value = syncConfig.gistId || '';
-            document.getElementById('sync-modal').classList.add('visible');
-        }
-        function closeSyncModal() {
-            document.getElementById('sync-modal').classList.remove('visible');
-        }
-        async function modalSave() {
-            const token = document.getElementById('modal-token').value.trim();
-            const gistId = document.getElementById('modal-gist-id').value.trim();
-            if (!token) { toast('Token required', true); return; }
+/* ============================ MODAL ============================ */
+function openSyncModal() {
+  document.getElementById('modal-token').value = syncConfig.token || '';
+  document.getElementById('modal-gist-id').value = syncConfig.gistId || '';
+  document.getElementById('sync-modal').classList.add('visible');
+}
+function closeSyncModal() {
+  document.getElementById('sync-modal').classList.remove('visible');
+}
+async function modalSave() {
+  const token = document.getElementById('modal-token').value.trim();
+  const gistId = document.getElementById('modal-gist-id').value.trim();
+  if (!token) { toast('Token required', true); return; }
 
-            syncConfig.token = token;
-            syncConfig.gistId = gistId;
-            saveSyncConfig();
+  syncConfig.token = token;
+  syncConfig.gistId = gistId;
+  saveSyncConfig();
 
-            // If gist ID was provided, pull first; else push to create
-            if (gistId) {
-                const ok = await pullFromGist();
-                if (ok) toast('Connected · pulled data');
-            } else {
-                const ok = await syncToGist();
-                if (ok) toast('Connected · gist created');
-            }
-            closeSyncModal();
-            render();
-        }
-        function modalDisconnect() {
-            if (!confirm('Disconnect sync? Token and Gist ID will be removed from this browser. Your local data stays.')) return;
-            syncConfig = { token: '', gistId: '', lastSync: null };
-            saveSyncConfig();
-            closeSyncModal();
-            render();
-            toast('Disconnected');
-        }
+  // If gist ID was provided, pull first; else push to create
+  if (gistId) {
+    const ok = await pullFromGist();
+    if (ok) toast('Connected · pulled data');
+  } else {
+    const ok = await syncToGist();
+    if (ok) toast('Connected · gist created');
+  }
+  closeSyncModal();
+  render();
+}
+function modalDisconnect() {
+  if (!confirm('Disconnect sync? Token and Gist ID will be removed from this browser. Your local data stays.')) return;
+  syncConfig = { token: '', gistId: '', lastSync: null };
+  saveSyncConfig();
+  closeSyncModal();
+  render();
+  toast('Disconnected');
+}
 
-        /* ============================ INIT ============================ */
-        // Start locked by default — anyone visiting sees read-only view
-        lock();
+/* ============================ INIT ============================ */
+// Start locked by default — anyone visiting sees read-only view
+lock();
 
-        viewWeekStart = currentPayPeriodStart(TODAY);
-        shifts = loadShifts();
-        document.getElementById('in-date').value = fmtDate(TODAY);
+viewWeekStart = currentPayPeriodStart(TODAY);
+shifts = loadShifts();
+document.getElementById('in-date').value = fmtDate(TODAY);
 
-        document.getElementById('btn-save').addEventListener('click', saveShift);
-        document.getElementById('form-cancel').addEventListener('click', () => { cancelEdit(); render(); });
-        document.getElementById('btn-reset').addEventListener('click', resetToSamples);
-        document.getElementById('btn-export').addEventListener('click', exportCSV);
-        document.getElementById('btn-sync').addEventListener('click', manualSync);
-        document.getElementById('sync-pill').addEventListener('click', openSyncModal);
-        document.getElementById('modal-cancel').addEventListener('click', closeSyncModal);
-        document.getElementById('modal-save').addEventListener('click', modalSave);
-        document.getElementById('modal-disconnect').addEventListener('click', modalDisconnect);
-        document.getElementById('sync-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'sync-modal') closeSyncModal();
-        });
+document.getElementById('btn-save').addEventListener('click', saveShift);
+document.getElementById('form-cancel').addEventListener('click', () => { cancelEdit(); render(); });
+document.getElementById('btn-reset').addEventListener('click', resetToSamples);
+document.getElementById('btn-export').addEventListener('click', exportCSV);
+document.getElementById('btn-sync').addEventListener('click', manualSync);
+document.getElementById('sync-pill').addEventListener('click', openSyncModal);
+document.getElementById('modal-cancel').addEventListener('click', closeSyncModal);
+document.getElementById('modal-save').addEventListener('click', modalSave);
+document.getElementById('modal-disconnect').addEventListener('click', modalDisconnect);
+document.getElementById('sync-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'sync-modal') closeSyncModal();
+});
 
-        ['in-start', 'in-end', 'in-break'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updateComputed);
-        });
-        ['in-date', 'in-start', 'in-end', 'in-break', 'in-note'].forEach(id => {
-            const el = document.getElementById(id);
-            el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
-            el.addEventListener('blur', () => el.closest('.field').classList.remove('focused'));
-        });
+['in-start', 'in-end', 'in-break'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateComputed);
+});
+['in-date', 'in-start', 'in-end', 'in-break', 'in-note'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
+  el.addEventListener('blur', () => el.closest('.field').classList.remove('focused'));
+});
 
-        document.getElementById('prev-week').addEventListener('click', () => {
-            viewWeekStart.setDate(viewWeekStart.getDate() - 14);
-            viewWeekStart = new Date(viewWeekStart);
-            renderTimeline();
-        });
-        document.getElementById('next-week').addEventListener('click', () => {
-            viewWeekStart.setDate(viewWeekStart.getDate() + 14);
-            viewWeekStart = new Date(viewWeekStart);
-            renderTimeline();
-        });
-        document.getElementById('this-week').addEventListener('click', () => {
-            viewWeekStart = currentPayPeriodStart(TODAY);
-            renderTimeline();
-        });
+document.getElementById('prev-week').addEventListener('click', () => {
+  viewWeekStart.setDate(viewWeekStart.getDate() - 14);
+  viewWeekStart = new Date(viewWeekStart);
+  renderTimeline();
+});
+document.getElementById('next-week').addEventListener('click', () => {
+  viewWeekStart.setDate(viewWeekStart.getDate() + 14);
+  viewWeekStart = new Date(viewWeekStart);
+  renderTimeline();
+});
+document.getElementById('this-week').addEventListener('click', () => {
+  viewWeekStart = currentPayPeriodStart(TODAY);
+  renderTimeline();
+});
 
-        document.addEventListener('keydown', (e) => {
-            // Unlock shortcut: Cmd/Ctrl + E
-            if ((e.metaKey || e.ctrlKey) && (e.key === 'e' || e.key === 'E')) {
-                e.preventDefault();
-                if (isUnlocked) {
-                    lock();
-                    toast('Locked');
-                } else {
-                    showPwPrompt();
-                }
-                return;
-            }
-            // Password prompt keys
-            const pwBackdrop = document.getElementById('pw-backdrop');
-            if (pwBackdrop.classList.contains('visible')) {
-                if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); return; }
-                if (e.key === 'Escape') { hidePwPrompt(); return; }
-            }
-            if (e.key === 'Escape') {
-                if (document.getElementById('sync-modal').classList.contains('visible')) closeSyncModal();
-                else if (editingId) { cancelEdit(); render(); }
-            }
-        });
+document.addEventListener('keydown', (e) => {
+  // Unlock shortcut: Cmd/Ctrl + E
+  if ((e.metaKey || e.ctrlKey) && (e.key === 'e' || e.key === 'E')) {
+    e.preventDefault();
+    if (isUnlocked) {
+      lock();
+      toast('Locked');
+    } else {
+      showPwPrompt();
+    }
+    return;
+  }
+  // Password prompt keys
+  const pwBackdrop = document.getElementById('pw-backdrop');
+  if (pwBackdrop.classList.contains('visible')) {
+    if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); return; }
+    if (e.key === 'Escape') { hidePwPrompt(); return; }
+  }
+  if (e.key === 'Escape') {
+    if (document.getElementById('sync-modal').classList.contains('visible')) closeSyncModal();
+    else if (editingId) { cancelEdit(); render(); }
+  }
+});
 
-        // Click backdrop to close pw prompt
-        document.getElementById('pw-backdrop').addEventListener('click', (e) => {
-            if (e.target.id === 'pw-backdrop') hidePwPrompt();
-        });
+// Click backdrop to close pw prompt
+document.getElementById('pw-backdrop').addEventListener('click', (e) => {
+  if (e.target.id === 'pw-backdrop') hidePwPrompt();
+});
 
-        // On load: if synced, try to pull latest
-        if (syncConfig.token && syncConfig.gistId) {
-            pullFromGist().then(() => {
-                updateComputed();
-                render();
-            });
-        }
+// On load: if synced, try to pull latest
+if (syncConfig.token && syncConfig.gistId) {
+  pullFromGist().then(() => {
+    updateComputed();
+    render();
+  });
+}
 
-        updateComputed();
-        render();
+updateComputed();
+render();
 
-        // Refresh "last sync" string every minute
-        setInterval(() => {
-            if (syncConfig.token && syncConfig.gistId) renderSyncStatus();
-        }, 60000);
-    </script>
+// Refresh "last sync" string every minute
+setInterval(() => {
+  if (syncConfig.token && syncConfig.gistId) renderSyncStatus();
+}, 60000);
+/* ============================ CALCULATOR ============================ */
+const calcState = {
+  current: '0',
+  previous: null,
+  operator: null,
+  justEvaluated: false,
+};
+
+function calcRender() {
+  document.getElementById('calc-result').textContent = formatCalcNum(calcState.current);
+  const exprEl = document.getElementById('calc-expr');
+  if (calcState.previous !== null && calcState.operator) {
+    const opSym = { '+': '+', '-': '−', '*': '×', '/': '÷' }[calcState.operator];
+    exprEl.textContent = `${formatCalcNum(calcState.previous)} ${opSym}`;
+  } else {
+    exprEl.innerHTML = '&nbsp;';
+  }
+  // Highlight active op
+  document.querySelectorAll('.calc-key.op').forEach(b => b.classList.remove('active'));
+  if (calcState.operator && !calcState.justEvaluated) {
+    const active = document.querySelector(`.calc-key.op[data-op="${calcState.operator}"]`);
+    if (active && calcState.current === '0') active.classList.add('active');
+  }
+}
+
+function formatCalcNum(n) {
+  if (n === null || n === undefined) return '0';
+  const num = parseFloat(n);
+  if (isNaN(num)) return n.toString();
+  if (!isFinite(num)) return 'Error';
+  // If the raw string has trailing decimal point or trailing zeros after dot, preserve as typed
+  const s = n.toString();
+  if (s.endsWith('.') || (s.includes('.') && s.split('.')[1].endsWith('0'))) return s;
+  // Otherwise format with thousands separators, up to 10 significant digits
+  const abs = Math.abs(num);
+  if (abs >= 1e10 || (abs < 1e-6 && abs > 0)) return num.toExponential(6);
+  const rounded = Math.round(num * 1e8) / 1e8;
+  return rounded.toLocaleString('en-US', { maximumFractionDigits: 8 });
+}
+
+function calcInputDigit(d) {
+  if (calcState.justEvaluated) {
+    calcState.current = d;
+    calcState.previous = null;
+    calcState.operator = null;
+    calcState.justEvaluated = false;
+  } else if (calcState.current === '0') {
+    calcState.current = d;
+  } else {
+    if (calcState.current.replace('.', '').replace('-', '').length >= 12) return;
+    calcState.current += d;
+  }
+  calcRender();
+}
+
+function calcInputDot() {
+  if (calcState.justEvaluated) {
+    calcState.current = '0.';
+    calcState.justEvaluated = false;
+  } else if (!calcState.current.includes('.')) {
+    calcState.current += '.';
+  }
+  calcRender();
+}
+
+function calcInputOp(op) {
+  if (calcState.operator && calcState.previous !== null && !calcState.justEvaluated) {
+    // Chain: evaluate first
+    calcEvaluate();
+  }
+  calcState.previous = calcState.current;
+  calcState.operator = op;
+  calcState.current = '0';
+  calcState.justEvaluated = false;
+  calcRender();
+}
+
+function calcEvaluate() {
+  if (calcState.operator === null || calcState.previous === null) return;
+  const a = parseFloat(calcState.previous);
+  const b = parseFloat(calcState.current);
+  let result;
+  switch (calcState.operator) {
+    case '+': result = a + b; break;
+    case '-': result = a - b; break;
+    case '*': result = a * b; break;
+    case '/': result = b === 0 ? NaN : a / b; break;
+  }
+  if (!isFinite(result)) {
+    calcState.current = 'Error';
+  } else {
+    calcState.current = (Math.round(result * 1e10) / 1e10).toString();
+  }
+  calcState.previous = null;
+  calcState.operator = null;
+  calcState.justEvaluated = true;
+  calcRender();
+}
+
+function calcClear() {
+  calcState.current = '0';
+  calcState.previous = null;
+  calcState.operator = null;
+  calcState.justEvaluated = false;
+  calcRender();
+}
+
+function calcSign() {
+  if (calcState.current === '0' || calcState.current === 'Error') return;
+  calcState.current = calcState.current.startsWith('-')
+    ? calcState.current.slice(1)
+    : '-' + calcState.current;
+  calcRender();
+}
+
+function calcPercent() {
+  const n = parseFloat(calcState.current);
+  if (isNaN(n)) return;
+  calcState.current = (n / 100).toString();
+  calcRender();
+}
+
+function openCalc() {
+  document.getElementById('calc-backdrop').classList.add('visible');
+}
+function closeCalc() {
+  document.getElementById('calc-backdrop').classList.remove('visible');
+}
+
+// Wire up calculator
+document.getElementById('open-calc').addEventListener('click', openCalc);
+document.getElementById('calc-close').addEventListener('click', closeCalc);
+document.getElementById('calc-backdrop').addEventListener('click', (e) => {
+  if (e.target.id === 'calc-backdrop') closeCalc();
+});
+document.querySelectorAll('.calc-key').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.digit !== undefined) calcInputDigit(btn.dataset.digit);
+    else if (btn.dataset.op) calcInputOp(btn.dataset.op);
+    else if (btn.dataset.action === 'dot') calcInputDot();
+    else if (btn.dataset.action === 'eq') calcEvaluate();
+    else if (btn.dataset.action === 'clear') calcClear();
+    else if (btn.dataset.action === 'sign') calcSign();
+    else if (btn.dataset.action === 'percent') calcPercent();
+  });
+});
+
+// Keyboard support when calc is open
+document.addEventListener('keydown', (e) => {
+  const open = document.getElementById('calc-backdrop').classList.contains('visible');
+  if (!open) return;
+
+  // Don't intercept keys when the user is typing in an input field
+  // (e.g. converter inputs need digits to reach them, not the calculator).
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    if (e.key === 'Escape') closeCalc();
+    return;
+  }
+
+  // Also don't intercept when the Convert tab is active
+  const calcPaneActive = document.getElementById('pane-calc').classList.contains('active');
+  if (!calcPaneActive) {
+    if (e.key === 'Escape') closeCalc();
+    return;
+  }
+
+  if (e.key >= '0' && e.key <= '9') { calcInputDigit(e.key); e.preventDefault(); }
+  else if (e.key === '.') { calcInputDot(); e.preventDefault(); }
+  else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') { calcInputOp(e.key); e.preventDefault(); }
+  else if (e.key === 'Enter' || e.key === '=') { calcEvaluate(); e.preventDefault(); }
+  else if (e.key === 'Escape') { closeCalc(); }
+  else if (e.key === 'Backspace') {
+    if (calcState.justEvaluated) { calcClear(); }
+    else if (calcState.current.length > 1) {
+      calcState.current = calcState.current.slice(0, -1);
+      if (calcState.current === '-' || calcState.current === '') calcState.current = '0';
+      calcRender();
+    } else {
+      calcState.current = '0';
+      calcRender();
+    }
+    e.preventDefault();
+  } else if (e.key.toLowerCase() === 'c') { calcClear(); e.preventDefault(); }
+});
+
+calcRender();
+
+/* ============================ CONVERTER ============================ */
+const RATES_CACHE_KEY = 'workLog_v2_rates';
+const RATES_TTL_HOURS = 12; // cache rates for 12 hours
+
+// Hardcoded fallback rates — used if network fails completely.
+// Updated periodically; these are approximate Q2 2026 mid-market rates.
+const FALLBACK_RATES = {
+  USD: 1,
+  CAD: 1.38,
+  INR: 84.50,
+};
+const FALLBACK_DATE = 'Apr 2026';
+
+let rates = null;           // { USD: 1, CAD: x, INR: y }
+let ratesUpdatedAt = null;  // ms timestamp
+let ratesAreOffline = false; // true when using FALLBACK_RATES
+let convertInputs = null;
+
+function loadRatesCache() {
+  try {
+    const raw = localStorage.getItem(RATES_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed.rates || !parsed.ts) return null;
+    const ageHrs = (Date.now() - parsed.ts) / 3600000;
+    if (ageHrs > RATES_TTL_HOURS) return null;
+    return parsed;
+  } catch (e) { return null; }
+}
+
+function saveRatesCache(rates, ts) {
+  try {
+    localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({ rates, ts }));
+  } catch (e) {}
+}
+
+// Try each endpoint in turn; the first one that responds with valid CAD+INR wins.
+async function tryFetchEndpoints() {
+  const endpoints = [
+    {
+      url: 'https://open.er-api.com/v6/latest/USD',
+      parse: (d) => (d.result === 'success' && d.rates) ? { CAD: d.rates.CAD, INR: d.rates.INR } : null,
+    },
+    {
+      url: 'https://api.frankfurter.dev/v1/latest?from=USD&to=CAD,INR',
+      parse: (d) => (d.rates && d.rates.CAD && d.rates.INR) ? { CAD: d.rates.CAD, INR: d.rates.INR } : null,
+    },
+    {
+      url: 'https://api.exchangerate.host/latest?base=USD&symbols=CAD,INR',
+      parse: (d) => (d.rates && d.rates.CAD && d.rates.INR) ? { CAD: d.rates.CAD, INR: d.rates.INR } : null,
+    },
+  ];
+
+  for (const ep of endpoints) {
+    try {
+      const res = await fetch(ep.url, { method: 'GET' });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const parsed = ep.parse(data);
+      if (parsed && parsed.CAD && parsed.INR) return parsed;
+    } catch (e) {
+      // try next endpoint
+    }
+  }
+  return null;
+}
+
+async function fetchRates(force = false) {
+  // Check cache first unless forced
+  if (!force) {
+    const cached = loadRatesCache();
+    if (cached) {
+      rates = cached.rates;
+      ratesUpdatedAt = cached.ts;
+      ratesAreOffline = false;
+      setConvertStatus('ready', 'Live rates · cached');
+      updateConvertUpdatedLabel();
+      return true;
+    }
+  }
+
+  setConvertStatus('loading', 'Loading rates…');
+  const refreshBtn = document.getElementById('convert-refresh');
+  if (refreshBtn) refreshBtn.classList.add('spinning');
+
+  try {
+    const fetched = await tryFetchEndpoints();
+    if (fetched) {
+      rates = { USD: 1, CAD: fetched.CAD, INR: fetched.INR };
+      ratesUpdatedAt = Date.now();
+      ratesAreOffline = false;
+      saveRatesCache(rates, ratesUpdatedAt);
+      setConvertStatus('ready', 'Live rates loaded');
+      updateConvertUpdatedLabel();
+      return true;
+    } else {
+      // All endpoints failed — use hardcoded fallback so the converter still works
+      rates = { ...FALLBACK_RATES };
+      ratesUpdatedAt = null;
+      ratesAreOffline = true;
+      setConvertStatus('warning', `Offline · using ${FALLBACK_DATE} rates`);
+      updateConvertUpdatedLabel();
+      return true;
+    }
+  } finally {
+    if (refreshBtn) refreshBtn.classList.remove('spinning');
+  }
+}
+
+function setConvertStatus(state, msg) {
+  const el = document.getElementById('convert-status');
+  if (!el) return;
+  el.className = 'convert-status';
+  if (state === 'ready')   el.classList.add('ready');
+  if (state === 'error')   el.classList.add('error');
+  if (state === 'warning') el.classList.add('warning');
+  el.textContent = msg;
+}
+
+function updateConvertUpdatedLabel() {
+  const el = document.getElementById('convert-updated');
+  if (!el || !rates) return;
+  const cadStr = rates.CAD.toFixed(3);
+  const inrStr = rates.INR.toFixed(2);
+  if (ratesAreOffline) {
+    el.textContent = `Offline · 1 USD = ${cadStr} CAD · ${inrStr} INR`;
+  } else if (ratesUpdatedAt) {
+    const d = new Date(ratesUpdatedAt);
+    el.textContent = `${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · 1 USD = ${cadStr} CAD · ${inrStr} INR`;
+  } else {
+    el.textContent = `1 USD = ${cadStr} CAD · ${inrStr} INR`;
+  }
+}
+
+function getConvertInputs() {
+  if (convertInputs) return convertInputs;
+  convertInputs = {
+    USD: document.getElementById('conv-usd'),
+    CAD: document.getElementById('conv-cad'),
+    INR: document.getElementById('conv-inr'),
+  };
+  return convertInputs;
+}
+
+function formatConvertNum(n) {
+  if (n === 0) return '0';
+  const abs = Math.abs(n);
+  const decimals = abs >= 1000 ? 0 : abs >= 10 ? 2 : 4;
+  return n.toLocaleString('en-US', { minimumFractionDigits: decimals === 0 ? 0 : 2, maximumFractionDigits: decimals });
+}
+
+function handleConvertInput(e) {
+  if (!rates) return;
+  const inputs = getConvertInputs();
+  const sourceEl = e.target;
+  const sourceCur = sourceEl.dataset.cur;
+  const raw = sourceEl.value.replace(/[^0-9.\-]/g, '');
+  const amount = parseFloat(raw);
+  if (isNaN(amount)) {
+    Object.entries(inputs).forEach(([cur, el]) => {
+      if (cur !== sourceCur) el.value = '';
+    });
+    return;
+  }
+  const usdAmount = amount / rates[sourceCur];
+  Object.entries(inputs).forEach(([cur, el]) => {
+    if (cur === sourceCur) return;
+    const converted = usdAmount * rates[cur];
+    el.value = formatConvertNum(converted);
+  });
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.calc-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === name);
+  });
+  document.querySelectorAll('.calc-pane').forEach(p => {
+    p.classList.toggle('active', p.id === 'pane-' + name);
+  });
+  if (name === 'convert') {
+    if (!rates) {
+      fetchRates(false);
+    } else {
+      // Refresh status display in case it was stale
+      if (ratesAreOffline) setConvertStatus('warning', `Offline · using ${FALLBACK_DATE} rates`);
+      else setConvertStatus('ready', 'Live rates loaded');
+      updateConvertUpdatedLabel();
+    }
+    setTimeout(() => {
+      const usd = document.getElementById('conv-usd');
+      if (usd) usd.focus();
+    }, 50);
+  }
+}
+
+document.getElementById('tab-calc').addEventListener('click', () => switchTab('calc'));
+document.getElementById('tab-convert').addEventListener('click', () => switchTab('convert'));
+document.getElementById('convert-refresh').addEventListener('click', () => fetchRates(true));
+
+['conv-usd', 'conv-cad', 'conv-inr'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', handleConvertInput);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCalc();
+    });
+  }
+});
+</script>
 
 </body>
-
 </html>
