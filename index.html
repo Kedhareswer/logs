@@ -713,180 +713,12 @@
     letter-spacing: 0;
   }
 
-  /* ===================== TABLE ===================== */
-  .table-wrap {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--bg);
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  thead th {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--text-3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 500;
-    text-align: left;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-  }
-  thead th.num { text-align: right; }
-  thead th.center { text-align: center; }
-  .week-divider td {
-    background: var(--surface);
-    padding: 10px 18px;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-3);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 500;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .week-divider .week-meta {
-    float: right;
-    color: var(--text-2);
-    font-weight: 500;
-  }
-  tbody td {
-    padding: 13px 18px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    color: var(--text);
-    vertical-align: middle;
-  }
-  tbody tr:last-child td { border-bottom: none; }
-  tbody tr.entry-row {
-    transition: background 0.12s;
-    cursor: pointer;
-  }
-  tbody tr.entry-row:hover { background: var(--surface); }
-  tbody tr.entry-row.today {
-    background: rgba(59, 130, 246, 0.03);
-    box-shadow: inset 2px 0 0 var(--accent);
-  }
-  tbody tr.entry-row.today:hover { background: rgba(59, 130, 246, 0.06); }
-  tbody tr.entry-row.editing {
-    background: var(--surface-2);
-    box-shadow: inset 2px 0 0 var(--accent);
-  }
-  .date-col {
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    font-feature-settings: "tnum";
-  }
-  .date-col .month {
-    color: var(--text-3);
-    font-weight: 400;
-    margin-left: 4px;
-    font-family: var(--mono);
-    font-size: 11px;
-  }
-  .day-col {
-    color: var(--text-2);
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.02em;
-  }
-  .time-col {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
-  .num-col {
-    font-family: var(--mono);
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-size: 12px;
-  }
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 7px;
-    border-radius: 3px;
-    font-family: var(--mono);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .badge.overnight {
-    background: var(--amber-soft);
-    color: var(--amber);
-  }
-  .badge.day {
-    color: var(--text-3);
-  }
-  .hours-strong {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    letter-spacing: -0.005em;
-  }
-  .note-text {
-    color: var(--text-2);
-    font-size: 12px;
-  }
-  .empty-text {
-    color: var(--text-4);
-    font-style: italic;
-  }
-  .row-actions {
-    display: flex;
-    gap: 4px;
-    justify-content: flex-end;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-  tr.entry-row:hover .row-actions { opacity: 1; }
-  .btn-icon {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-3);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 3px;
-    transition: all 0.12s;
-    line-height: 1;
-    font-family: var(--mono);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-  .btn-icon:hover {
-    color: var(--text);
-    border-color: var(--border-2);
-    background: var(--surface);
-  }
-  .btn-icon.danger:hover {
-    color: var(--red);
-    border-color: var(--red);
-    background: var(--red-soft);
-  }
-  .empty-state {
-    padding: 80px 20px;
-    text-align: center;
-    color: var(--text-3);
-    font-size: 13px;
-  }
-
   /* ===================== FOOTER ===================== */
   .footer-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 16px;
-    padding-top: 0;
   }
   .footer-actions-left,
   .footer-actions-right {
@@ -924,136 +756,6 @@
     padding-right: 8px;
   }
 
-  /* ===================== MODAL ===================== */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 50;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    backdrop-filter: blur(4px);
-  }
-  .modal-backdrop.visible { display: flex; }
-  .modal {
-    background: var(--bg);
-    border: 1px solid var(--border-2);
-    border-radius: 8px;
-    width: 100%;
-    max-width: 480px;
-    overflow: hidden;
-  }
-  .modal-head {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .modal-title {
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    margin-bottom: 6px;
-  }
-  .modal-sub {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-3);
-    letter-spacing: 0.02em;
-  }
-  .modal-body {
-    padding: 20px 24px;
-  }
-  .modal-body p {
-    font-size: 13px;
-    color: var(--text-2);
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-  .modal-body code {
-    font-family: var(--mono);
-    font-size: 11px;
-    background: var(--surface-2);
-    padding: 2px 6px;
-    border-radius: 3px;
-    color: var(--text);
-  }
-  .modal-body a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .modal-body a:hover { text-decoration: underline; }
-  .modal-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .modal-field label {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-  .modal-field input {
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 10px 12px;
-    border: 1px solid var(--border-2);
-    border-radius: 4px;
-    background: var(--surface);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.12s;
-  }
-  .modal-field input:focus {
-    border-color: var(--text-3);
-  }
-  .modal-foot {
-    padding: 14px 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-  .modal-foot-left { display: flex; gap: 8px; }
-  .btn-modal {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.12s;
-    border: 1px solid var(--border-2);
-    background: transparent;
-    color: var(--text-2);
-    letter-spacing: -0.005em;
-  }
-  .btn-modal:hover {
-    color: var(--text);
-    border-color: var(--border-3);
-  }
-  .btn-modal.primary {
-    background: var(--text);
-    color: var(--bg);
-    border-color: var(--text);
-  }
-  .btn-modal.primary:hover {
-    background: #E5E5E5;
-  }
-  .btn-modal.danger {
-    color: var(--red);
-    border-color: rgba(239, 68, 68, 0.3);
-  }
-  .btn-modal.danger:hover {
-    background: var(--red-soft);
-    border-color: var(--red);
-  }
-
   /* ===================== LOCKED STATE ===================== */
   body.locked .form input,
   body.locked .form button { pointer-events: none; }
@@ -1061,14 +763,10 @@
   body.locked .field-readout .v { color: var(--text-3); }
   body.locked .form { opacity: 0.55; filter: grayscale(0.2); }
   body.locked .form-main .btn-save,
-  body.locked .row-actions,
   body.locked #btn-reset,
   body.locked #form-cancel,
   body.locked #btn-add-segment,
   body.locked .segment-remove { display: none !important; }
-  body.locked tr.entry-row { cursor: default; }
-  body.locked tr.entry-row:hover { background: transparent; }
-  body.locked tr.entry-row.today:hover { background: rgba(59, 130, 246, 0.03); }
 
   .lock-indicator {
     display: inline-flex;
@@ -1084,16 +782,13 @@
     border-radius: 4px;
     background: var(--surface);
   }
-  .lock-indicator .ic {
-    font-size: 11px;
-  }
   body.unlocked .lock-indicator {
     color: var(--green);
     border-color: rgba(74, 222, 128, 0.3);
     background: var(--green-soft);
   }
 
-  /* Password prompt modal */
+  /* Password prompt */
   .pw-prompt-backdrop {
     position: fixed;
     inset: 0;
@@ -1114,10 +809,7 @@
     border-radius: 6px;
     padding: 24px;
   }
-  .pw-prompt.shake {
-    animation: shake 0.4s;
-    border-color: var(--red);
-  }
+  .pw-prompt.shake { animation: shake 0.4s; border-color: var(--red); }
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-6px); }
@@ -1142,324 +834,7 @@
     background: var(--surface);
     color: var(--text);
     outline: none;
-    transition: border-color 0.12s;
     letter-spacing: 0.05em;
-  }
-  .pw-prompt input:focus { border-color: var(--text-3); }
-  .pw-prompt-foot {
-    margin-top: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .pw-prompt-hint {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-4);
-    letter-spacing: 0.05em;
-  }
-  .pw-prompt-hint kbd {
-    color: var(--text-3);
-  }
-
-  /* ===================== ICON BUTTON ===================== */
-  .icon-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-2);
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.12s;
-    padding: 0;
-  }
-  .icon-btn:hover {
-    border-color: var(--border-2);
-    color: var(--text);
-    background: var(--surface-2);
-  }
-  .icon-btn svg {
-    display: block;
-  }
-
-  /* ===================== CALCULATOR ===================== */
-  .calc-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    z-index: 70;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    backdrop-filter: blur(6px);
-  }
-  .calc-backdrop.visible { display: flex; }
-  .calc {
-    width: 100%;
-    max-width: 320px;
-    background: var(--bg);
-    border: 1px solid var(--border-2);
-    border-radius: 8px;
-    overflow: hidden;
-    user-select: none;
-  }
-  .calc-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .calc-title {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-3);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-  .calc-close {
-    background: transparent;
-    border: none;
-    color: var(--text-3);
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    padding: 4px 6px;
-    transition: color 0.12s;
-    font-family: var(--mono);
-  }
-  .calc-close:hover { color: var(--text); }
-  .calc-display {
-    padding: 24px 18px 18px;
-    text-align: right;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    overflow: hidden;
-  }
-  .calc-expr {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-3);
-    letter-spacing: 0.02em;
-    min-height: 16px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    direction: rtl;
-  }
-  .calc-result {
-    font-family: var(--mono);
-    font-size: 32px;
-    font-weight: 400;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    margin-top: 8px;
-    line-height: 1.1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    direction: rtl;
-    font-feature-settings: "tnum";
-  }
-  .calc-keys {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--border);
-  }
-  .calc-key {
-    background: var(--bg);
-    color: var(--text);
-    border: none;
-    padding: 18px 0;
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: background 0.08s;
-    letter-spacing: 0;
-  }
-  .calc-key:hover { background: var(--surface); }
-  .calc-key:active { background: var(--surface-2); }
-  .calc-key.func {
-    color: var(--text-2);
-    background: var(--surface);
-    font-size: 13px;
-  }
-  .calc-key.func:hover { background: var(--surface-2); }
-  .calc-key.op {
-    color: var(--accent);
-    background: var(--bg);
-  }
-  .calc-key.op.active {
-    background: var(--accent);
-    color: var(--bg);
-  }
-  .calc-key.eq {
-    background: var(--text);
-    color: var(--bg);
-    font-weight: 500;
-  }
-  .calc-key.eq:hover { background: #E5E5E5; }
-  .calc-key.span2 { grid-column: span 2; }
-
-  /* Tabs (Calc / Convert) */
-  .calc-tabs {
-    display: flex;
-    gap: 4px;
-  }
-  .calc-tab {
-    background: transparent;
-    border: none;
-    color: var(--text-3);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 6px 10px;
-    border-radius: 4px;
-    transition: all 0.12s;
-  }
-  .calc-tab:hover { color: var(--text-2); background: var(--surface); }
-  .calc-tab.active {
-    color: var(--text);
-    background: var(--surface-2);
-  }
-
-  /* Panes */
-  .calc-pane { display: none; }
-  .calc-pane.active { display: block; }
-
-  /* Converter */
-  .convert-status {
-    padding: 14px 18px 0;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-3);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-align: center;
-    min-height: 24px;
-  }
-  .convert-status.error { color: var(--red); }
-  .convert-status.ready { color: var(--green); }
-  .convert-status.warning { color: var(--amber); }
-  .convert-fields {
-    padding: 16px 18px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .convert-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px 14px;
-    transition: border-color 0.12s;
-  }
-  .convert-row:focus-within {
-    border-color: var(--border-3);
-    background: var(--surface-2);
-  }
-  .convert-badge {
-    width: 26px;
-    height: 18px;
-    border-radius: 3px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--mono);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: #FFFFFF;
-    text-shadow: 0 0 2px rgba(0,0,0,0.6);
-    flex-shrink: 0;
-  }
-  .convert-code {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-2);
-    letter-spacing: 0.04em;
-    font-weight: 500;
-    min-width: 32px;
-  }
-  .convert-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 400;
-    outline: none;
-    text-align: right;
-    font-feature-settings: "tnum";
-    letter-spacing: -0.01em;
-    min-width: 0;
-  }
-  .convert-input::placeholder { color: var(--text-4); }
-  .convert-foot {
-    padding: 0 18px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-3);
-    letter-spacing: 0.02em;
-  }
-  .convert-refresh {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-3);
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    line-height: 1;
-    transition: all 0.12s;
-    font-family: var(--mono);
-  }
-  .convert-refresh:hover {
-    color: var(--text);
-    border-color: var(--border-2);
-    background: var(--surface);
-  }
-  .convert-refresh.spinning {
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-  .convert-attribution {
-    padding: 10px 18px 14px;
-    border-top: 1px solid var(--border);
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--text-4);
-    text-align: center;
-    letter-spacing: 0.02em;
-  }
-  .convert-attribution a {
-    color: var(--text-3);
-    text-decoration: none;
-    transition: color 0.12s;
-  }
-  .convert-attribution a:hover {
-    color: var(--text-2);
   }
 
   /* ===================== TOAST ===================== */
@@ -1478,52 +853,20 @@
     pointer-events: none;
     transition: all 0.2s;
     z-index: 100;
-    letter-spacing: -0.005em;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .toast.error { background: var(--red); color: var(--text); }
 
-  /* ===================== RESPONSIVE ===================== */
   @media (max-width: 900px) {
     .app { padding: 40px 24px 60px; }
     .kpis { grid-template-columns: repeat(2, 1fr); }
-    .form-main {
-      grid-template-columns: 1fr;
-    }
+    .form-main { grid-template-columns: 1fr; }
     .form-left, .form-center, .form-right {
       border-right: none;
       border-bottom: 1px solid var(--border);
     }
-    .form-right {
-      flex-direction: row;
-    }
-    .field-readout, .field-readout-secondary {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      flex: 1;
-    }
-    .btn-save {
-      width: 100%;
-      padding: 14px 0;
-    }
+    .btn-save { width: 100%; padding: 14px 0; }
     .tl-axis, .tl-row { grid-template-columns: 60px 1fr 48px; }
-    thead th:nth-child(6), tbody td:nth-child(6) { display: none; }
-  }
-  @media (max-width: 560px) {
-    .app { padding: 28px 16px 60px; }
-    .kpi-value { font-size: 26px; }
-    .segment-row { grid-template-columns: 1fr 1fr auto; }
-    thead th:nth-child(3), tbody td:nth-child(3),
-    thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
-    .tl-axis, .tl-row { grid-template-columns: 50px 1fr 40px; }
-    .tl-bar { font-size: 9px; padding: 0 4px; }
-    .header-right { gap: 8px; }
-    .header-date { display: none; }
   }
 </style>
 </head>
@@ -1531,7 +874,6 @@
 
 <div class="app">
 
-  <!-- HEADER -->
   <header class="header">
     <div class="brand">
       <div class="brand-mark">W</div>
@@ -1539,34 +881,13 @@
       <span class="ver">v2.0</span>
     </div>
     <div class="header-right">
-      <span class="lock-indicator" id="lock-indicator" style="display:none;">
-        <span class="ic">○</span>
+      <span class="lock-indicator" id="lock-indicator">
         <span id="lock-text">Read only</span>
       </span>
-      <button class="sync-pill" id="sync-pill" title="Sync settings" style="display:none;">
-        <span class="sync-dot" id="sync-dot"></span>
-        <span id="sync-status">Local only</span>
-      </button>
-      <button class="icon-btn" id="open-calc" title="Calculator" aria-label="Open calculator">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="2" width="16" height="20" rx="2"/>
-          <line x1="8" y1="6" x2="16" y2="6"/>
-          <circle cx="8" cy="10" r="0.5" fill="currentColor"/>
-          <circle cx="12" cy="10" r="0.5" fill="currentColor"/>
-          <circle cx="16" cy="10" r="0.5" fill="currentColor"/>
-          <circle cx="8" cy="14" r="0.5" fill="currentColor"/>
-          <circle cx="12" cy="14" r="0.5" fill="currentColor"/>
-          <circle cx="16" cy="14" r="0.5" fill="currentColor"/>
-          <circle cx="8" cy="18" r="0.5" fill="currentColor"/>
-          <circle cx="12" cy="18" r="0.5" fill="currentColor"/>
-          <circle cx="16" cy="18" r="0.5" fill="currentColor"/>
-        </svg>
-      </button>
       <div class="header-date" id="header-date">—</div>
     </div>
   </header>
 
-  <!-- HEAT STRIP -->
   <section class="heat-section">
     <div class="heat-label">
       <span>Current 2 Weeks</span>
@@ -1575,7 +896,6 @@
     <div class="heat-strip" id="heat-strip"></div>
   </section>
 
-  <!-- KPIs -->
   <section class="kpis">
     <div class="kpi">
       <div class="kpi-head">
@@ -1607,11 +927,10 @@
         <span class="kpi-delta flat" id="delta-total">—</span>
       </div>
       <div class="kpi-value" id="kpi-total">0<span class="unit">hrs</span></div>
-      <div class="kpi-sub" id="kpi-total-sub">All entries</div>
+      <div class="kpi-sub">All entries</div>
     </div>
   </section>
 
-  <!-- LOG FORM -->
   <section class="section">
     <div class="section-head">
       <div class="section-title" id="form-title">Log a Shift</div>
@@ -1625,9 +944,7 @@
           </div>
         </div>
         <div class="form-center">
-          <div class="segments" id="segments">
-            <!-- segment rows injected here by JS -->
-          </div>
+          <div class="segments" id="segments"></div>
           <button type="button" class="btn-add-segment" id="btn-add-segment">+ Add segment</button>
         </div>
         <div class="form-right">
@@ -1649,7 +966,6 @@
     </div>
   </section>
 
-  <!-- TIMELINE -->
   <section class="section">
     <div class="section-head">
       <div class="section-title">Biweekly Timeline</div>
@@ -1661,8 +977,8 @@
       </div>
     </div>
     <div class="timeline">
-      <div class="chart-stage" id="chart-stage">
-        <div class="tl-axis" id="gantt-axis-wrap">
+      <div id="chart-stage">
+        <div class="tl-axis">
           <div></div>
           <div class="tl-axis-hours" id="tl-axis-hours"></div>
           <div></div>
@@ -1676,14 +992,12 @@
     </div>
   </section>
 
-  <!-- ACTIONS -->
   <section class="section">
     <div class="footer-actions">
       <div class="footer-actions-left">
-        <span class="last-sync" id="last-sync">Never synced</span>
+        <span class="last-sync">Local demo</span>
       </div>
       <div class="footer-actions-right">
-        <button class="btn-text" id="btn-sync">↻ Sync now</button>
         <button class="btn-text" id="btn-export">Export CSV</button>
         <button class="btn-text danger" id="btn-reset">Reset</button>
       </div>
@@ -1692,150 +1006,38 @@
 
 </div>
 
-<!-- SYNC MODAL -->
-<div class="modal-backdrop" id="sync-modal">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">GitHub Gist Sync</div>
-      <div class="modal-sub">Sync your data across devices via a private gist</div>
-    </div>
-    <div class="modal-body">
-      <p>To enable sync, you need a <a href="https://github.com/settings/tokens/new?scopes=gist&description=Work%20Log" target="_blank">personal access token</a> with the <code>gist</code> scope.</p>
-      <p style="margin-bottom: 18px;">First time? Leave Gist ID empty — a private gist will be created. Already syncing? Paste your existing Gist ID.</p>
-      <div class="modal-field">
-        <label>Personal Access Token</label>
-        <input type="password" id="modal-token" placeholder="ghp_..." />
-      </div>
-      <div class="modal-field">
-        <label>Gist ID (optional)</label>
-        <input type="text" id="modal-gist-id" placeholder="Leave empty to create new" />
-      </div>
-    </div>
-    <div class="modal-foot">
-      <div class="modal-foot-left">
-        <button class="btn-modal danger" id="modal-disconnect">Disconnect</button>
-      </div>
-      <div class="modal-foot-left">
-        <button class="btn-modal" id="modal-cancel">Cancel</button>
-        <button class="btn-modal primary" id="modal-save">Connect</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-</div>
-
-<!-- PASSWORD PROMPT -->
 <div class="pw-prompt-backdrop" id="pw-backdrop">
   <div class="pw-prompt" id="pw-prompt">
     <label class="pw-prompt-label">Enter password</label>
     <input type="password" id="pw-input" autocomplete="off" />
-    <div class="pw-prompt-foot">
-      <span class="pw-prompt-hint"><kbd>Enter</kbd> to unlock · <kbd>Esc</kbd> to cancel</span>
-    </div>
-  </div>
-</div>
-
-<!-- CALCULATOR -->
-<div class="calc-backdrop" id="calc-backdrop">
-  <div class="calc" id="calc">
-    <div class="calc-head">
-      <div class="calc-tabs">
-        <button class="calc-tab active" data-tab="calc" id="tab-calc">Calc</button>
-        <button class="calc-tab" data-tab="convert" id="tab-convert">Convert</button>
-      </div>
-      <button class="calc-close" id="calc-close" aria-label="Close">×</button>
-    </div>
-
-    <!-- CALC PANE -->
-    <div class="calc-pane active" id="pane-calc">
-      <div class="calc-display">
-        <div class="calc-expr" id="calc-expr">&nbsp;</div>
-        <div class="calc-result" id="calc-result">0</div>
-      </div>
-      <div class="calc-keys">
-        <button class="calc-key func" data-action="clear">AC</button>
-        <button class="calc-key func" data-action="sign">±</button>
-        <button class="calc-key func" data-action="percent">%</button>
-        <button class="calc-key op" data-op="/">÷</button>
-
-        <button class="calc-key" data-digit="7">7</button>
-        <button class="calc-key" data-digit="8">8</button>
-        <button class="calc-key" data-digit="9">9</button>
-        <button class="calc-key op" data-op="*">×</button>
-
-        <button class="calc-key" data-digit="4">4</button>
-        <button class="calc-key" data-digit="5">5</button>
-        <button class="calc-key" data-digit="6">6</button>
-        <button class="calc-key op" data-op="-">−</button>
-
-        <button class="calc-key" data-digit="1">1</button>
-        <button class="calc-key" data-digit="2">2</button>
-        <button class="calc-key" data-digit="3">3</button>
-        <button class="calc-key op" data-op="+">+</button>
-
-        <button class="calc-key span2" data-digit="0">0</button>
-        <button class="calc-key" data-action="dot">.</button>
-        <button class="calc-key eq" data-action="eq">=</button>
-      </div>
-    </div>
-
-    <!-- CONVERT PANE -->
-    <div class="calc-pane" id="pane-convert">
-      <div class="convert-status" id="convert-status">Loading rates…</div>
-      <div class="convert-fields">
-        <div class="convert-row">
-          <span class="convert-badge" style="background: linear-gradient(135deg, #3C3B6E 50%, #B22234 50%);">US</span>
-          <span class="convert-code">USD</span>
-          <input type="text" class="convert-input" id="conv-usd" data-cur="USD" inputmode="decimal" placeholder="0" />
-        </div>
-        <div class="convert-row">
-          <span class="convert-badge" style="background: linear-gradient(90deg, #D52B1E 25%, #FFFFFF 25%, #FFFFFF 75%, #D52B1E 75%); color: #D52B1E;">CA</span>
-          <span class="convert-code">CAD</span>
-          <input type="text" class="convert-input" id="conv-cad" data-cur="CAD" inputmode="decimal" placeholder="0" />
-        </div>
-        <div class="convert-row">
-          <span class="convert-badge" style="background: linear-gradient(180deg, #FF9933 33%, #FFFFFF 33%, #FFFFFF 67%, #138808 67%); color: #000080;">IN</span>
-          <span class="convert-code">INR</span>
-          <input type="text" class="convert-input" id="conv-inr" data-cur="INR" inputmode="decimal" placeholder="0" />
-        </div>
-      </div>
-      <div class="convert-foot">
-        <span id="convert-updated">—</span>
-        <button class="convert-refresh" id="convert-refresh" title="Refresh rates">↻</button>
-      </div>
-      <div class="convert-attribution">
-        Rates by <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Exchange Rate API</a>
-      </div>
-    </div>
-
   </div>
 </div>
 
 <div class="toast" id="toast">Saved</div>
 
 <script>
-/* ============================ LOCK STATE ============================ */
-// API namespace identifier — change this value to your private phrase
 const API_NAMESPACE = 'Kedhar';
-
+const STORAGE_KEY = 'workLog_v2_data_jun4';
+let shifts = [];
+let editingId = null;
 let isUnlocked = false;
+
+const TODAY = new Date();
+TODAY.setHours(0, 0, 0, 0);
+
+let viewWeekStart;
 
 function lock() {
   isUnlocked = false;
   document.body.classList.remove('unlocked');
   document.body.classList.add('locked');
   document.getElementById('lock-text').textContent = 'Read only';
-  document.getElementById('lock-indicator').querySelector('.ic').textContent = '○';
 }
 function unlock() {
   isUnlocked = true;
   document.body.classList.remove('locked');
   document.body.classList.add('unlocked');
   document.getElementById('lock-text').textContent = 'Editable';
-  document.getElementById('lock-indicator').querySelector('.ic').textContent = '●';
 }
 function showPwPrompt() {
   document.getElementById('pw-backdrop').classList.add('visible');
@@ -1844,36 +1046,16 @@ function showPwPrompt() {
 function hidePwPrompt() {
   document.getElementById('pw-backdrop').classList.remove('visible');
   document.getElementById('pw-input').value = '';
-  document.getElementById('pw-prompt').classList.remove('shake');
 }
 function tryUnlock() {
   const val = document.getElementById('pw-input').value;
-  if (val === API_NAMESPACE) {
-    unlock();
-    hidePwPrompt();
-    toast('Unlocked');
-  } else {
+  if (val === API_NAMESPACE) { unlock(); hidePwPrompt(); toast('Unlocked'); }
+  else {
     const p = document.getElementById('pw-prompt');
-    p.classList.remove('shake');
-    void p.offsetWidth;
-    p.classList.add('shake');
+    p.classList.remove('shake'); void p.offsetWidth; p.classList.add('shake');
     document.getElementById('pw-input').value = '';
-    setTimeout(() => document.getElementById('pw-input').focus(), 100);
   }
 }
-
-
-const STORAGE_KEY = 'workLog_v2_data';
-const SYNC_KEY = 'workLog_v2_sync';
-
-let shifts = [];
-let syncConfig = loadSyncConfig();
-let editingId = null;
-
-const TODAY = new Date();
-TODAY.setHours(0, 0, 0, 0);
-
-let viewWeekStart; // assigned in INIT, after cycle helpers are defined
 
 function loadShifts() {
   try {
@@ -1885,199 +1067,100 @@ function loadShifts() {
 function saveShiftsLocal() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(shifts)); } catch(e) {}
 }
-function loadSyncConfig() {
-  try {
-    const raw = localStorage.getItem(SYNC_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return { token: '', gistId: '', lastSync: null };
-}
-function saveSyncConfig() {
-  try { localStorage.setItem(SYNC_KEY, JSON.stringify(syncConfig)); } catch(e) {}
-}
 
 function seedSamples() {
-  // Real shifts starting May 9, 2026
-  const PAY_START = new Date(2026, 4, 9); // May 9
+  // Pay period Jun 6 - Jun 19, 2026
+  const PAY_START = new Date(2026, 5, 6);
   const pattern = [
-    { offset: 0, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 9
-    { offset: 1, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 10
-    { offset: 2, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 11
-    { offset: 3, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 12
-    { offset: 4, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 13
-    { offset: 5, start: '21:00', end: '01:30', brk: 0,   note: '' }, // May 14
-    { offset: 6, start: '21:00', end: '02:00', brk: 0,   note: '' }, // May 15
-    // May 16 (today): split shift — 6 PM to 8 PM, then 9 PM to 3 AM
-    { offset: 7, start: '18:00', end: '20:00', brk: 0,   note: 'Split shift',
-      segments: [
-        { start: '18:00', end: '20:00' },
-        { start: '21:00', end: '03:00' }
-      ]
-    },
-    // May 17: split shift — 6 PM to 8 PM, then 9 PM to 11:30 PM
-    { offset: 8, start: '18:00', end: '20:00', brk: 0,   note: 'Split shift',
-      segments: [
-        { start: '18:00', end: '20:00' },
-        { start: '21:00', end: '23:30' }
-      ]
-    },
+    { offset: 0,  start: '21:00', end: '02:00' }, // Sat Jun 6
+    { offset: 1,  start: '21:00', end: '02:00' }, // Sun Jun 7
+    { offset: 2,  start: '21:00', end: '01:00' }, // Mon Jun 8
+    { offset: 3,  start: '21:00', end: '02:30' }, // Tue Jun 9
+    { offset: 4,  start: '21:00', end: '01:00' }, // Wed Jun 10
+    { offset: 5,  start: '21:00', end: '02:30' }, // Thu Jun 11
+    // Fri Jun 12 — off
+    { offset: 7,  start: '00:00', end: '02:30' }, // Sat Jun 13
+    // Sun Jun 14 — off
+    { offset: 9,  start: '21:00', end: '02:30' }, // Mon Jun 15
+    { offset: 10, start: '21:00', end: '02:00' }, // Tue Jun 16
+    { offset: 11, start: '21:00', end: '03:30' }, // Wed Jun 17
+    { offset: 12, start: '22:00', end: '02:40' }, // Thu Jun 18
+    // Fri Jun 19 — off
   ];
   return pattern.map((p, i) => {
     const d = new Date(PAY_START);
     d.setDate(PAY_START.getDate() + p.offset);
-    const entry = { id: 'shift-' + i, date: fmtDate(d), start: p.start, end: p.end, break: p.brk, note: p.note };
-    if (p.segments) entry.segments = p.segments;
-    return entry;
+    return { id: 'shift-' + i, date: fmtDate(d), start: p.start, end: p.end, break: 0, note: '' };
   });
 }
 
-/* ============================ DATE/TIME ============================ */
 function fmtDate(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function parseDate(s) {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(y, m - 1, d);
-}
-function parseTime(t) {
-  if (!t) return null;
-  const [h, m] = t.split(':').map(Number);
-  return h + m / 60;
-}
+function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function parseTime(t) { if(!t) return null; const [h,m]=t.split(':').map(Number); return h+m/60; }
 function fmtTime12(t) {
   if (!t) return '—';
-  const [h, m] = t.split(':').map(Number);
-  const suffix = h < 12 ? 'AM' : 'PM';
-  const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
-  return m === 0 ? `${display}:00 ${suffix}` : `${display}:${String(m).padStart(2,'0')} ${suffix}`;
+  const [h,m] = t.split(':').map(Number);
+  const suffix = h<12?'AM':'PM';
+  const display = h===0?12:h>12?h-12:h;
+  return m===0?`${display}:00 ${suffix}`:`${display}:${String(m).padStart(2,'0')} ${suffix}`;
 }
 function fmtHour(h) {
-  if (h === 0 || h === 24) return '12a';
-  if (h === 12) return '12p';
-  const whole = Math.floor(h);
-  const min = Math.round((h - whole) * 60);
-  const suffix = whole < 12 ? 'a' : 'p';
-  const display = whole === 0 ? 12 : whole > 12 ? whole - 12 : whole;
-  return min === 0 ? `${display}${suffix}` : `${display}:${String(min).padStart(2,'0')}${suffix}`;
+  if (h===0||h===24) return '12a';
+  if (h===12) return '12p';
+  const whole = Math.floor(h), min = Math.round((h-whole)*60);
+  const suffix = whole<12?'a':'p';
+  const display = whole===0?12:whole>12?whole-12:whole;
+  return min===0?`${display}${suffix}`:`${display}:${String(min).padStart(2,'0')}${suffix}`;
 }
-function computeHours(start, end, brk) {
-  const s = parseTime(start);
-  const e = parseTime(end);
-  if (s === null || e === null) return 0;
-  let diff = e - s;
-  if (diff <= 0) diff += 24;
-  diff -= (parseFloat(brk) || 0);
-  return Math.max(0, Math.round(diff * 100) / 100);
-}
-function isOvernight(start, end) {
-  const s = parseTime(start);
-  const e = parseTime(end);
-  return s !== null && e !== null && e <= s;
-}
+function sameDay(a,b) { return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
 
-// Extract all segments from a shift. Returns array of {start, end} strings.
-// Single-segment shifts return [{start, end}].
-// Multi-segment shifts (with a `segments` array) return that array.
 function getSegments(shift) {
   if (!shift) return [];
-  if (Array.isArray(shift.segments) && shift.segments.length > 0) {
-    return shift.segments.filter(s => s.start && s.end);
-  }
-  if (shift.start && shift.end) return [{ start: shift.start, end: shift.end }];
+  if (Array.isArray(shift.segments)&&shift.segments.length>0) return shift.segments.filter(s=>s.start&&s.end);
+  if (shift.start&&shift.end) return [{start:shift.start,end:shift.end}];
   return [];
 }
-
-// Compute total hours for a shift, summing across all segments and subtracting break
 function computeShiftHours(shift) {
   if (!shift) return 0;
   const segs = getSegments(shift);
   let total = 0;
   segs.forEach(seg => {
-    const s = parseTime(seg.start);
-    const e = parseTime(seg.end);
-    if (s === null || e === null) return;
-    let diff = e - s;
-    if (diff <= 0) diff += 24;
-    total += diff;
+    const s = parseTime(seg.start), e = parseTime(seg.end);
+    if (s===null||e===null) return;
+    let diff = e-s; if (diff<=0) diff+=24; total+=diff;
   });
-  total -= (parseFloat(shift.break) || 0);
-  return Math.max(0, Math.round(total * 100) / 100);
-}
-function startOfWeek(d) {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  const day = x.getDay();
-  const offset = day === 0 ? -6 : 1 - day;
-  x.setDate(x.getDate() + offset);
-  return x;
-}
-function sameDay(a, b) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
-function startOfMonth(d) {
-  return new Date(d.getFullYear(), d.getMonth(), 1);
+  total -= (parseFloat(shift.break)||0);
+  return Math.max(0, Math.round(total*100)/100);
 }
 
-/* ============ CYCLE ============ */
-// Anchor date: 14-day cycles start from this date
-const PAY_ANCHOR = new Date(2026, 4, 9); // May 9, 2026
-PAY_ANCHOR.setHours(0, 0, 0, 0);
-
+const PAY_ANCHOR = new Date(2026, 4, 9);
+PAY_ANCHOR.setHours(0,0,0,0);
 function currentPayPeriodStart(d) {
-  const target = new Date(d);
-  target.setHours(0, 0, 0, 0);
-  const daysSince = Math.floor((target - PAY_ANCHOR) / 86400000);
-  const periodIndex = Math.floor(daysSince / 14);
-  const start = new Date(PAY_ANCHOR);
-  start.setDate(PAY_ANCHOR.getDate() + periodIndex * 14);
+  const target = new Date(d); target.setHours(0,0,0,0);
+  const daysSince = Math.floor((target-PAY_ANCHOR)/86400000);
+  const periodIndex = Math.floor(daysSince/14);
+  const start = new Date(PAY_ANCHOR); start.setDate(PAY_ANCHOR.getDate()+periodIndex*14);
   return start;
 }
-function payPeriodEnd(start) {
-  const end = new Date(start);
-  end.setDate(start.getDate() + 13);
-  return end;
-}
+function payPeriodEnd(start) { const end = new Date(start); end.setDate(start.getDate()+13); return end; }
 function previousPayPeriodStart(d) {
-  const cur = currentPayPeriodStart(d);
-  const prev = new Date(cur);
-  prev.setDate(cur.getDate() - 14);
-  return prev;
+  const cur = currentPayPeriodStart(d); const prev = new Date(cur); prev.setDate(cur.getDate()-14); return prev;
 }
 function daysUntilPayday(d) {
   const periodEnd = payPeriodEnd(currentPayPeriodStart(d));
-  const payday = new Date(periodEnd);
-  payday.setDate(periodEnd.getDate() + 1);
-  const diff = Math.ceil((payday - d) / 86400000);
+  const payday = new Date(periodEnd); payday.setDate(periodEnd.getDate()+1);
+  const diff = Math.ceil((payday-d)/86400000);
   return Math.max(0, diff);
 }
-function fmtRelative(ts) {
-  if (!ts) return 'Never synced';
-  const diff = Date.now() - ts;
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'Synced just now';
-  if (mins < 60) return `Synced ${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `Synced ${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  return `Synced ${days}d ago`;
-}
 
-/* ============================ RENDER ============================ */
 function render() {
-  renderHeader();
+  document.getElementById('header-date').textContent =
+    TODAY.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   renderHeatStrip();
   renderKPIs();
   renderTimeline();
-  renderLog();
-  renderSyncStatus();
-}
-
-function renderHeader() {
-  document.getElementById('header-date').textContent =
-    TODAY.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 function renderHeatStrip() {
@@ -2085,1154 +1168,303 @@ function renderHeatStrip() {
   const periodStart = currentPayPeriodStart(TODAY);
   const periodEnd = payPeriodEnd(periodStart);
   document.getElementById('heat-range').textContent =
-    `${periodStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${periodEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-
-  // Day-of-week letters derived from the actual dates (Sun=S, Mon=M, ...).
-  // The cycle may start on any day of the week, so don't hardcode.
-  const DOW_LETTER = ['S','M','T','W','T','F','S']; // Sun..Sat
+    `${periodStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${periodEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+  const DOW_LETTER = ['S','M','T','W','T','F','S'];
   let html = '';
-  for (let i = 0; i < 14; i++) {
-    const d = new Date(periodStart);
-    d.setDate(periodStart.getDate() + i);
-    const shift = shifts.find(s => s.date === fmtDate(d));
+  for (let i=0; i<14; i++) {
+    const d = new Date(periodStart); d.setDate(periodStart.getDate()+i);
+    const shift = shifts.find(s=>s.date===fmtDate(d));
     const hrs = computeShiftHours(shift);
-    const intensity = Math.min(hrs / 8, 1);
+    const intensity = Math.min(hrs/8, 1);
     const isToday = sameDay(d, TODAY);
-    const filled = hrs > 0;
+    const filled = hrs>0;
     const letter = DOW_LETTER[d.getDay()];
-    html += `
-      <div class="heat-cell ${isToday ? 'today' : ''} ${filled ? 'filled' : ''}" title="${d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}${hrs ? ' — ' + hrs + ' hrs' : ' — no entry'}">
-        <div class="heat-fill" style="opacity: ${intensity * 0.95};"></div>
-        <span class="heat-day">${letter}</span>
-        <span class="heat-val">${hrs > 0 ? hrs : ''}</span>
-      </div>
-    `;
+    html += `<div class="heat-cell ${isToday?'today':''} ${filled?'filled':''}" title="${d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}${hrs?' — '+hrs+' hrs':' — no entry'}"><div class="heat-fill" style="opacity:${intensity*0.95};"></div><span class="heat-day">${letter}</span><span class="heat-val">${hrs>0?hrs:''}</span></div>`;
   }
   strip.innerHTML = html;
 }
 
 function renderKPIs() {
-  const sumInRange = (start, end) =>
-    shifts.filter(s => {
-      const d = parseDate(s.date);
-      return d >= start && d <= end;
-    }).reduce((a, s) => a + computeShiftHours(s), 0);
-
-  // Current pay period
-  const curStart = currentPayPeriodStart(TODAY);
-  const curEnd = payPeriodEnd(curStart);
+  const sumInRange = (start,end) =>
+    shifts.filter(s=>{const d=parseDate(s.date); return d>=start&&d<=end;}).reduce((a,s)=>a+computeShiftHours(s),0);
+  const curStart = currentPayPeriodStart(TODAY), curEnd = payPeriodEnd(curStart);
   const curHrs = sumInRange(curStart, curEnd);
-
-  // Previous pay period
-  const prevStart = previousPayPeriodStart(TODAY);
-  const prevEnd = payPeriodEnd(prevStart);
+  const prevStart = previousPayPeriodStart(TODAY), prevEnd = payPeriodEnd(prevStart);
   const prevHrs = sumInRange(prevStart, prevEnd);
-
-  // Days until payday
   const daysToPay = daysUntilPayday(TODAY);
-
-  // Total
-  const total = shifts.reduce((a, s) => a + computeShiftHours(s), 0);
-  const totalCount = shifts.filter(s => computeShiftHours(s) > 0).length;
+  const total = shifts.reduce((a,s)=>a+computeShiftHours(s),0);
+  const totalCount = shifts.filter(s=>computeShiftHours(s)>0).length;
 
   setKPI('kpi-week', curHrs, 'hrs');
   setKPI('kpi-month', prevHrs, 'hrs');
   setKPI('kpi-total', total, 'hrs');
-
-  // Days to payday as a plain number (no decimal)
   const dpEl = document.getElementById('kpi-avg');
-  dpEl.innerHTML = `${daysToPay}<span class="unit">${daysToPay === 1 ? 'day' : 'days'}</span>`;
-  dpEl.classList.toggle('empty', daysToPay === 0);
-
-  // Deltas
+  dpEl.innerHTML = `${daysToPay}<span class="unit">${daysToPay===1?'day':'days'}</span>`;
   setDelta('delta-week', curHrs, prevHrs);
-  setDelta('delta-month', prevHrs, sumInRange(
-    new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 14),
-    new Date(prevStart.getFullYear(), prevStart.getMonth(), prevStart.getDate() - 1)
-  ));
-  document.getElementById('delta-avg').textContent = daysToPay === 0 ? 'Last day' : '';
-  document.getElementById('delta-avg').className = daysToPay === 0 ? 'kpi-delta up' : 'kpi-delta flat';
+  setDelta('delta-month', prevHrs, 0);
+  document.getElementById('delta-avg').textContent = daysToPay===0?'Last day':'';
   document.getElementById('delta-total').textContent = `${totalCount} entries`;
-  document.getElementById('delta-total').className = 'kpi-delta flat';
 
-  // Subs
-  const fmtRange = (s, e) =>
-    `${s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}–${e.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+  const fmtRange = (s,e) => `${s.toLocaleDateString('en-US',{month:'short',day:'numeric'})}–${e.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
   document.getElementById('kpi-week-sub').textContent = fmtRange(curStart, curEnd);
   document.getElementById('kpi-month-sub').textContent = fmtRange(prevStart, prevEnd);
-  const cycleEnd = new Date(curEnd);
   document.getElementById('kpi-avg-sub').textContent =
-    daysToPay === 0 ? 'Cycle ends today' : `Ends ${cycleEnd.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+    daysToPay===0?'Cycle ends today':`Ends ${curEnd.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}`;
 }
-
 function setKPI(id, value, unit) {
   const el = document.getElementById(id);
-  const v = (Math.round(value * 10) / 10);
-  el.innerHTML = `${v || 0}<span class="unit">${unit}</span>`;
-  el.classList.toggle('empty', v === 0);
+  const v = Math.round(value*10)/10;
+  el.innerHTML = `${v||0}<span class="unit">${unit}</span>`;
+  el.classList.toggle('empty', v===0);
 }
-
 function setDelta(id, current, previous) {
   const el = document.getElementById(id);
-  if (previous === 0 && current === 0) {
-    el.textContent = '—';
-    el.className = 'kpi-delta flat';
-    return;
-  }
-  if (previous === 0) {
-    // No previous data — show "New" instead of an inflated percentage
-    el.textContent = 'New';
-    el.className = 'kpi-delta up';
-    return;
-  }
-  if (current === 0) {
-    // Had work last period, none now — show "—"
-    el.textContent = '—';
-    el.className = 'kpi-delta down';
-    return;
-  }
-  const diff = current - previous;
-  const pct = Math.round((diff / previous) * 100);
-  if (Math.abs(pct) < 1) {
-    el.textContent = '—';
-    el.className = 'kpi-delta flat';
-    return;
-  }
-  const arrow = pct > 0 ? '▲' : '▼';
-  el.textContent = `${arrow} ${Math.abs(pct)}%`;
-  el.className = `kpi-delta ${pct > 0 ? 'up' : 'down'}`;
+  if (previous===0&&current===0) { el.textContent='—'; el.className='kpi-delta flat'; return; }
+  if (previous===0) { el.textContent='New'; el.className='kpi-delta up'; return; }
+  if (current===0) { el.textContent='—'; el.className='kpi-delta down'; return; }
+  const pct = Math.round(((current-previous)/previous)*100);
+  if (Math.abs(pct)<1) { el.textContent='—'; el.className='kpi-delta flat'; return; }
+  el.textContent = `${pct>0?'▲':'▼'} ${Math.abs(pct)}%`;
+  el.className = `kpi-delta ${pct>0?'up':'down'}`;
 }
 
-/* ============================ TIMELINE ============================ */
-
-/* Common: get the 14 cycle days as { date, shift } */
 function getCycleDays() {
   const days = [];
-  for (let i = 0; i < 14; i++) {
-    const d = new Date(viewWeekStart);
-    d.setDate(viewWeekStart.getDate() + i);
-    const shift = shifts.find(s => s.date === fmtDate(d));
-    days.push({ date: d, shift });
+  for (let i=0; i<14; i++) {
+    const d = new Date(viewWeekStart); d.setDate(viewWeekStart.getDate()+i);
+    days.push({date:d, shift: shifts.find(s=>s.date===fmtDate(d))});
   }
   return days;
 }
-
-/* Common: cycle total hours */
-function getCycleTotal(days) {
-  return days.reduce((sum, { shift }) => sum + computeShiftHours(shift), 0);
-}
-
 function renderTimeline() {
-  const cycleEnd = new Date(viewWeekStart);
-  cycleEnd.setDate(viewWeekStart.getDate() + 13);
+  const cycleEnd = new Date(viewWeekStart); cycleEnd.setDate(viewWeekStart.getDate()+13);
   document.getElementById('week-label').textContent =
-    `${viewWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${cycleEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-
+    `${viewWeekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${cycleEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
   const days = getCycleDays();
-  const total = getCycleTotal(days);
-  document.getElementById('week-total').innerHTML =
-    `${(Math.round(total * 10) / 10)}<span class="unit">hrs</span>`;
-
+  const total = days.reduce((sum,{shift})=>sum+computeShiftHours(shift), 0);
+  document.getElementById('week-total').innerHTML = `${Math.round(total*10)/10}<span class="unit">hrs</span>`;
   renderGantt(days, document.getElementById('tl-rows'));
 }
-
-/* ============ GANTT ============ */
 function renderGantt(cycleDays, stage) {
-  // Compute auto-fit axis range from all segments
-  let axisStart = null, axisEnd = null;
-  cycleDays.forEach(({ shift }) => {
+  // For night-shift layout: treat any shift starting before this hour
+  // as the tail-end of the previous evening (add 24 to its display position).
+  // The underlying data is unchanged — this only affects visual placement.
+  const DAY_BOUNDARY = 12; // noon
+  const shiftIfEarly = (h) => h < DAY_BOUNDARY ? h + 24 : h;
+
+  let axisStart=null, axisEnd=null;
+  cycleDays.forEach(({shift}) => {
     getSegments(shift).forEach(seg => {
-      const sH = parseTime(seg.start);
-      let eH = parseTime(seg.end);
-      if (eH <= sH) eH += 24;
-      if (axisStart === null || sH < axisStart) axisStart = sH;
-      if (axisEnd === null || eH > axisEnd) axisEnd = eH;
+      let sH = shiftIfEarly(parseTime(seg.start));
+      let eH = shiftIfEarly(parseTime(seg.end));
+      if (eH<=sH) eH+=24;
+      if (axisStart===null||sH<axisStart) axisStart=sH;
+      if (axisEnd===null||eH>axisEnd) axisEnd=eH;
     });
   });
-  if (axisStart === null) { axisStart = 18; axisEnd = 30; }
-  else {
-    axisStart = Math.max(0, Math.floor(axisStart - 1));
-    axisEnd = Math.min(48, Math.ceil(axisEnd + 1));
-  }
-  const axisSpan = axisEnd - axisStart;
-  const toPct = (h) => ((h - axisStart) / axisSpan) * 100;
-  const tickInterval = axisSpan <= 8 ? 1 : axisSpan <= 14 ? 2 : 3;
+  if (axisStart===null) { axisStart=18; axisEnd=30; }
+  else { axisStart = Math.max(0, Math.floor(axisStart-1)); axisEnd = Math.min(48, Math.ceil(axisEnd+1)); }
+  const axisSpan = axisEnd-axisStart;
+  const toPct = h => ((h-axisStart)/axisSpan)*100;
+  const tickInterval = axisSpan<=8?1:axisSpan<=14?2:3;
 
-  const axisEl = document.getElementById('tl-axis-hours');
   let axisHTML = '';
   const firstTick = Math.ceil(axisStart);
-  for (let h = firstTick; h <= axisEnd; h += tickInterval) {
-    const pct = toPct(h);
-    if (pct < 0 || pct > 100) continue;
-    const nh = ((h % 24) + 24) % 24;
-    axisHTML += `<div class="tl-axis-tick ${nh === 0 ? 'midnight' : ''}" style="left: ${pct}%;">${fmtHour(nh)}</div>`;
+  for (let h=firstTick; h<=axisEnd; h+=tickInterval) {
+    const pct = toPct(h); if (pct<0||pct>100) continue;
+    const nh = ((h%24)+24)%24;
+    axisHTML += `<div class="tl-axis-tick ${nh===0?'midnight':''}" style="left:${pct}%;">${fmtHour(nh)}</div>`;
   }
-  axisEl.innerHTML = axisHTML;
+  document.getElementById('tl-axis-hours').innerHTML = axisHTML;
 
   const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let rowsHTML = '';
-  cycleDays.forEach(({ date: d, shift }, i) => {
-    const dayOfWeek = d.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const isToday = sameDay(d, TODAY);
-    const isWeekDivider = i === 7;
-
+  cycleDays.forEach(({date:d, shift}, i) => {
+    const dow = d.getDay(); const isWeekend = dow===0||dow===6;
+    const isToday = sameDay(d, TODAY); const isWeekDivider = i===7;
     let trackHTML = '';
-    for (let h = firstTick; h <= axisEnd; h += tickInterval) {
-      const pct = toPct(h);
-      if (pct <= 0 || pct >= 100) continue;
-      const nh = ((h % 24) + 24) % 24;
-      trackHTML += `<div class="tl-track-gridline ${nh === 0 ? 'midnight' : ''}" style="left: ${pct}%;"></div>`;
+    for (let h=firstTick; h<=axisEnd; h+=tickInterval) {
+      const pct = toPct(h); if (pct<=0||pct>=100) continue;
+      const nh = ((h%24)+24)%24;
+      trackHTML += `<div class="tl-track-gridline ${nh===0?'midnight':''}" style="left:${pct}%;"></div>`;
     }
-
-    // Render each segment as its own bar
-    const segs = getSegments(shift);
-    const totalH = computeShiftHours(shift);
-    let hoursLabel = '<span class="empty">—</span>';
-    if (segs.length > 0) hoursLabel = `${totalH}h`;
-
+    const segs = getSegments(shift); const totalH = computeShiftHours(shift);
+    let hoursLabel = segs.length>0 ? `${totalH}h` : '<span class="empty">—</span>';
     segs.forEach(seg => {
-      const startH = parseTime(seg.start);
-      let endH = parseTime(seg.end);
-      if (endH <= startH) endH += 24;
-      const leftPct = toPct(startH);
-      const widthPct = toPct(endH) - leftPct;
-      const labelText = widthPct > 14
-        ? `${fmtTime12(seg.start)} → ${fmtTime12(seg.end)}`
-        : widthPct > 8
-          ? `${fmtHour(startH)}–${fmtHour(((endH % 24) + 24) % 24)}`
-          : '';
-      trackHTML += `<div class="tl-bar ${isToday ? 'today' : ''}" style="left: ${leftPct}%; width: ${widthPct}%;" title="${fmtTime12(seg.start)} – ${fmtTime12(seg.end)}">${labelText}</div>`;
+      let startH = shiftIfEarly(parseTime(seg.start));
+      let endH = shiftIfEarly(parseTime(seg.end));
+      if (endH<=startH) endH+=24;
+      const leftPct = toPct(startH); const widthPct = toPct(endH)-leftPct;
+      const labelText = widthPct>14 ? `${fmtTime12(seg.start)} → ${fmtTime12(seg.end)}`
+        : widthPct>8 ? `${fmtHour(((startH%24)+24)%24)}–${fmtHour(((endH%24)+24)%24)}` : '';
+      trackHTML += `<div class="tl-bar ${isToday?'today':''}" style="left:${leftPct}%;width:${widthPct}%;" title="${fmtTime12(seg.start)} – ${fmtTime12(seg.end)}">${labelText}</div>`;
     });
-
-    rowsHTML += `
-      <div class="tl-row ${isToday ? 'today' : ''} ${isWeekDivider ? 'week-break' : ''}">
-        <div class="tl-day">
-          <span class="name ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}">${dayNames[dayOfWeek]}</span>
-          <span class="date">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-        </div>
-        <div class="tl-track">${trackHTML}</div>
-        <div class="tl-hours ${segs.length === 0 ? 'empty' : ''}">${hoursLabel}</div>
-      </div>
-    `;
+    rowsHTML += `<div class="tl-row ${isToday?'today':''} ${isWeekDivider?'week-break':''}"><div class="tl-day"><span class="name ${isWeekend?'weekend':''} ${isToday?'today':''}">${dayNames[dow]}</span><span class="date">${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span></div><div class="tl-track">${trackHTML}</div><div class="tl-hours ${segs.length===0?'empty':''}">${hoursLabel}</div></div>`;
   });
   stage.innerHTML = rowsHTML;
 }
 
-
-function renderLog() {
-  // Table removed — editing happens via clicking timeline rows or via the form
-}
-
-function renderSyncStatus() {
-  const dot = document.getElementById('sync-dot');
-  const status = document.getElementById('sync-status');
-  const lastSync = document.getElementById('last-sync');
-
-  if (syncConfig.token && syncConfig.gistId) {
-    dot.className = 'sync-dot connected';
-    status.textContent = 'Synced';
-    lastSync.textContent = fmtRelative(syncConfig.lastSync);
-  } else {
-    dot.className = 'sync-dot';
-    status.textContent = 'Local only';
-    lastSync.textContent = 'Not connected';
-  }
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
-}
-
-/* ============================ ACTIONS ============================ */
-/* ============================ FORM SEGMENTS ============================ */
-// Each segment row has two time inputs (start, end) and a remove button.
-// `formSegments` holds the current draft state; render syncs it to the DOM.
-let formSegments = [{ start: '21:00', end: '02:00' }];
-
+let formSegments = [{start:'21:00', end:'02:00'}];
 function renderSegments() {
   const container = document.getElementById('segments');
   container.innerHTML = formSegments.map((seg, i) => `
     <div class="segment-row" data-idx="${i}">
-      <div class="field">
-        <label>${i === 0 ? 'Start' : 'Start ' + (i + 1)}</label>
-        <input type="time" class="seg-start" data-idx="${i}" value="${seg.start || ''}" />
-      </div>
-      <div class="field">
-        <label>${i === 0 ? 'End' : 'End ' + (i + 1)}</label>
-        <input type="time" class="seg-end" data-idx="${i}" value="${seg.end || ''}" />
-      </div>
-      <button type="button" class="segment-remove" data-idx="${i}" aria-label="Remove segment">×</button>
-    </div>
-  `).join('');
-
-  // Re-wire input listeners
+      <div class="field"><label>${i===0?'Start':'Start '+(i+1)}</label><input type="time" class="seg-start" data-idx="${i}" value="${seg.start||''}" /></div>
+      <div class="field"><label>${i===0?'End':'End '+(i+1)}</label><input type="time" class="seg-end" data-idx="${i}" value="${seg.end||''}" /></div>
+      <button type="button" class="segment-remove" data-idx="${i}">×</button>
+    </div>`).join('');
   container.querySelectorAll('.seg-start, .seg-end').forEach(el => {
-    el.addEventListener('input', handleSegmentInput);
-    el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
-    el.addEventListener('blur',  () => el.closest('.field').classList.remove('focused'));
+    el.addEventListener('input', e => {
+      const idx = parseInt(e.target.dataset.idx);
+      const field = e.target.classList.contains('seg-start')?'start':'end';
+      if (formSegments[idx]) formSegments[idx][field] = e.target.value;
+      updateComputed();
+    });
   });
   container.querySelectorAll('.segment-remove').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.idx);
-      formSegments.splice(idx, 1);
-      if (formSegments.length === 0) formSegments = [{ start: '', end: '' }];
-      renderSegments();
-      updateComputed();
+      formSegments.splice(idx,1);
+      if (formSegments.length===0) formSegments=[{start:'',end:''}];
+      renderSegments(); updateComputed();
     });
   });
 }
-
-function handleSegmentInput(e) {
-  const idx = parseInt(e.target.dataset.idx);
-  const field = e.target.classList.contains('seg-start') ? 'start' : 'end';
-  if (formSegments[idx]) {
-    formSegments[idx][field] = e.target.value;
+function updateComputed() {
+  const validSegs = formSegments.filter(s=>s.start&&s.end);
+  let totalWorked=0, anyOvernight=false;
+  validSegs.forEach(seg => {
+    const sH=parseTime(seg.start), eH=parseTime(seg.end);
+    if (sH===null||eH===null) return;
+    let diff=eH-sH; if (diff<=0) { diff+=24; anyOvernight=true; }
+    totalWorked+=diff;
+  });
+  let totalBreak=0;
+  if (validSegs.length>=2) {
+    for (let i=1; i<validSegs.length; i++) {
+      const prevEnd=parseTime(validSegs[i-1].end), currStart=parseTime(validSegs[i].start);
+      if (prevEnd===null||currStart===null) continue;
+      let gap=currStart-prevEnd; if (gap<0) gap+=24;
+      if (gap>0&&gap<24) totalBreak+=gap;
+    }
   }
-  updateComputed();
+  totalWorked=Math.max(0,Math.round(totalWorked*100)/100);
+  totalBreak=Math.max(0,Math.round(totalBreak*100)/100);
+  const cv = document.getElementById('computed-v');
+  cv.textContent = totalWorked||'0';
+  document.getElementById('computed-u').textContent = anyOvernight?'Overnight':'Hours';
+  document.getElementById('computed').classList.toggle('overnight', anyOvernight);
+  const breakReadout = document.getElementById('break-readout');
+  if (totalBreak>0) { breakReadout.style.display=''; document.getElementById('break-v').textContent=`${totalBreak}h`; }
+  else breakReadout.style.display='none';
 }
-
 function addSegment() {
-  // Default the new segment's start to the previous segment's end + 1 hour
-  let defaultStart = '', defaultEnd = '';
-  const last = formSegments[formSegments.length - 1];
-  if (last && last.end) {
+  let defaultStart='', defaultEnd='';
+  const last = formSegments[formSegments.length-1];
+  if (last&&last.end) {
     const eH = parseTime(last.end);
-    if (eH !== null) {
-      const newStart = (Math.ceil(eH) + 1) % 24;
+    if (eH!==null) {
+      const newStart = (Math.ceil(eH)+1)%24;
       defaultStart = `${String(Math.floor(newStart)).padStart(2,'0')}:00`;
     }
   }
-  formSegments.push({ start: defaultStart, end: defaultEnd });
-  renderSegments();
-  updateComputed();
+  formSegments.push({start:defaultStart,end:defaultEnd});
+  renderSegments(); updateComputed();
 }
 
-/* ============================ FORM ACTIONS ============================ */
 function saveShift() {
   if (!isUnlocked) return;
   const date = document.getElementById('in-date').value;
   const note = document.getElementById('in-note').value.trim();
-
-  if (!date) {
-    toast('Pick a date', true);
-    return;
-  }
-
-  // Filter to only valid segments (both start and end set)
-  const validSegs = formSegments.filter(s => s.start && s.end);
-  if (validSegs.length === 0) {
-    toast('Add at least one segment with start and end', true);
-    return;
-  }
-
-  let existingIdx;
-  if (editingId) {
-    existingIdx = shifts.findIndex(s => s.id === editingId);
-  } else {
-    existingIdx = shifts.findIndex(s => s.date === date);
-  }
-
-  // Build entry. If only one segment, store flat (backward compatible).
-  // If multiple, use segments array.
+  if (!date) { toast('Pick a date', true); return; }
+  const validSegs = formSegments.filter(s=>s.start&&s.end);
+  if (validSegs.length===0) { toast('Add a segment', true); return; }
+  let existingIdx = editingId ? shifts.findIndex(s=>s.id===editingId) : shifts.findIndex(s=>s.date===date);
   let entry;
-  if (validSegs.length === 1) {
-    entry = {
-      id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
-      date,
-      start: validSegs[0].start,
-      end: validSegs[0].end,
-      break: 0,
-      note,
-    };
+  if (validSegs.length===1) {
+    entry = { id: existingIdx>=0?shifts[existingIdx].id:'shift-'+Date.now(), date, start:validSegs[0].start, end:validSegs[0].end, break:0, note };
   } else {
-    entry = {
-      id: existingIdx >= 0 ? shifts[existingIdx].id : 'shift-' + Date.now(),
-      date,
-      start: validSegs[0].start,
-      end: validSegs[0].end,
-      break: 0,
-      note,
-      segments: validSegs.map(s => ({ start: s.start, end: s.end })),
-    };
+    entry = { id: existingIdx>=0?shifts[existingIdx].id:'shift-'+Date.now(), date, start:validSegs[0].start, end:validSegs[0].end, break:0, note, segments:validSegs.map(s=>({start:s.start,end:s.end})) };
   }
-
-  if (existingIdx >= 0) shifts[existingIdx] = entry;
-  else shifts.push(entry);
-
+  if (existingIdx>=0) shifts[existingIdx]=entry; else shifts.push(entry);
   saveShiftsLocal();
-  if (syncConfig.token && syncConfig.gistId) syncToGist();
-
-  toast(existingIdx >= 0 ? 'Updated' : 'Saved');
-  cancelEdit();
-  render();
+  toast(existingIdx>=0?'Updated':'Saved');
+  cancelEdit(); render();
 }
-
-function startEdit(id) {
-  if (!isUnlocked) return;
-  const s = shifts.find(x => x.id === id);
-  if (!s) return;
-  editingId = id;
-  document.getElementById('in-date').value = s.date;
-  // Load segments — either from `segments` array or single start/end
-  formSegments = getSegments(s).length > 0
-    ? getSegments(s).map(seg => ({ start: seg.start, end: seg.end }))
-    : [{ start: s.start || '', end: s.end || '' }];
-  renderSegments();
-  document.getElementById('in-note').value = s.note || '';
-  document.getElementById('btn-save').textContent = 'Update';
-  document.getElementById('btn-save').classList.add('editing');
-  document.getElementById('form-cancel').classList.add('visible');
-  document.getElementById('form-title').textContent = 'Editing entry · ' + s.date;
-  updateComputed();
-  render();
-  document.querySelector('.form').scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
 function cancelEdit() {
   editingId = null;
-  document.getElementById('btn-save').textContent = 'Save';
+  document.getElementById('btn-save').textContent='Save';
   document.getElementById('btn-save').classList.remove('editing');
   document.getElementById('form-cancel').classList.remove('visible');
-  document.getElementById('form-title').textContent = 'Log a Shift';
-  document.getElementById('in-note').value = '';
-  // Reset segments to a default single segment
-  formSegments = [{ start: '21:00', end: '02:00' }];
-  renderSegments();
-  updateComputed();
+  document.getElementById('form-title').textContent='Log a Shift';
+  document.getElementById('in-note').value='';
+  formSegments=[{start:'21:00',end:'02:00'}];
+  renderSegments(); updateComputed();
 }
-
-function deleteShift(id) {
-  if (!isUnlocked) return;
-  if (!confirm('Delete this entry?')) return;
-  shifts = shifts.filter(s => s.id !== id);
-  saveShiftsLocal();
-  if (syncConfig.token && syncConfig.gistId) syncToGist();
-  if (editingId === id) cancelEdit();
-  toast('Deleted');
-  render();
-}
-
 function resetToSamples() {
   if (!isUnlocked) return;
-  if (!confirm('Reset all entries to samples? This erases local data (but won\'t affect your synced gist unless you sync after).')) return;
+  if (!confirm('Reset all entries?')) return;
   localStorage.removeItem(STORAGE_KEY);
   shifts = loadShifts();
-  render();
-  toast('Reset');
+  render(); toast('Reset');
 }
-
 function exportCSV() {
   const rows = [['Date','Day','Segments','Hours','Note']];
-  [...shifts].sort((a,b) => a.date.localeCompare(b.date)).forEach(s => {
+  [...shifts].sort((a,b)=>a.date.localeCompare(b.date)).forEach(s => {
     const d = parseDate(s.date);
     const segs = getSegments(s);
-    const segStr = segs.map(seg => `${seg.start}–${seg.end}`).join(' | ');
-    rows.push([
-      s.date,
-      d.toLocaleDateString('en-US', { weekday: 'long' }),
-      segStr,
-      computeShiftHours(s),
-      (s.note || '').replace(/"/g, '""'),
-    ]);
+    const segStr = segs.map(seg=>`${seg.start}–${seg.end}`).join(' | ');
+    rows.push([s.date, d.toLocaleDateString('en-US',{weekday:'long'}), segStr, computeShiftHours(s), (s.note||'').replace(/"/g,'""')]);
   });
-  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
+  const csv = rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `work_log_${fmtDate(new Date())}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('Exported');
+  const a = document.createElement('a'); a.href=url; a.download=`work_log_${fmtDate(new Date())}.csv`; a.click();
+  URL.revokeObjectURL(url); toast('Exported');
 }
-
-function updateComputed() {
-  // Compute total worked hours and break (gap) time across all valid segments.
-  const validSegs = formSegments.filter(s => s.start && s.end);
-  let totalWorked = 0;
-  let anyOvernight = false;
-
-  validSegs.forEach(seg => {
-    const sH = parseTime(seg.start);
-    const eH = parseTime(seg.end);
-    if (sH === null || eH === null) return;
-    let diff = eH - sH;
-    if (diff <= 0) { diff += 24; anyOvernight = true; }
-    totalWorked += diff;
-  });
-
-  // Break time = gaps between segments (in their declared order)
-  let totalBreak = 0;
-  if (validSegs.length >= 2) {
-    // Sort segments by start time to compute gaps reliably.
-    // For overnight scenarios, we treat each segment as a separate window —
-    // gaps are computed based on the order entered.
-    for (let i = 1; i < validSegs.length; i++) {
-      const prevEnd = parseTime(validSegs[i - 1].end);
-      const currStart = parseTime(validSegs[i].start);
-      if (prevEnd === null || currStart === null) continue;
-      let gap = currStart - prevEnd;
-      if (gap < 0) gap += 24; // overnight gap
-      if (gap > 0 && gap < 24) totalBreak += gap;
-    }
-  }
-
-  totalWorked = Math.max(0, Math.round(totalWorked * 100) / 100);
-  totalBreak = Math.max(0, Math.round(totalBreak * 100) / 100);
-
-  const cv = document.getElementById('computed-v');
-  cv.textContent = totalWorked || '0';
-  cv.classList.toggle('empty', totalWorked === 0);
-  document.getElementById('computed-u').textContent = anyOvernight ? 'Overnight' : 'Hours';
-  document.getElementById('computed').classList.toggle('overnight', anyOvernight);
-
-  // Show break readout only when there's a gap
-  const breakReadout = document.getElementById('break-readout');
-  if (totalBreak > 0) {
-    breakReadout.style.display = '';
-    document.getElementById('break-v').textContent = `${totalBreak}h`;
-  } else {
-    breakReadout.style.display = 'none';
-  }
-}
-
 function toast(msg, isError) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.toggle('error', !!isError);
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1500);
+  t.textContent = msg; t.classList.toggle('error', !!isError); t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1500);
 }
 
-/* ============================ GIST SYNC ============================ */
-async function syncToGist() {
-  if (!syncConfig.token) return;
-
-  setSyncStatus('syncing');
-  try {
-    const payload = {
-      description: 'Work Log — synced data',
-      public: false,
-      files: {
-        'work_log.json': { content: JSON.stringify({ shifts, updated: new Date().toISOString() }, null, 2) }
-      }
-    };
-
-    let res;
-    if (syncConfig.gistId) {
-      res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `token ${syncConfig.token}`,
-          'Accept': 'application/vnd.github+json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-    } else {
-      res = await fetch('https://api.github.com/gists', {
-        method: 'POST',
-        headers: {
-          'Authorization': `token ${syncConfig.token}`,
-          'Accept': 'application/vnd.github+json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-    }
-
-    if (!res.ok) throw new Error(`Gist API ${res.status}`);
-    const data = await res.json();
-    if (!syncConfig.gistId) syncConfig.gistId = data.id;
-    syncConfig.lastSync = Date.now();
-    saveSyncConfig();
-    setSyncStatus('connected');
-    return true;
-  } catch (e) {
-    setSyncStatus('error');
-    toast('Sync failed: ' + e.message, true);
-    return false;
-  }
-}
-
-async function pullFromGist() {
-  if (!syncConfig.token || !syncConfig.gistId) return;
-  setSyncStatus('syncing');
-  try {
-    const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
-      headers: {
-        'Authorization': `token ${syncConfig.token}`,
-        'Accept': 'application/vnd.github+json',
-      },
-    });
-    if (!res.ok) throw new Error(`Gist API ${res.status}`);
-    const data = await res.json();
-    const file = data.files['work_log.json'];
-    if (!file) throw new Error('work_log.json not found in gist');
-    const parsed = JSON.parse(file.content);
-    if (parsed.shifts) {
-      shifts = parsed.shifts;
-      saveShiftsLocal();
-      syncConfig.lastSync = Date.now();
-      saveSyncConfig();
-      setSyncStatus('connected');
-      render();
-      return true;
-    }
-  } catch (e) {
-    setSyncStatus('error');
-    toast('Pull failed: ' + e.message, true);
-    return false;
-  }
-}
-
-function setSyncStatus(state) {
-  const dot = document.getElementById('sync-dot');
-  const status = document.getElementById('sync-status');
-  dot.className = 'sync-dot ' + (state === 'connected' ? 'connected' : state);
-  status.textContent = state === 'syncing' ? 'Syncing…' : state === 'connected' ? 'Synced' : state === 'error' ? 'Sync error' : 'Local only';
-  document.getElementById('last-sync').textContent = state === 'connected' ? fmtRelative(syncConfig.lastSync) : state === 'error' ? 'Last sync failed' : 'Not connected';
-}
-
-async function manualSync() {
-  if (!syncConfig.token || !syncConfig.gistId) {
-    openSyncModal();
-    return;
-  }
-  const ok = await syncToGist();
-  if (ok) toast('Synced');
-}
-
-/* ============================ MODAL ============================ */
-function openSyncModal() {
-  document.getElementById('modal-token').value = syncConfig.token || '';
-  document.getElementById('modal-gist-id').value = syncConfig.gistId || '';
-  document.getElementById('sync-modal').classList.add('visible');
-}
-function closeSyncModal() {
-  document.getElementById('sync-modal').classList.remove('visible');
-}
-async function modalSave() {
-  const token = document.getElementById('modal-token').value.trim();
-  const gistId = document.getElementById('modal-gist-id').value.trim();
-  if (!token) { toast('Token required', true); return; }
-
-  syncConfig.token = token;
-  syncConfig.gistId = gistId;
-  saveSyncConfig();
-
-  // If gist ID was provided, pull first; else push to create
-  if (gistId) {
-    const ok = await pullFromGist();
-    if (ok) toast('Connected · pulled data');
-  } else {
-    const ok = await syncToGist();
-    if (ok) toast('Connected · gist created');
-  }
-  closeSyncModal();
-  render();
-}
-function modalDisconnect() {
-  if (!confirm('Disconnect sync? Token and Gist ID will be removed from this browser. Your local data stays.')) return;
-  syncConfig = { token: '', gistId: '', lastSync: null };
-  saveSyncConfig();
-  closeSyncModal();
-  render();
-  toast('Disconnected');
-}
-
-/* ============================ INIT ============================ */
-// Start locked by default — anyone visiting sees read-only view
+// INIT
 lock();
-
 viewWeekStart = currentPayPeriodStart(TODAY);
 shifts = loadShifts();
 document.getElementById('in-date').value = fmtDate(TODAY);
-
 document.getElementById('btn-save').addEventListener('click', saveShift);
 document.getElementById('form-cancel').addEventListener('click', () => { cancelEdit(); render(); });
 document.getElementById('btn-reset').addEventListener('click', resetToSamples);
 document.getElementById('btn-export').addEventListener('click', exportCSV);
-document.getElementById('btn-sync').addEventListener('click', manualSync);
-document.getElementById('sync-pill').addEventListener('click', openSyncModal);
-document.getElementById('modal-cancel').addEventListener('click', closeSyncModal);
-document.getElementById('modal-save').addEventListener('click', modalSave);
-document.getElementById('modal-disconnect').addEventListener('click', modalDisconnect);
-document.getElementById('sync-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'sync-modal') closeSyncModal();
-});
-
-// Segment input listeners are wired inside renderSegments() each time it runs.
-// Wire the "+ Add segment" button:
-document.getElementById('btn-add-segment').addEventListener('click', () => {
-  if (!isUnlocked) return;
-  addSegment();
-});
-
-// Wire focused class on date and note fields
-['in-date', 'in-note'].forEach(id => {
-  const el = document.getElementById(id);
-  el.addEventListener('focus', () => el.closest('.field').classList.add('focused'));
-  el.addEventListener('blur',  () => el.closest('.field').classList.remove('focused'));
-});
-
+document.getElementById('btn-add-segment').addEventListener('click', () => { if (isUnlocked) addSegment(); });
 document.getElementById('prev-week').addEventListener('click', () => {
-  viewWeekStart.setDate(viewWeekStart.getDate() - 14);
-  viewWeekStart = new Date(viewWeekStart);
-  renderTimeline();
+  viewWeekStart.setDate(viewWeekStart.getDate()-14);
+  viewWeekStart = new Date(viewWeekStart); renderTimeline();
 });
 document.getElementById('next-week').addEventListener('click', () => {
-  viewWeekStart.setDate(viewWeekStart.getDate() + 14);
-  viewWeekStart = new Date(viewWeekStart);
-  renderTimeline();
+  viewWeekStart.setDate(viewWeekStart.getDate()+14);
+  viewWeekStart = new Date(viewWeekStart); renderTimeline();
 });
 document.getElementById('this-week').addEventListener('click', () => {
-  viewWeekStart = currentPayPeriodStart(TODAY);
-  renderTimeline();
+  viewWeekStart = currentPayPeriodStart(TODAY); renderTimeline();
 });
-
-document.addEventListener('keydown', (e) => {
-  // Unlock shortcut: Cmd/Ctrl + E
-  if ((e.metaKey || e.ctrlKey) && (e.key === 'e' || e.key === 'E')) {
+document.addEventListener('keydown', e => {
+  if ((e.metaKey||e.ctrlKey)&&(e.key==='e'||e.key==='E')) {
     e.preventDefault();
-    if (isUnlocked) {
-      lock();
-      toast('Locked');
-    } else {
-      showPwPrompt();
-    }
+    if (isUnlocked) { lock(); toast('Locked'); } else showPwPrompt();
     return;
   }
-  // Password prompt keys
   const pwBackdrop = document.getElementById('pw-backdrop');
   if (pwBackdrop.classList.contains('visible')) {
-    if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); return; }
-    if (e.key === 'Escape') { hidePwPrompt(); return; }
-  }
-  if (e.key === 'Escape') {
-    if (document.getElementById('sync-modal').classList.contains('visible')) closeSyncModal();
-    else if (editingId) { cancelEdit(); render(); }
+    if (e.key==='Enter') { e.preventDefault(); tryUnlock(); }
+    else if (e.key==='Escape') hidePwPrompt();
   }
 });
-
-// Click backdrop to close pw prompt
-document.getElementById('pw-backdrop').addEventListener('click', (e) => {
-  if (e.target.id === 'pw-backdrop') hidePwPrompt();
+document.getElementById('pw-backdrop').addEventListener('click', e => {
+  if (e.target.id==='pw-backdrop') hidePwPrompt();
 });
-
-// On load: if synced, try to pull latest
-if (syncConfig.token && syncConfig.gistId) {
-  pullFromGist().then(() => {
-    renderSegments();
-    updateComputed();
-    render();
-  });
-}
-
-renderSegments();
-updateComputed();
-render();
-
-// Refresh "last sync" string every minute
-setInterval(() => {
-  if (syncConfig.token && syncConfig.gistId) renderSyncStatus();
-}, 60000);
-/* ============================ CALCULATOR ============================ */
-const calcState = {
-  current: '0',
-  previous: null,
-  operator: null,
-  justEvaluated: false,
-};
-
-function calcRender() {
-  document.getElementById('calc-result').textContent = formatCalcNum(calcState.current);
-  const exprEl = document.getElementById('calc-expr');
-  if (calcState.previous !== null && calcState.operator) {
-    const opSym = { '+': '+', '-': '−', '*': '×', '/': '÷' }[calcState.operator];
-    exprEl.textContent = `${formatCalcNum(calcState.previous)} ${opSym}`;
-  } else {
-    exprEl.innerHTML = '&nbsp;';
-  }
-  // Highlight active op
-  document.querySelectorAll('.calc-key.op').forEach(b => b.classList.remove('active'));
-  if (calcState.operator && !calcState.justEvaluated) {
-    const active = document.querySelector(`.calc-key.op[data-op="${calcState.operator}"]`);
-    if (active && calcState.current === '0') active.classList.add('active');
-  }
-}
-
-function formatCalcNum(n) {
-  if (n === null || n === undefined) return '0';
-  const num = parseFloat(n);
-  if (isNaN(num)) return n.toString();
-  if (!isFinite(num)) return 'Error';
-  // If the raw string has trailing decimal point or trailing zeros after dot, preserve as typed
-  const s = n.toString();
-  if (s.endsWith('.') || (s.includes('.') && s.split('.')[1].endsWith('0'))) return s;
-  // Otherwise format with thousands separators, up to 10 significant digits
-  const abs = Math.abs(num);
-  if (abs >= 1e10 || (abs < 1e-6 && abs > 0)) return num.toExponential(6);
-  const rounded = Math.round(num * 1e8) / 1e8;
-  return rounded.toLocaleString('en-US', { maximumFractionDigits: 8 });
-}
-
-function calcInputDigit(d) {
-  if (calcState.justEvaluated) {
-    calcState.current = d;
-    calcState.previous = null;
-    calcState.operator = null;
-    calcState.justEvaluated = false;
-  } else if (calcState.current === '0') {
-    calcState.current = d;
-  } else {
-    if (calcState.current.replace('.', '').replace('-', '').length >= 12) return;
-    calcState.current += d;
-  }
-  calcRender();
-}
-
-function calcInputDot() {
-  if (calcState.justEvaluated) {
-    calcState.current = '0.';
-    calcState.justEvaluated = false;
-  } else if (!calcState.current.includes('.')) {
-    calcState.current += '.';
-  }
-  calcRender();
-}
-
-function calcInputOp(op) {
-  if (calcState.operator && calcState.previous !== null && !calcState.justEvaluated) {
-    // Chain: evaluate first
-    calcEvaluate();
-  }
-  calcState.previous = calcState.current;
-  calcState.operator = op;
-  calcState.current = '0';
-  calcState.justEvaluated = false;
-  calcRender();
-}
-
-function calcEvaluate() {
-  if (calcState.operator === null || calcState.previous === null) return;
-  const a = parseFloat(calcState.previous);
-  const b = parseFloat(calcState.current);
-  let result;
-  switch (calcState.operator) {
-    case '+': result = a + b; break;
-    case '-': result = a - b; break;
-    case '*': result = a * b; break;
-    case '/': result = b === 0 ? NaN : a / b; break;
-  }
-  if (!isFinite(result)) {
-    calcState.current = 'Error';
-  } else {
-    calcState.current = (Math.round(result * 1e10) / 1e10).toString();
-  }
-  calcState.previous = null;
-  calcState.operator = null;
-  calcState.justEvaluated = true;
-  calcRender();
-}
-
-function calcClear() {
-  calcState.current = '0';
-  calcState.previous = null;
-  calcState.operator = null;
-  calcState.justEvaluated = false;
-  calcRender();
-}
-
-function calcSign() {
-  if (calcState.current === '0' || calcState.current === 'Error') return;
-  calcState.current = calcState.current.startsWith('-')
-    ? calcState.current.slice(1)
-    : '-' + calcState.current;
-  calcRender();
-}
-
-function calcPercent() {
-  const n = parseFloat(calcState.current);
-  if (isNaN(n)) return;
-  calcState.current = (n / 100).toString();
-  calcRender();
-}
-
-function openCalc() {
-  document.getElementById('calc-backdrop').classList.add('visible');
-}
-function closeCalc() {
-  document.getElementById('calc-backdrop').classList.remove('visible');
-}
-
-// Wire up calculator
-document.getElementById('open-calc').addEventListener('click', openCalc);
-document.getElementById('calc-close').addEventListener('click', closeCalc);
-document.getElementById('calc-backdrop').addEventListener('click', (e) => {
-  if (e.target.id === 'calc-backdrop') closeCalc();
-});
-document.querySelectorAll('.calc-key').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.dataset.digit !== undefined) calcInputDigit(btn.dataset.digit);
-    else if (btn.dataset.op) calcInputOp(btn.dataset.op);
-    else if (btn.dataset.action === 'dot') calcInputDot();
-    else if (btn.dataset.action === 'eq') calcEvaluate();
-    else if (btn.dataset.action === 'clear') calcClear();
-    else if (btn.dataset.action === 'sign') calcSign();
-    else if (btn.dataset.action === 'percent') calcPercent();
-  });
-});
-
-// Keyboard support when calc is open
-document.addEventListener('keydown', (e) => {
-  const open = document.getElementById('calc-backdrop').classList.contains('visible');
-  if (!open) return;
-
-  // Don't intercept keys when the user is typing in an input field
-  // (e.g. converter inputs need digits to reach them, not the calculator).
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-    if (e.key === 'Escape') closeCalc();
-    return;
-  }
-
-  // Also don't intercept when the Convert tab is active
-  const calcPaneActive = document.getElementById('pane-calc').classList.contains('active');
-  if (!calcPaneActive) {
-    if (e.key === 'Escape') closeCalc();
-    return;
-  }
-
-  if (e.key >= '0' && e.key <= '9') { calcInputDigit(e.key); e.preventDefault(); }
-  else if (e.key === '.') { calcInputDot(); e.preventDefault(); }
-  else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') { calcInputOp(e.key); e.preventDefault(); }
-  else if (e.key === 'Enter' || e.key === '=') { calcEvaluate(); e.preventDefault(); }
-  else if (e.key === 'Escape') { closeCalc(); }
-  else if (e.key === 'Backspace') {
-    if (calcState.justEvaluated) { calcClear(); }
-    else if (calcState.current.length > 1) {
-      calcState.current = calcState.current.slice(0, -1);
-      if (calcState.current === '-' || calcState.current === '') calcState.current = '0';
-      calcRender();
-    } else {
-      calcState.current = '0';
-      calcRender();
-    }
-    e.preventDefault();
-  } else if (e.key.toLowerCase() === 'c') { calcClear(); e.preventDefault(); }
-});
-
-calcRender();
-
-/* ============================ CONVERTER ============================ */
-const RATES_CACHE_KEY = 'workLog_v2_rates';
-const RATES_TTL_HOURS = 12; // cache rates for 12 hours
-
-// Hardcoded fallback rates — used if network fails completely.
-// Updated periodically; these are approximate Q2 2026 mid-market rates.
-const FALLBACK_RATES = {
-  USD: 1,
-  CAD: 1.38,
-  INR: 84.50,
-};
-const FALLBACK_DATE = 'Apr 2026';
-
-let rates = null;           // { USD: 1, CAD: x, INR: y }
-let ratesUpdatedAt = null;  // ms timestamp
-let ratesAreOffline = false; // true when using FALLBACK_RATES
-let convertInputs = null;
-
-function loadRatesCache() {
-  try {
-    const raw = localStorage.getItem(RATES_CACHE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed.rates || !parsed.ts) return null;
-    const ageHrs = (Date.now() - parsed.ts) / 3600000;
-    if (ageHrs > RATES_TTL_HOURS) return null;
-    return parsed;
-  } catch (e) { return null; }
-}
-
-function saveRatesCache(rates, ts) {
-  try {
-    localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({ rates, ts }));
-  } catch (e) {}
-}
-
-// Try each endpoint in turn; the first one that responds with valid CAD+INR wins.
-async function tryFetchEndpoints() {
-  const endpoints = [
-    {
-      url: 'https://open.er-api.com/v6/latest/USD',
-      parse: (d) => (d.result === 'success' && d.rates) ? { CAD: d.rates.CAD, INR: d.rates.INR } : null,
-    },
-    {
-      url: 'https://api.frankfurter.dev/v1/latest?from=USD&to=CAD,INR',
-      parse: (d) => (d.rates && d.rates.CAD && d.rates.INR) ? { CAD: d.rates.CAD, INR: d.rates.INR } : null,
-    },
-    {
-      url: 'https://api.exchangerate.host/latest?base=USD&symbols=CAD,INR',
-      parse: (d) => (d.rates && d.rates.CAD && d.rates.INR) ? { CAD: d.rates.CAD, INR: d.rates.INR } : null,
-    },
-  ];
-
-  for (const ep of endpoints) {
-    try {
-      const res = await fetch(ep.url, { method: 'GET' });
-      if (!res.ok) continue;
-      const data = await res.json();
-      const parsed = ep.parse(data);
-      if (parsed && parsed.CAD && parsed.INR) return parsed;
-    } catch (e) {
-      // try next endpoint
-    }
-  }
-  return null;
-}
-
-async function fetchRates(force = false) {
-  // Check cache first unless forced
-  if (!force) {
-    const cached = loadRatesCache();
-    if (cached) {
-      rates = cached.rates;
-      ratesUpdatedAt = cached.ts;
-      ratesAreOffline = false;
-      setConvertStatus('ready', 'Live rates · cached');
-      updateConvertUpdatedLabel();
-      return true;
-    }
-  }
-
-  setConvertStatus('loading', 'Loading rates…');
-  const refreshBtn = document.getElementById('convert-refresh');
-  if (refreshBtn) refreshBtn.classList.add('spinning');
-
-  try {
-    const fetched = await tryFetchEndpoints();
-    if (fetched) {
-      rates = { USD: 1, CAD: fetched.CAD, INR: fetched.INR };
-      ratesUpdatedAt = Date.now();
-      ratesAreOffline = false;
-      saveRatesCache(rates, ratesUpdatedAt);
-      setConvertStatus('ready', 'Live rates loaded');
-      updateConvertUpdatedLabel();
-      return true;
-    } else {
-      // All endpoints failed — use hardcoded fallback so the converter still works
-      rates = { ...FALLBACK_RATES };
-      ratesUpdatedAt = null;
-      ratesAreOffline = true;
-      setConvertStatus('warning', `Offline · using ${FALLBACK_DATE} rates`);
-      updateConvertUpdatedLabel();
-      return true;
-    }
-  } finally {
-    if (refreshBtn) refreshBtn.classList.remove('spinning');
-  }
-}
-
-function setConvertStatus(state, msg) {
-  const el = document.getElementById('convert-status');
-  if (!el) return;
-  el.className = 'convert-status';
-  if (state === 'ready')   el.classList.add('ready');
-  if (state === 'error')   el.classList.add('error');
-  if (state === 'warning') el.classList.add('warning');
-  el.textContent = msg;
-}
-
-function updateConvertUpdatedLabel() {
-  const el = document.getElementById('convert-updated');
-  if (!el || !rates) return;
-  const cadStr = rates.CAD.toFixed(3);
-  const inrStr = rates.INR.toFixed(2);
-  if (ratesAreOffline) {
-    el.textContent = `Offline · 1 USD = ${cadStr} CAD · ${inrStr} INR`;
-  } else if (ratesUpdatedAt) {
-    const d = new Date(ratesUpdatedAt);
-    el.textContent = `${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · 1 USD = ${cadStr} CAD · ${inrStr} INR`;
-  } else {
-    el.textContent = `1 USD = ${cadStr} CAD · ${inrStr} INR`;
-  }
-}
-
-function getConvertInputs() {
-  if (convertInputs) return convertInputs;
-  convertInputs = {
-    USD: document.getElementById('conv-usd'),
-    CAD: document.getElementById('conv-cad'),
-    INR: document.getElementById('conv-inr'),
-  };
-  return convertInputs;
-}
-
-function formatConvertNum(n) {
-  if (n === 0) return '0';
-  const abs = Math.abs(n);
-  const decimals = abs >= 1000 ? 0 : abs >= 10 ? 2 : 4;
-  return n.toLocaleString('en-US', { minimumFractionDigits: decimals === 0 ? 0 : 2, maximumFractionDigits: decimals });
-}
-
-function handleConvertInput(e) {
-  if (!rates) return;
-  const inputs = getConvertInputs();
-  const sourceEl = e.target;
-  const sourceCur = sourceEl.dataset.cur;
-  const raw = sourceEl.value.replace(/[^0-9.\-]/g, '');
-  const amount = parseFloat(raw);
-  if (isNaN(amount)) {
-    Object.entries(inputs).forEach(([cur, el]) => {
-      if (cur !== sourceCur) el.value = '';
-    });
-    return;
-  }
-  const usdAmount = amount / rates[sourceCur];
-  Object.entries(inputs).forEach(([cur, el]) => {
-    if (cur === sourceCur) return;
-    const converted = usdAmount * rates[cur];
-    el.value = formatConvertNum(converted);
-  });
-}
-
-function switchTab(name) {
-  document.querySelectorAll('.calc-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.tab === name);
-  });
-  document.querySelectorAll('.calc-pane').forEach(p => {
-    p.classList.toggle('active', p.id === 'pane-' + name);
-  });
-  if (name === 'convert') {
-    if (!rates) {
-      fetchRates(false);
-    } else {
-      // Refresh status display in case it was stale
-      if (ratesAreOffline) setConvertStatus('warning', `Offline · using ${FALLBACK_DATE} rates`);
-      else setConvertStatus('ready', 'Live rates loaded');
-      updateConvertUpdatedLabel();
-    }
-    setTimeout(() => {
-      const usd = document.getElementById('conv-usd');
-      if (usd) usd.focus();
-    }, 50);
-  }
-}
-
-document.getElementById('tab-calc').addEventListener('click', () => switchTab('calc'));
-document.getElementById('tab-convert').addEventListener('click', () => switchTab('convert'));
-document.getElementById('convert-refresh').addEventListener('click', () => fetchRates(true));
-
-['conv-usd', 'conv-cad', 'conv-inr'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener('input', handleConvertInput);
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeCalc();
-    });
-  }
-});
+renderSegments(); updateComputed(); render();
 </script>
 
 </body>
