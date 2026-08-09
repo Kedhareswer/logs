@@ -32,7 +32,11 @@ Do not reintroduce an hour cutoff applied *per segment* rather than per day; tha
 
 **Pay cycles.** 14 days from `PAY_ANCHOR` (2026-05-09). The stat bar always reports the cycle containing `TODAY`; the calendar, timeline, and checklist all follow `viewCycleStart`, which the cycle nav moves in ±14-day steps.
 
-**Checklist** (`renderChecklist`) answers three things for the *viewed* cycle: whether every past day has an entry (`unloggedDays()` — past days only, future days are "still to come", and each gap is a chip that jumps the form to that date), whether the cycle is marked paid (persisted per cycle), and what the pay should come to (`estimatePay()` = hours × rate, compared against an optional recorded amount). Rate and currency are user prefs; there is no hardcoded currency.
+**Checklist** (`renderChecklist`) answers three things for the *viewed* cycle: whether every past day has an entry (`unloggedDays()` — past days only, future days are "still to come", and each gap is a chip that jumps the form to that date), whether the cycle is marked paid (persisted per cycle), and what the pay should come to.
+
+**Currency chain.** Pay is earned in one currency, transferred through a second, and landed in a third — `prefs.chain`, defaulting to `['USD','CAD','INR']`. `convertChain()` is pure: rates are all quoted against `chain[0]`, each hop after the first uses a cross rate (`rTo / rFrom`), and the running value is left unrounded between hops so a two-hop route lands on the same figure as converting direct. It returns `null` when any leg lacks a rate — never a silently wrong number. `normalizeChain()` drops blanks and repeats, so clearing the middle field degrades to a direct hop rather than breaking.
+
+Rates come from `FX_SOURCES`, tried in order: Frankfurter (ECB reference rates) then open.er-api.com. Both are keyless, CORS-enabled, and HTTPS, which is what makes them usable from a static page. Results cache in `FX_KEY` for `FX_MAX_AGE` (6h) and survive offline; a failed refresh keeps the last good rates and marks the status line stale. These are mid-market rates — the bank doing the transfer takes a spread, so the estimate is a ceiling. When an actual received amount is recorded, the checklist derives the effective rate so the spread is visible.
 
 **CSV.** Export writes a UTF-8 BOM and ASCII `-` between times — the old export used an en dash with no BOM, which Excel rendered as mojibake. `importCSV()` reads that same shape and merges by date; `parseSegmentSpec()` accepts `-`, `–`, and `—` so old exports still import.
 
