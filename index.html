@@ -397,6 +397,40 @@
   .btn-danger:hover { background: var(--red-soft); border-color: var(--red); color: var(--red); }
   [hidden] { display: none !important; }
 
+  /* ===================== EXPENSES ===================== */
+  .exp-item {
+    display: grid; grid-template-columns: 44px 1fr auto 20px;
+    gap: 8px; align-items: baseline;
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+  }
+  .exp-item:first-child { padding-top: 0; }
+  .exp-date { font-family: var(--mono); font-size: 10px; color: var(--text-4); }
+  .exp-note { font-size: 12px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .exp-amt { font-family: var(--mono); font-size: 11px; color: var(--text); white-space: nowrap; }
+  .exp-amt .conv { color: var(--text-4); }
+  .exp-del {
+    width: 18px; height: 18px; align-self: center;
+    border: 1px solid transparent; border-radius: 4px;
+    background: transparent; color: var(--text-4);
+    font-family: var(--mono); font-size: 12px; line-height: 1; cursor: pointer;
+    transition: all 160ms var(--ease);
+  }
+  .exp-del:hover { border-color: var(--red); color: var(--red); background: var(--red-soft); }
+  .exp-empty { font-family: var(--mono); font-size: 10.5px; color: var(--text-4); }
+  .exp-add { margin-top: 13px; display: flex; flex-direction: column; gap: 6px; }
+  .exp-row-1 { display: grid; grid-template-columns: 122px 1fr; gap: 6px; }
+  .exp-row-2 { display: grid; grid-template-columns: 1fr 50px 56px; gap: 6px; }
+  .btn-mini {
+    padding: 8px 6px;
+    border: 1px solid var(--border-2); border-radius: 6px;
+    background: var(--surface-2); color: var(--text);
+    font-family: var(--mono); font-size: 11px; cursor: pointer;
+    transition: all 180ms var(--ease);
+  }
+  .btn-mini:hover:not(:disabled) { border-color: var(--text-2); }
+  .btn-mini:active { transform: scale(0.98); }
+  .btn-mini:disabled { color: var(--text-4); cursor: not-allowed; }
+
   /* ===================== CHECKLIST ===================== */
   .check-item {
     display: grid; grid-template-columns: 20px 1fr; gap: 11px;
@@ -674,6 +708,27 @@
 
       <section class="panel reveal" style="--i:2">
         <div class="panel-head">
+          <span class="panel-title">Work expenses</span>
+          <span class="panel-meta" id="exp-total">—</span>
+        </div>
+        <div class="panel-body">
+          <div id="exp-list"></div>
+          <div class="exp-add">
+            <div class="exp-row-1">
+              <input type="date" id="exp-date" title="Date of the expense" />
+              <input type="text" id="exp-note" placeholder="What it was for" />
+            </div>
+            <div class="exp-row-2">
+              <input type="number" id="exp-amount" min="0" step="0.01" placeholder="0.00" />
+              <input type="text" class="mono code" id="exp-cur" maxlength="3" title="Currency you paid in" />
+              <button type="button" class="btn-mini" id="btn-add-expense">Add</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel reveal" style="--i:3">
+        <div class="panel-head">
           <span class="panel-title">Cycle checklist</span>
           <span class="panel-meta" id="check-cycle">—</span>
         </div>
@@ -739,6 +794,7 @@ const EDIT_PASSWORD = 'Kedhar';
 const DATA_KEY   = 'workLog_v3';
 const PREFS_KEY  = 'workLog_v3_prefs';
 const CYCLES_KEY = 'workLog_v3_cycles';
+const EXPENSES_KEY = 'workLog_v3_expenses';
 const FX_KEY     = 'workLog_v3_fx';
 const LEGACY_KEY = 'workLog_v2_data_jun4';
 
@@ -755,6 +811,7 @@ const TODAY = new Date();
 TODAY.setHours(0, 0, 0, 0);
 
 let shifts = [];
+let expenses = [];
 let prefs = { rate: 0, chain: ['USD', 'CAD', 'INR'] };
 let cycleRecords = {};
 let fx = { ts: 0, base: '', rates: {}, date: '', source: '', error: '' };
@@ -978,6 +1035,32 @@ function convertChain(amount, chain, rates) {
   return steps;
 }
 
+// Any code to any other code, both quoted against base. Null when a rate is
+// missing — an expense in an unknown currency must not silently count as zero.
+function rateOf(code, rates, base) { return code === base ? 1 : Number(rates[code]); }
+function convertAmount(amount, from, to, rates, base) {
+  if (from === to) return amount;
+  const rFrom = rateOf(from, rates, base), rTo = rateOf(to, rates, base);
+  if (!(rFrom > 0) || !(rTo > 0)) return null;
+  return amount * rTo / rFrom;
+}
+
+function expensesIn(list, start, end) {
+  return list
+    .filter(e => { const d = parseDate(e.date); return d >= start && d <= end; })
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+// Converted sum plus a count of what could not be converted, so the UI can
+// say "these three are not in this total" instead of quietly under-reporting.
+function expensesTotal(list, to, rates, base) {
+  let total = 0, unconverted = 0;
+  list.forEach(e => {
+    const v = convertAmount(e.amount, e.currency, to, rates, base);
+    if (v === null) unconverted++; else total += v;
+  });
+  return { total: Math.round(total * 100) / 100, unconverted: unconverted };
+}
+
 const FX_SOURCES = [
   {
     name: 'ECB',
@@ -993,19 +1076,28 @@ const FX_SOURCES = [
 ];
 const FX_MAX_AGE = 6 * 3600 * 1000;
 
-function ratesAreFresh() {
+// Every code the UI has to price: the pay chain plus whatever currencies
+// expenses were paid in.
+function neededCurrencies() {
   const chain = activeChain();
-  if (chain.length < 2) return true;
-  const need = chain.slice(1);
-  return fx.base === chain[0] && need.every(c => Number(fx.rates[c]) > 0) &&
+  const base = chain[0];
+  const codes = new Set(chain);
+  expenses.forEach(e => { if (e.currency) codes.add(e.currency); });
+  return Array.from(codes).filter(c => c && c !== base);
+}
+function ratesAreFresh() {
+  const need = neededCurrencies();
+  if (!need.length) return true;
+  return fx.base === activeChain()[0] && need.every(c => Number(fx.rates[c]) > 0) &&
     (Date.now() - fx.ts) < FX_MAX_AGE;
 }
 async function fetchRates(force) {
   const chain = activeChain();
-  if (chain.length < 2) return;
+  const need = neededCurrencies();
+  if (!chain.length || !need.length) return;
   if (ratesAreFresh() && !force) return;
 
-  const base = chain[0], need = chain.slice(1);
+  const base = chain[0];
   fxBusy = true; renderChecklist();
 
   for (const src of FX_SOURCES) {
@@ -1059,6 +1151,18 @@ function loadShifts() {
   };
   return fromKey(DATA_KEY) || fromKey(LEGACY_KEY) || seedShifts();
 }
+function loadExpenses() {
+  const raw = readJSON(EXPENSES_KEY, []);
+  if (!Array.isArray(raw)) return [];
+  return raw.map(e => ({
+    id: e.id || 'exp-' + Math.random().toString(36).slice(2),
+    date: e.date,
+    note: e.note || '',
+    amount: Math.round((Number(e.amount) || 0) * 100) / 100,
+    currency: cleanCode(e.currency) || 'INR'
+  })).filter(e => /^\d{4}-\d{2}-\d{2}$/.test(e.date || '') && e.amount > 0);
+}
+function persistExpenses() { writeJSON(EXPENSES_KEY, expenses); }
 function persist() { writeJSON(DATA_KEY, shifts); }
 function persistPrefs() { writeJSON(PREFS_KEY, prefs); }
 function persistCycles() { writeJSON(CYCLES_KEY, cycleRecords); }
@@ -1111,6 +1215,7 @@ function render() {
   renderStats();
   renderCalendar();
   renderTimeline();
+  renderExpenses();
   renderChecklist();
   renderSegments();
   updateComputed();
@@ -1272,6 +1377,78 @@ function renderTimeline() {
 }
 
 /* ============================================================
+   EXPENSES
+   ============================================================ */
+function renderExpenses() {
+  const start = viewCycleStart, end = cycleEnd(start);
+  const list = expensesIn(expenses, start, end);
+  const chain = activeChain();
+  const to = chain[chain.length - 1] || 'INR';
+  const sum = expensesTotal(list, to, fx.rates, chain[0]);
+
+  document.getElementById('exp-total').textContent = list.length
+    ? fmtMoney(sum.total, to) + (sum.unconverted ? ' + ' + sum.unconverted + ' unpriced' : '')
+    : 'None this cycle';
+
+  document.getElementById('exp-list').innerHTML = list.length
+    ? list.map(e => {
+        const conv = convertAmount(e.amount, e.currency, to, fx.rates, chain[0]);
+        const showConv = e.currency !== to;
+        return '<div class="exp-item">' +
+          '<span class="exp-date">' + parseDate(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</span>' +
+          '<span class="exp-note" title="' + escapeHTML(e.note) + '">' + escapeHTML(e.note) + '</span>' +
+          '<span class="exp-amt">' + fmtMoney(e.amount, e.currency) +
+            (showConv ? '<span class="conv"> · ' + (conv === null ? 'no rate' : fmtMoney(conv, to)) + '</span>' : '') +
+          '</span>' +
+          '<button class="exp-del" data-del-exp="' + e.id + '" title="Remove">×</button>' +
+          '</div>';
+      }).join('')
+    : '<div class="exp-empty">Nothing bought for work this cycle.</div>';
+
+  document.querySelectorAll('[data-del-exp]').forEach(btn => {
+    btn.disabled = !isUnlocked;
+    btn.addEventListener('click', () => deleteExpense(btn.dataset.delExp));
+  });
+  setInputValue('exp-cur', document.getElementById('exp-cur').value || to);
+}
+
+function addExpense() {
+  if (!isUnlocked) return toast('Unlock editing first', true);
+  const date = document.getElementById('exp-date').value;
+  const note = document.getElementById('exp-note').value.trim();
+  const amount = Math.round((Number(document.getElementById('exp-amount').value) || 0) * 100) / 100;
+  const chain = activeChain();
+  const currency = cleanCode(document.getElementById('exp-cur').value) || chain[chain.length - 1] || 'INR';
+
+  if (!date) return toast('Pick a date for the expense', true);
+  if (!(amount > 0)) return toast('Enter an amount', true);
+  if (!note) return toast('Say what it was for', true);
+
+  expenses.push({ id: 'exp-' + Date.now(), date: date, note: note, amount: amount, currency: currency });
+  expenses.sort((a, b) => a.date.localeCompare(b.date));
+  persistExpenses();
+
+  document.getElementById('exp-note').value = '';
+  document.getElementById('exp-amount').value = '';
+  viewCycleStart = cycleStart(parseDate(date));
+
+  fetchRates(false);   // a new currency may need a rate
+  renderCalendar(); renderExpenses(); renderChecklist();
+  toast('Expense added');
+}
+
+function deleteExpense(id) {
+  if (!isUnlocked) return;
+  const e = expenses.find(x => x.id === id);
+  if (!e) return;
+  if (!confirm('Remove "' + e.note + '" (' + fmtMoney(e.amount, e.currency) + ')?')) return;
+  expenses = expenses.filter(x => x.id !== id);
+  persistExpenses();
+  renderExpenses(); renderChecklist();
+  toast('Expense removed');
+}
+
+/* ============================================================
    CHECKLIST
    ============================================================ */
 const CHECK_SVG = '<svg viewBox="0 0 12 12"><path d="M2 6.4 L4.6 9 L10 3.2"/></svg>';
@@ -1326,13 +1503,18 @@ function renderChecklist() {
   const payCur = chain[0] || 'USD';
   const getCur = chain[chain.length - 1] || payCur;
   const steps = convertChain(estimate, chain, fx.rates);
-  const landed = steps && steps.length ? steps[steps.length - 1].value : estimate;
+  const payLanded = steps && steps.length ? steps[steps.length - 1].value : estimate;
+  const cycleExpenses = expensesIn(expenses, start, end);
+  const exp = expensesTotal(cycleExpenses, getCur, fx.rates, chain[0]);
+  const owed = payLanded + exp.total;
 
   // 2 — paid
   html += item({
     state: rec.paid ? 'done' : '',
     button: 'toggle-paid',
-    title: 'Paid for all ' + fmtHours(hours) + ' hours in this cycle',
+    title: 'Paid for all ' + fmtHours(hours) + ' hours' +
+      (cycleExpenses.length ? ' and ' + cycleExpenses.length + ' expense' + (cycleExpenses.length === 1 ? '' : 's') : '') +
+      ' in this cycle',
     sub: rec.paid
       ? 'Marked paid' + (received != null ? ' · ' + fmtMoney(received, getCur) + ' received' : '')
       : 'Not marked yet · payday ' + addDays(end, 1).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -1354,18 +1536,27 @@ function renderChecklist() {
         fmtMoney(st.value, st.to), 'step');
     });
   }
-  lines += line('You receive · ' + getCur, fmtMoney(landed, getCur), 'total');
+  if (cycleExpenses.length) {
+    lines += line('Reimbursables · ' + cycleExpenses.length +
+      (cycleExpenses.length === 1 ? ' item' : ' items'), '+ ' + fmtMoney(exp.total, getCur));
+    if (exp.unconverted) {
+      lines += line(exp.unconverted + ' expense' + (exp.unconverted === 1 ? '' : 's') +
+        ' has no rate yet', 'not counted', 'note');
+    }
+  }
+  lines += line('You should get · ' + getCur, fmtMoney(owed, getCur), 'total');
 
   if (received != null) {
-    const diff = Math.round((received - landed) * 100) / 100;
+    const diff = Math.round((received - owed) * 100) / 100;
     lines += line('Actually received', fmtMoney(received, getCur));
     lines += line(
       diff === 0 ? 'Matches the estimate' : diff > 0 ? 'Over the estimate' : 'Short of the estimate',
       (diff > 0 ? '+' : diff < 0 ? '−' : '') + fmtMoney(diff, getCur),
       '', diff > 0 ? 'pos' : diff < 0 ? 'neg' : ''
     );
+    // Net out the reimbursement so the rate reflects the pay leg alone.
     if (estimate > 0 && payCur !== getCur) {
-      lines += line('Effective 1 ' + payCur, fmtMoney(received / estimate, getCur), 'step');
+      lines += line('Effective 1 ' + payCur, fmtMoney((received - exp.total) / estimate, getCur), 'step');
     }
   }
   document.getElementById('pay-lines').innerHTML = lines;
@@ -1579,17 +1770,24 @@ function deleteShift() {
    ============================================================ */
 function csvCell(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
 
+// One file holds both. A row is an expense when the Expense column has an
+// amount; older five-column exports simply have no such column and still load.
 function exportCSV() {
-  const rows = [['Date', 'Day', 'Segments', 'Hours', 'Note']];
-  shifts.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(s => {
-    rows.push([
-      s.date,
-      parseDate(s.date).toLocaleDateString('en-US', { weekday: 'long' }),
+  const rows = [['Date', 'Day', 'Segments', 'Hours', 'Note', 'Expense', 'Currency']];
+  const dayName = d => parseDate(d).toLocaleDateString('en-US', { weekday: 'long' });
+
+  const combined = shifts.map(s => ({
+    date: s.date,
+    row: [s.date, dayName(s.date),
       getSegments(s).map(seg => seg.start + '-' + seg.end).join(' | '),
-      fmtHours(computeShiftHours(s)),
-      s.note || ''
-    ]);
-  });
+      fmtHours(computeShiftHours(s)), s.note || '', '', '']
+  })).concat(expenses.map(e => ({
+    date: e.date,
+    row: [e.date, dayName(e.date), '', '', e.note || '', String(e.amount), e.currency]
+  })));
+
+  combined.sort((a, b) => a.date.localeCompare(b.date));
+  combined.forEach(x => rows.push(x.row));
   // BOM keeps Excel from mangling the file; ASCII separators keep the times readable.
   const csv = '﻿' + rows.map(r => r.map(csvCell).join(',')).join('\r\n');
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
@@ -1624,29 +1822,45 @@ function importCSV(text) {
   if (!rows.length) return toast('That file looks empty', true);
   if (/date/i.test(rows[0][0] || '')) rows.shift();
 
-  let added = 0, replaced = 0;
+  let added = 0, replaced = 0, expAdded = 0;
   rows.forEach(r => {
     const date = (r[0] || '').trim();
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+    const note = (r[4] || '').trim();
+
+    const amount = Math.round((Number((r[5] || '').trim()) || 0) * 100) / 100;
+    if (amount > 0) {
+      const currency = cleanCode(r[6]) || 'INR';
+      const dupe = expenses.some(e =>
+        e.date === date && e.note === note && e.amount === amount && e.currency === currency);
+      if (!dupe) {
+        expenses.push({ id: 'exp-csv-' + date + '-' + expAdded, date: date, note: note, amount: amount, currency: currency });
+        expAdded++;
+      }
+      return;
+    }
+
     const segments = parseSegmentSpec(r[2] || '');
     if (!segments.length) return;
-    const entry = withLegacyFields({
-      id: 'csv-' + date, date: date, segments: segments, note: (r[4] || '').trim()
-    });
+    const entry = withLegacyFields({ id: 'csv-' + date, date: date, segments: segments, note: note });
     const idx = shifts.findIndex(s => s.date === date);
     if (idx >= 0) { entry.id = shifts[idx].id; shifts[idx] = entry; replaced++; }
     else { shifts.push(entry); added++; }
   });
 
-  if (!added && !replaced) return toast('No valid rows found', true);
+  if (!added && !replaced && !expAdded) return toast('No valid rows found', true);
   shifts.sort((a, b) => a.date.localeCompare(b.date));
-  persist(); render();
-  toast('Imported ' + added + ' new, updated ' + replaced);
+  expenses.sort((a, b) => a.date.localeCompare(b.date));
+  persist(); persistExpenses();
+  fetchRates(false);
+  render();
+  toast('Imported ' + added + ' shifts, updated ' + replaced +
+    (expAdded ? ', ' + expAdded + ' expenses' : ''));
 }
 
 function resetToSeed() {
   if (!isUnlocked) return toast('Unlock editing first', true);
-  if (!confirm('Replace every entry with the imported CSV baseline?')) return;
+  if (!confirm('Replace every shift with the imported CSV baseline? Expenses are kept.')) return;
   shifts = seedShifts();
   persist(); render(); toast('Reset to baseline');
 }
@@ -1735,6 +1949,27 @@ function selfTest() {
   ok(normalizeChain([' u s d ', 'CAD', 'CAD']).join() === 'USD,CAD', 'codes are cleaned and repeats dropped');
   ok(estimatePay(54.5, 12.5) === 681.25, '54.5h at 12.50/hr = 681.25');
 
+  // Expenses — any currency, folded into what you are owed
+  const base = 'USD';
+  ok(convertAmount(2400, 'INR', 'INR', rates, base) === 2400, 'same-currency expense is untouched');
+  ok(round(convertAmount(100, 'USD', 'INR', rates, base)) === 9521, 'a USD expense prices in INR');
+  ok(round(convertAmount(9521, 'INR', 'USD', rates, base)) === 100, 'and converts back symmetrically');
+  ok(convertAmount(50, 'GBP', 'INR', rates, base) === null, 'an expense in an unpriced currency returns null');
+
+  const exps = [
+    { date: '2026-08-03', amount: 2400, currency: 'INR' },
+    { date: '2026-08-06', amount: 20, currency: 'USD' },
+    { date: '2026-08-20', amount: 999, currency: 'INR' },   // next cycle
+    { date: '2026-08-07', amount: 50, currency: 'GBP' }      // no rate
+  ];
+  const inCycle = expensesIn(exps, cs, cycleEnd(cs));
+  ok(inCycle.length === 3, 'expenses are scoped to the viewed cycle');
+  ok(inCycle[0].date <= inCycle[1].date, 'expenses come back in date order');
+  const sum = expensesTotal(inCycle, 'INR', rates, base);
+  ok(round(sum.total) === round(2400 + 20 * 95.21), 'mixed-currency expenses total in the receive currency');
+  ok(sum.unconverted === 1, 'an unpriced expense is reported, not silently dropped');
+  ok(expensesTotal([], 'INR', rates, base).total === 0, 'no expenses totals zero');
+
   // CSV
   ok(parseSegmentSpec('21:00–23:30|00:00-01:10').length === 2, 'CSV segment spec parses both dash styles');
   ok(parseCSV('"a","b"\r\n"c,1","d""e"')[1][0] === 'c,1', 'CSV parser handles quoted commas');
@@ -1747,11 +1982,14 @@ function selfTest() {
    INIT
    ============================================================ */
 shifts = loadShifts();
+expenses = loadExpenses();
 prefs = Object.assign({ rate: 0, chain: ['USD', 'CAD', 'INR'] }, readJSON(PREFS_KEY, {}));
 cycleRecords = readJSON(CYCLES_KEY, {}) || {};
 fx = Object.assign({ ts: 0, base: '', rates: {}, date: '', source: '', error: '' }, readJSON(FX_KEY, {}));
 viewCycleStart = cycleStart(TODAY);
 document.getElementById('in-date').value = fmtDate(TODAY);
+document.getElementById('exp-date').value = fmtDate(TODAY);
+document.getElementById('exp-cur').value = activeChain().slice(-1)[0] || 'INR';
 render();
 setLocked(true);
 initReveal();
@@ -1761,6 +1999,16 @@ document.getElementById('btn-save').addEventListener('click', saveShift);
 document.getElementById('btn-delete').addEventListener('click', deleteShift);
 document.getElementById('btn-cancel').addEventListener('click', () => { cancelEdit(); render(); });
 document.getElementById('btn-add-segment').addEventListener('click', addSegment);
+document.getElementById('btn-add-expense').addEventListener('click', addExpense);
+document.getElementById('exp-cur').addEventListener('input', e => {
+  e.target.value = cleanCode(e.target.value);
+});
+document.getElementById('exp-amount').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addExpense(); }
+});
+document.getElementById('exp-note').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addExpense(); }
+});
 document.getElementById('btn-export').addEventListener('click', exportCSV);
 document.getElementById('btn-reset').addEventListener('click', resetToSeed);
 document.getElementById('btn-import').addEventListener('click', () => {
@@ -1778,7 +2026,7 @@ document.getElementById('file-input').addEventListener('change', e => {
 
 const goCycle = delta => {
   viewCycleStart = delta === 0 ? cycleStart(TODAY) : addDays(viewCycleStart, delta * 14);
-  renderCalendar(); renderTimeline(); renderChecklist();
+  renderCalendar(); renderTimeline(); renderExpenses(); renderChecklist();
 };
 document.getElementById('prev-cycle').addEventListener('click', () => goCycle(-1));
 document.getElementById('next-cycle').addEventListener('click', () => goCycle(1));
